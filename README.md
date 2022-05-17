@@ -3,6 +3,8 @@
 Color palette generation function using hue cycling and easing functions.
 Check out a simple [demo](https://codepen.io/meodai/pen/yLvgxQK?editors=0010) or see it in action over on [farbvelo](https://farbvelo.elastiq.ch/)
 
+- [1000 Ramps](https://codepen.io/meodai/pen/ExQWwar?editors=0110) generated with Rampensau 
+
 ## Installation
 
 Rampensau is bundled as both UMD and ES on npm. Install it using npm:
