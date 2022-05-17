@@ -11,6 +11,11 @@ export type GenerateHSLRampArgument = {
   lEasing?: FuncNumberReturn;
 };
 
+/**  
+ * Generates a color ramp based on the HSL color space.
+ * @param {GenerateHSLRampArgument} args - The arguments to generate the ramp.
+ * @returns {Array<number>} - The color ramp.
+*/
 export default function generateHSLRamp({
   total = 9,
   hCenter = Math.random() * 360,
