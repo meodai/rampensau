@@ -21,7 +21,7 @@ function generateHSLRamp({
   lEasing = (x) => Math.pow(x, 1.5)
 } = {}) {
   const hueSlice = 360 / total;
-  const hues = new Array(total).fill(0).map((_, i) => 360 + (-180 + hCenter + i * hCycles * hueSlice) % 360);
+  const hues = new Array(total).fill(0).map((_, i) => (360 + (-180 + hCenter + i * hCycles * hueSlice)) % 360);
   const lDiff = lRange[1] - lRange[0];
   const sDiff = sRange[1] - sRange[0];
   const firstColor = [hues.pop() || 0, sRange[0], lRange[0]];

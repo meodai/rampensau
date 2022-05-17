@@ -29,7 +29,7 @@ export function generateHSLRamp({
   const hues: number[] = new Array(total)
     .fill(0)
     .map(
-      (_, i): number => 360 + ((-180 + hCenter + i * hCycles * hueSlice) % 360)
+      (_, i): number => (360 + (-180 + hCenter + i * hCycles * hueSlice)) % 360
     );
   const lDiff: number = lRange[1] - lRange[0];
   const sDiff: number = sRange[1] - sRange[0];
