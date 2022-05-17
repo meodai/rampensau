@@ -49,7 +49,7 @@ export declare const generateHSLRampParams: {
             step: number;
         };
     };
-    minLight: {
+    maxSaturation: {
         default: number;
         props: {
             min: number;
@@ -57,7 +57,7 @@ export declare const generateHSLRampParams: {
             step: number;
         };
     };
-    maxSaturation: {
+    minLight: {
         default: number;
         props: {
             min: number;

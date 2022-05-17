@@ -51,12 +51,12 @@ var rampensau = (() => {
       default: 0.4,
       props: { min: 0, max: 1, step: 1e-3 }
     },
-    minLight: {
-      default: 0.1,
-      props: { min: 0, max: 1, step: 1e-3 }
-    },
     maxSaturation: {
       default: 0.35,
+      props: { min: 0, max: 1, step: 1e-3 }
+    },
+    minLight: {
+      default: 0.1,
       props: { min: 0, max: 1, step: 1e-3 }
     },
     maxLight: {
