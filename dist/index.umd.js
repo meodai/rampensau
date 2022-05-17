@@ -20,7 +20,8 @@ var rampensau = (() => {
   // src/index.ts
   var src_exports = {};
   __export(src_exports, {
-    default: () => generateHSLRamp
+    generateHSLRamp: () => generateHSLRamp,
+    generateHSLRampParams: () => generateHSLRampParams
   });
   function generateHSLRamp({
     total = 9,
@@ -43,6 +44,36 @@ var rampensau = (() => {
     ]);
     return [...[firstColor], ...ramp];
   }
+  var generateHSLRampParams = {
+    total: {
+      default: 30,
+      props: { min: 3, max: 50, step: 1 }
+    },
+    hCenter: {
+      default: 0,
+      props: { min: 0, max: 360, step: 0.1 }
+    },
+    hCycles: {
+      default: 1,
+      props: { min: -1.25, max: 1.5, step: 1e-3 }
+    },
+    minSaturation: {
+      default: 0.4,
+      props: { min: 0, max: 1, step: 1e-3 }
+    },
+    minLight: {
+      default: 0.1,
+      props: { min: 0, max: 1, step: 1e-3 }
+    },
+    maxSaturation: {
+      default: 0.35,
+      props: { min: 0, max: 1, step: 1e-3 }
+    },
+    maxLight: {
+      default: 0.9,
+      props: { min: 0, max: 1, step: 1e-3 }
+    }
+  };
   return src_exports;
 })();
 return rampensau; }));

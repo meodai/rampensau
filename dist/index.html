@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <!-- Primary Meta Tags -->
-    <title>FettePalette — Color ramp generator using curves within the HSV color model</title>
+    <title>RampenSau — Color ramp generator using curves within the HSV color model</title>
     <meta name="title" content="FettePalette — Color ramp generator using curves within the HSV color model">
     <meta name="description" content="FettePalette is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSV color model. This page serves as preview for the variety of options the function takes.">
     <meta name="keywords" content="color, colour, generative, generative-art, generative-design, palette, colorpalette">
@@ -158,7 +158,7 @@
       [data-colors] i {
         flex: 1 0 calc(var(--w, 0.11) * 100%);
         width: calc(var(--w, 0.11) * 100%);
-        padding-top: calc(var(--w, 0.11) * 100%);
+        height: 10rem;
         background: hsl(var(--h), calc(var(--s) * 1%), calc(var(--l) * 1%));
       }
 
@@ -527,12 +527,12 @@
         <aside>
           <h3>About</h3>
           <p>
-            FettePalette is lightweight, dependency free and fast JavaScript
+            RampenSau is lightweight, dependency free and fast JavaScript
             function written in TypeScript. It generates color ramps based on a
             curve within the HSV color model. This page serves as preview for
             the variety of options the function takes.
           </p>
-          <a class="projectlink" href="https://github.com/meodai/fettepalette">Github</a>
+          <a class="projectlink" href="https://github.com/meodai/rampensau">Github</a>
         </aside>
         <aside>
           <h3 class="code-title">Function Call</h3>
@@ -564,38 +564,12 @@
           </footer>
       </section>
       <section class="main">
-        <h1>Fette&shy;Palette</h1>
+        <h1>Rampen&shy;Sau</h1>
 
         <!--p>
         <mark>Fette­Palette</mark> is a function that returns an object containing
         as many base colors, tints and shades as set in <code>colors</code>.
       </p-->
-        <aside class="section">
-          <div class="section__text">
-            <h2>HSV Slice Preview</h2>
-            <p>
-              This figure shows the curve drawn within the HSV color model. It is drawn
-              using the method set in <code>curveMethod</code>. (<button data-pantrigger="curveMethod" data-panvalue="lamé">lamé</button>, <button data-pantrigger="curveMethod" data-panvalue="arc">arc</button>, <button data-pantrigger="curveMethod" data-panvalue="pow">pow</button>,
-              <button data-pantrigger="curveMethod" data-panvalue="powX">powX</button> or <button data-pantrigger="curveMethod" data-panvalue="powY">powY</button>) and controlled by the <code>curveAccent</code> [<button data-pantrigger="curveAccent" data-panvalue="-.05">-0.05</button>, <button data-pantrigger="curveAccent" data-panvalue="0">0.0</button>, <button data-pantrigger="curveAccent" data-panvalue=".05">0.05</button>, <button data-pantrigger="curveAccent" data-panvalue=".15">0.15</button>, <button data-pantrigger="curveAccent" data-panvalue=".5">0.5</button>, <button data-pantrigger="curveAccent" data-panvalue="1">1.0</button>].
-            </p>
-            <p>
-              The white dots represent the tints and the black dots the shades.
-              <code>offsetTint</code>, <code>offsetShade</code>,
-              <code>offsetCurveModTint</code> and
-              <code>offsetCurveModShade</code> have in imact on the curve and
-              the positions of those points.
-            </p>
-            <p>
-              The change in hue can be set with the
-              <code>hueCycle</code> option. <code>0</code> means the same color
-              for the full curve and <code>1</code>
-              would be a full rotation around the hue wheel.
-            </p>
-          </div>
-          <div class="section__fig">
-            <figure><svg data-figure viewbox="0 0 100 100"></svg></figure>
-          </div>
-        </aside>
 
         <aside class="section">
           <div class="section__text">
@@ -662,7 +636,7 @@
 
         <p>
           fork on
-          <a href="https://github.com/meodai/fettepalette">github</a> made by
+          <a href="https://github.com/meodai/rampensau">github</a> made by
           <a href="https://www.elastiq.ch/">elastiq</a>.
         </p>
       </section>
@@ -675,24 +649,11 @@
 
     <script type="module">
       import {
-        generateRandomColorRamp,
-        generateRandomColorRampParams,
-        hsv2hsl,
-        pointOnCurve,
+        generateHSLRamp,
+        generateHSLRampParams,
       } from "./index.mjs";
 
       console.clear();
-
-      let outputModel = 'hsl';
-
-      const shuffleArray = (array) => {
-        let arr = [...array];
-        for (let i = arr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-      };
 
       class Pane {
         constructor(
@@ -741,7 +702,7 @@
             const ref = this.watches.get(key).reference;
 
             if ($target.dataset.type === "number") {
-              ref[key] = new Number($target.value);
+              ref[key] = parseFloat($target.value);
             } else {
               ref[key] = $target.value;
             }
@@ -895,81 +856,15 @@
 
       const PARAMS = {};
 
-      Object.keys(generateRandomColorRampParams).forEach((key) => {
-        const param = generateRandomColorRampParams[key];
+      Object.keys(generateHSLRampParams).forEach((key) => {
+        const param = generateHSLRampParams[key];
         PARAMS[key] = param.default;
         pane.addInput(PARAMS, key, param.props);
       });
 
       const $pal = document.querySelector("[data-palette]");
-      const $picker = document.querySelector("[data-figure]");
       const $ramp = document.querySelector("[data-ramp]");
       let colors = [];
-
-      const palette = (colors, method) => {
-        let allColors = [];
-
-        const lightColors = shuffleArray(colors.light);
-        const mediumColors = shuffleArray(colors.base);
-        const darkColors = shuffleArray(colors.dark);
-
-        switch (method) {
-          case "random":
-            allColors = shuffleArray(colors.all);
-            break;
-          case "l2md":
-            allColors = [
-              lightColors[0],
-              mediumColors[0],
-              darkColors[0],
-              lightColors[1],
-            ];
-            break;
-          case "lmd2":
-            allColors = [
-              darkColors[0],
-              mediumColors[0],
-              lightColors[0],
-              darkColors[1],
-            ];
-            break;
-          case "lm2d":
-            allColors = [
-              mediumColors[1],
-              mediumColors[0],
-              lightColors[0],
-              darkColors[1],
-            ];
-            break;
-        }
-
-        let localcolors = [...allColors];
-        $pal.innerHTML = "";
-
-        $pal.appendChild(paletteDom(localcolors, 1));
-        localcolors = shuffleArray(localcolors);
-
-        for (let i = 0; i < 2; i++) {
-          $pal.appendChild(paletteDom(localcolors, 2));
-          localcolors = shuffleArray(localcolors);
-        }
-
-        for (let i = 0; i < 4 * 2; i++) {
-          $pal.appendChild(paletteDom(localcolors, 4));
-          localcolors = shuffleArray(localcolors);
-        }
-
-        $ramp.style.setProperty(
-          "background",
-          `linear-gradient(90deg, ${allColors
-            .slice(0, 4)
-            .sort((a, b) => b.hsl[2] - a.hsl[2])
-            .map(
-              (c) => `hsl(${c.hsl[0]},${c.hsl[1] * 100}%,${c.hsl[2] * 100}%)`
-            )
-            .join(",")})`
-        );
-      };
 
       function paletteDom(colorArr, x = 1) {
         const $div = document.createElement("div");
@@ -990,47 +885,39 @@
       }
 
       function bam() {
-        colors = generateRandomColorRamp({
+        console.log(typeof PARAMS.total, PARAMS)
+        colors = generateHSLRamp({
           total: PARAMS.total,
-          centerHue: PARAMS.centerHue,
-          hueCycle: PARAMS.hueCycle,
-          offsetTint: PARAMS.offsetTint,
-          offsetShade: PARAMS.offsetShade,
-          curveAccent: PARAMS.curveAccent,
-          tintShadeHueShift: PARAMS.tintShadeHueShift,
-          curveMethod: PARAMS.curveMethod,
-          offsetCurveModTint: PARAMS.offsetCurveModTint,
-          offsetCurveModShade: PARAMS.offsetCurveModShade,
-          minSaturationLight: [PARAMS.minSaturation, PARAMS.minLight],
-          maxSaturationLight: [PARAMS.maxSaturation, PARAMS.maxLight],
-          colorModel: outputModel === 'hsl' ? 'hsl' : 'hsv',
+          hCenter: PARAMS.hCenter,
+          hCycles: PARAMS.hCycles,
+          sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
+          lRange: [PARAMS.minLight, PARAMS.maxLight],
         });
 
         // Mutate colors object
-        for (const key in colors) {
-          colors[key] = colors[key].map(([h, s, l]) => {
-            const { r, g, b } = culori.converter("rgb")({
-              mode: "hsl",
-              h,
-              s,
-              l,
-            });
-            return {
-              hsl: [h, s, l],
-              rgb: [r * 255, g * 255, b * 255],
-              hex: culori.formatHex({ mode: "hsl", h, s, l }),
-              contrast: {
-                white: culori.wcagContrast("#ffffff", { mode: "hsl", h, s, l }),
-                black: culori.wcagContrast("#000000", { mode: "hsl", h, s, l }),
-              },
-            };
+        colors = colors.map(([h, s, l]) => {
+          const { r, g, b } = culori.converter("rgb")({
+            mode: "hsl",
+            h,
+            s,
+            l,
           });
-        }
+          return {
+            hsl: [h, s, l],
+            rgb: [r * 255, g * 255, b * 255],
+            hex: culori.formatHex({ mode: "hsl", h, s, l }),
+            contrast: {
+              white: culori.wcagContrast("#ffffff", { mode: "hsl", h, s, l }),
+              black: culori.wcagContrast("#000000", { mode: "hsl", h, s, l }),
+            },
+          };
+        });
 
 
+/*
         document.querySelector(
           "[data-code]"
-        ).innerHTML = `generateRandomColorRamp({
+        ).innerHTML = `generateHSLRamp({
   total: ${PARAMS.total},
   centerHue: ${PARAMS.centerHue},
   hueCycle: ${PARAMS.hueCycle},
@@ -1044,27 +931,9 @@
   minSaturationLight: [${PARAMS.minSaturation}, ${PARAMS.minLight}],
   maxSaturationLight: [${PARAMS.maxSaturation}, ${PARAMS.maxLight}],
 });
-`;
+`;*/
 
-        points(
-          PARAMS.total,
-          PARAMS.offsetTint,
-          PARAMS.offsetShade,
-          PARAMS.curveAccent,
-          colors.base,
-          PARAMS.curveMethod,
-          PARAMS.offsetCurveModTint,
-          PARAMS.offsetCurveModShade,
-          [PARAMS.minSaturation, PARAMS.minLight],
-          [PARAMS.maxSaturation, PARAMS.maxLight]
-        );
-
-        $picker.style.setProperty(
-          `--deg`,
-          `${colors.all[Math.floor(colors.all.length * 0.5)].hsl[0]}deg`
-        );
-
-        document.querySelector("[data-colors]").innerHTML = colors.all.reduce(
+        document.querySelector("[data-colors]").innerHTML = colors.reduce(
           (r, c) => {
             return `${r}<i style="--w: ${1 / PARAMS.total}; --h: ${
               c.hsl[0]
@@ -1073,6 +942,77 @@
           ""
         );
 
+        const shuffleArray = (array) => {
+          let arr = [...array];
+          for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+          }
+          return arr;
+        };
+
+        const palette = (colors, method) => {
+          let allColors = shuffleArray(colors);
+
+          switch (method) {
+            case "random":
+              allColors = shuffleArray(colors);
+              break;
+            case "l2md":
+              allColors = [
+                lightColors[0],
+                mediumColors[0],
+                darkColors[0],
+                lightColors[1],
+              ];
+              break;
+            case "lmd2":
+              allColors = [
+                darkColors[0],
+                mediumColors[0],
+                lightColors[0],
+                darkColors[1],
+              ];
+              break;
+            case "lm2d":
+              allColors = [
+                mediumColors[1],
+                mediumColors[0],
+                lightColors[0],
+                darkColors[1],
+              ];
+              break;
+          }
+
+          let localcolors = [...allColors];
+          $pal.innerHTML = "";
+
+          $pal.appendChild(paletteDom(localcolors, 1));
+          localcolors = shuffleArray(localcolors);
+
+          for (let i = 0; i < 2; i++) {
+            $pal.appendChild(paletteDom(localcolors, 2));
+            localcolors = shuffleArray(localcolors);
+          }
+
+          for (let i = 0; i < 4 * 2; i++) {
+            $pal.appendChild(paletteDom(localcolors, 4));
+            localcolors = shuffleArray(localcolors);
+          }
+
+          $ramp.style.setProperty(
+            "background",
+            `linear-gradient(90deg, ${allColors
+              .slice(0, 4)
+              .sort((a, b) => b.hsl[2] - a.hsl[2])
+              .map(
+                (c) => `hsl(${c.hsl[0]},${c.hsl[1] * 100}%,${c.hsl[2] * 100}%)`
+              )
+              .join(",")})`
+          );
+        };
+
+
         palette(colors, "random");
         list(colors);
 
@@ -1080,98 +1020,6 @@
       }
        
       const xmlns = 'http://www.w3.org/2000/svg';
-
-      function points(
-        colorsInt,
-        offsetTint,
-        offsetShade,
-        curveAccent,
-        colorsArr,
-        curveMethod,
-        offsetCurveModTint,
-        offsetCurveModShade,
-        minSaturationLight,
-        maxSaturationLight
-      ) {
-        $picker.innerHTML = "";
-        const limit = Math.PI / 2;
-        const part = limit / (colorsInt + 1);
-
-        for (let i = 1; i < colorsInt + 1; i++) {
-          const [x, y] = pointOnCurve(
-            curveMethod,
-            i,
-            colorsInt + 1,
-            curveAccent,
-            minSaturationLight,
-            maxSaturationLight
-          );
-          const hsl = hsv2hsl(0, x, y);
-          const newElement = document.createElementNS(
-            xmlns,
-            "circle"
-          );
-
-          newElement.setAttribute("cx", x * 100);
-          newElement.setAttribute("cy", 100 - y * 100);
-
-          newElement.setAttribute("r", "3");
-
-          newElement.style.fill = `hsl(${colorsArr[i - 1].hsl[0]}deg,${
-            hsl[1] * 100
-          }%,${hsl[2] * 100}%)`;
-          newElement.style.stroke = "#212121";
-          newElement.style.strokeWidth = ".5px";
-
-          const [xl, yl] = pointOnCurve(
-            curveMethod,
-            i,
-            colorsInt + 1,
-            curveAccent + offsetCurveModTint,
-            minSaturationLight,
-            maxSaturationLight
-          );
-
-          const newElementLight = document.createElementNS(
-            xmlns,
-            "circle"
-          );
-
-          newElementLight.setAttribute("cx", (xl - offsetTint) * 100);
-          newElementLight.setAttribute("cy", 100 - (yl + offsetTint) * 100);
-
-          newElementLight.setAttribute("r", "1");
-
-          newElementLight.style.fill = `#fff`;
-          newElementLight.style.strokeWidth = "0px";
-
-          const newElementDark = document.createElementNS(
-            xmlns,
-            "circle"
-          );
-
-          const [xd, yd] = pointOnCurve(
-            curveMethod,
-            i,
-            colorsInt + 1,
-            curveAccent - offsetCurveModShade,
-            minSaturationLight,
-            maxSaturationLight
-          );
-
-          newElementDark.setAttribute("cx", (xd - offsetShade) * 100);
-          newElementDark.setAttribute("cy", 100 - (yd - offsetShade) * 100);
-
-          newElementDark.setAttribute("r", "1");
-
-          newElementDark.style.fill = `#000`;
-          newElementDark.style.strokeWidth = "0px";
-
-          $picker.appendChild(newElement);
-          $picker.appendChild(newElementLight);
-          $picker.appendChild(newElementDark);
-        }
-      }
 
       const printColors = (arr, simple, names) =>
         arr
@@ -1222,16 +1070,8 @@
       function list(colors) {
         document.querySelector("[data-list]").innerHTML = `
         <div>
-          <h3>Light Colors</h3>
-          <ol>${printColors(colors.light, true)}</ol>
-        </div>
-        <div>
-          <h3>Base Colors</h3>
-          <ol>${printColors(colors.base, true)}</ol>
-        </div>
-        <div>
-          <h3>Dark Colors</h3>
-          <ol>${printColors(colors.dark, true)}</ol>
+          <h3>Colors</h3>
+          <ol>${printColors(colors, true)}</ol>
         </div>
       `;
       }
@@ -1243,7 +1083,7 @@
         $names.innerHTML = `<strong style="--col: #fff">…</strong>`;
         clearTimeout(timer);
         timer = setTimeout(() => {
-          let hexes = colors.all.map((c) => c.hex.replace("#", ""));
+          let hexes = colors.map((c) => c.hex.replace("#", ""));
           fetch(
             `https://api.color.pizza/v1/?values=${hexes.join(
               ","
@@ -1252,7 +1092,7 @@
             .then((r) => r.json())
             .then((d) => {
               $names.innerHTML = `<ol>${printColors(
-                colors.all,
+                colors,
                 false,
                 d.colors
               )}</ol>`;

@@ -10,4 +10,67 @@ export declare type GenerateHSLRampArgument = {
     sEasing?: FuncNumberReturn;
     lEasing?: FuncNumberReturn;
 };
-export default function generateHSLRamp({ total, hCenter, hCycles, sRange, sEasing, lRange, lEasing, }?: GenerateHSLRampArgument): Vector3[];
+/**
+ * Generates a color ramp based on the HSL color space.
+ * @param {GenerateHSLRampArgument} args - The arguments to generate the ramp.
+ * @returns {Array<number>} - The color ramp.
+ */
+export declare function generateHSLRamp({ total, hCenter, hCycles, sRange, sEasing, lRange, lEasing, }?: GenerateHSLRampArgument): Vector3[];
+export declare const generateHSLRampParams: {
+    total: {
+        default: number;
+        props: {
+            min: number;
+            max: number;
+            step: number;
+        };
+    };
+    hCenter: {
+        default: number;
+        props: {
+            min: number;
+            max: number;
+            step: number;
+        };
+    };
+    hCycles: {
+        default: number;
+        props: {
+            min: number;
+            max: number;
+            step: number;
+        };
+    };
+    minSaturation: {
+        default: number;
+        props: {
+            min: number;
+            max: number;
+            step: number;
+        };
+    };
+    minLight: {
+        default: number;
+        props: {
+            min: number;
+            max: number;
+            step: number;
+        };
+    };
+    maxSaturation: {
+        default: number;
+        props: {
+            min: number;
+            max: number;
+            step: number;
+        };
+    };
+    maxLight: {
+        default: number;
+        props: {
+            min: number;
+            max: number;
+            step: number;
+        };
+    };
+};

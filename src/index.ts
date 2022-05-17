@@ -11,12 +11,12 @@ export type GenerateHSLRampArgument = {
   lEasing?: FuncNumberReturn;
 };
 
-/**  
+/**
  * Generates a color ramp based on the HSL color space.
  * @param {GenerateHSLRampArgument} args - The arguments to generate the ramp.
  * @returns {Array<number>} - The color ramp.
-*/
-export default function generateHSLRamp({
+ */
+export function generateHSLRamp({
   total = 9,
   hCenter = Math.random() * 360,
   hCycles = 1,
@@ -46,3 +46,34 @@ export default function generateHSLRamp({
 
   return [...[firstColor], ...ramp];
 }
+
+export const generateHSLRampParams = {
+  total: {
+    default: 30,
+    props: { min: 3, max: 50, step: 1 },
+  },
+  hCenter: {
+    default: 0,
+    props: { min: 0, max: 360, step: 0.1 },
+  },
+  hCycles: {
+    default: 1,
+    props: { min: -1.25, max: 1.5, step: 0.001 },
+  },
+  minSaturation: {
+    default: 0.4,
+    props: { min: 0, max: 1, step: 0.001 },
+  },
+  maxSaturation: {
+    default: 0.35,
+    props: { min: 0, max: 1, step: 0.001 },
+  },
+  minLight: {
+    default: 0.1,
+    props: { min: 0, max: 1, step: 0.001 },
+  },
+  maxLight: {
+    default: 0.9,
+    props: { min: 0, max: 1, step: 0.001 },
+  },
+};
