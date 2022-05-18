@@ -53,7 +53,7 @@ Function returns an array of colors in HSL format (`[0…360,0…1,0…1]`).
 
 - `total` int 3…∞ → Amount of base colors.
 - `hCenter` float 0…360 → 0 Red, 180 Teal etc..
-- `hCycles` float 0…∞ → Number of hue cycles. (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
+- `hCycles` float -∞…0…+∞ → Number of hue cycles. (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
 - `sRange` array [0…1,0…1] → Saturation Range
 - `sEasing` function(x) → Saturation easing function
 - `lRange` array [0…1,0…1] → Lightness Range
