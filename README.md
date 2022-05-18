@@ -1,4 +1,4 @@
-# Rampensau
+# Rampensau 🐷
 
 Color palette generation function using hue cycling and easing functions.
 
