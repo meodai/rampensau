@@ -38,10 +38,15 @@
         font-family: "Inter", sans-serif;
         --light: var(--clast);
         --dark: var(--c0);
+        --highlight: var(--csecondlast);
         
         background: var(--dark);
         
         --sidebarwidth: 20rem;
+      }
+
+      a {
+        color: var(--highlight);
       }
 
       .settings {
@@ -63,11 +68,12 @@
         display: block;
         margin-bottom: 1rem;
         text-decoration: underline;
+        color: var(--highlight);
       }
 
       .projectlink {
         display: inline-block;
-        color: var(--light);
+        color: var(--highlight);
         margin-top: .75em;
       }
 
@@ -173,6 +179,7 @@
         height: calc(100vmin - 8rem);
         margin-bottom: 4rem;
         flex-direction: column-reverse;
+        box-shadow: 0 0 0 1px var(--dark);
       }
       [data-colors] i {
         flex: 1 0 auto;
@@ -651,14 +658,14 @@
         <aside class="section section--vertical section--first">
           <div class="section__text">
             <h2>Full Palette</h2>
-            <p>
+            <!--p>
               <code>total</code> [<button data-pantrigger="total" data-panvalue="3">3</button>, <button data-pantrigger="total" data-panvalue="9">9</button>, <button data-pantrigger="total" data-panvalue="12">12</button>] 
               sets the amount of base colors. However the
               class returns an <code>Object</code> containing
               <code>light</code>, <code>base</code> and <code>dark</code> colors
               in an array of HSL coordinates. (as well as an array with all of
               them called <code>all</code>)
-            </p>
+            </p-->
           </div>
           <div class="section__fig">
             <div data-colors></div>
@@ -1038,17 +1045,21 @@
 
       np();
 
-      $rnd.addEventListener('click', () => {
+      const newPalette = () => {
         const newParams = newOptions();
-        
+
         Object.keys(newParams).forEach(key => {
           PARAMS[key] = newParams[key];
         });
 
-        console.log();
-        
+
         pane.updateInputs();
+      }
+
+      $rnd.addEventListener('click', () => {
+        newPalette()
       })
+
 
       let colors = [];
 
@@ -1137,6 +1148,16 @@
         });
 
         document.documentElement.style.setProperty(`--clast`, colors[colors.length - 1].hex);
+        
+        const remColors = [...colors];
+        
+        const bgc = remColors.shift();
+        remColors.pop();
+        const bestContrastTobgc = remColors.sort(
+          (a, b) => culori.wcagContrast(a.hex, bgc.hex) - culori.wcagContrast(b.hex, bgc.hex)
+        ).pop();
+        console.log(bestContrastTobgc)
+        document.documentElement.style.setProperty(`--csecondlast`, bestContrastTobgc.hex);
 
         names(colors);
       }
@@ -1258,6 +1279,8 @@
         });
       }
 
+
+      newPalette();
       bam();
     </script>
   </body>
