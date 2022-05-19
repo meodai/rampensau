@@ -55,6 +55,12 @@
         z-index: 2;
       }
 
+      .rnd-settings {
+        display: block;
+        margin-bottom: 1rem;
+        text-decoration: underline;
+      }
+
       .projectlink {
         display: inline-block;
         color: #fff;
@@ -76,6 +82,12 @@
         margin-top: 4rem;
         max-width: calc(50rem + 12.5vw);
       }
+      .section--first {
+        margin-top: 0;
+      }
+      .section--vertical {
+        flex-direction: column;
+      }
       .section__text {
         flex: 1 0 calc(100% - 25rem - 4rem);
         order: 1;
@@ -95,10 +107,10 @@
       }
 
       h1 {
-        font-size: calc(1rem + 11vw);
+        font-size: calc(.64rem + 3vw);
         font-weight: 900;
         letter-spacing: -0.055em;
-        margin-top: 2rem;
+        margin-top: 0;
         line-height: 0.85;
         margin-left: -0.045em;
       }
@@ -154,12 +166,25 @@
         display: flex;
         flex-wrap: wrap;
         width: 100%;
+        height: calc(100vmin - 8rem);
+        margin-bottom: 4rem;
+        flex-direction: column-reverse;
       }
       [data-colors] i {
-        flex: 1 0 calc(var(--w, 0.11) * 100%);
-        width: calc(var(--w, 0.11) * 100%);
-        height: 10rem;
+        flex: 1 0 auto;
+        width 100%;
         background: hsl(var(--h), calc(var(--s) * 1%), calc(var(--l) * 1%));
+        position: relative;
+      }
+      [data-colors] b {
+        position: absolute;
+        top: 50%;
+        right: .7rem;
+        transform: translateY(-50%);
+        font-size: 0.7em;
+        color: var(--c);
+        font-weight: 900;
+        filter: hue-rotate(180deg);
       }
 
       [data-palette] {
@@ -518,6 +543,54 @@
         width: 40%;
         margin: 4rem 0 0;
       }
+
+      [data-rndsamples] {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+          min-height: 100vh;
+          margin-bottom: 4rem;
+      }
+      .palette {
+        position: relative;
+        aspect-ratio: 2;
+        flex: 1 1 20%;
+        background: var(--crnd);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .palette::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: linear-gradient(90deg, var(--gc));
+        transform: translateY(min(1vw, 4px));
+        border-radius: 0.3rem;
+      }
+      .palette:hover {
+        background: linear-gradient(90deg, var(--gs));
+        box-shadow: inset 0 0 0 min(0.3vw, 2px) var(--c4), inset 0 0 0 min(0.5vw, 4px) var(--c0);
+      }
+      .palette:hover > * {
+        display: none;
+      }
+      .palette:hover::after {
+        background: var(--c4);
+      }
+      .palette__swatch {
+        width: 16%;
+        aspect-ratio: 1;
+        background: var(--color);
+        border-radius: 50%;
+        margin-left: -8%;
+        position: relative;
+        left: 1vw;
+        transform: rotate(-45deg);
+        box-shadow: 0 0 0 min(0.3vw, 2px) var(--c0), min(-0.2vw, -2px) 0 0 min(0.3vw, 3px) var(--color);
+      }
+
     </style>
   </head>
 
@@ -525,7 +598,7 @@
     <article class="app">
       <section class="settings">
         <aside>
-          <h3>About</h3>
+          <h1>Rampen&shy;Sau</h1>
           <p>
             RampenSau is lightweight, dependency free and fast JavaScript
             function written in TypeScript. It generates color ramps based on a
@@ -535,16 +608,17 @@
           <a class="projectlink" href="https://github.com/meodai/rampensau">Github</a>
         </aside>
         <aside>
-          <h3 class="code-title">Function Call</h3>
-          <code>
-            <pre data-code></pre>
-          </code>
-        </aside>
-        <aside>
           <h3>Settings</h3>
+          <button class="rnd-settings" data-randomize>Randomize Settings</button>
           <div class="settings__inner">
             <div data-pane></div>
           </div>
+        </aside>
+        <aside>
+          <h3 class="code-title">Function Call</h3>
+          <code>
+                    <pre data-code></pre>
+                  </code>
         </aside>
         <footer>
           <a href="https://www.elastiq.ch/" hreflang="en" class="ellogo"><svg xmlns="http://www.w3.org/2000/svg"
@@ -564,14 +638,13 @@
           </footer>
       </section>
       <section class="main">
-        <h1>Rampen&shy;Sau</h1>
 
         <!--p>
         <mark>Fette­Palette</mark> is a function that returns an object containing
         as many base colors, tints and shades as set in <code>colors</code>.
       </p-->
 
-        <aside class="section">
+        <aside class="section section--vertical section--first">
           <div class="section__text">
             <h2>Full Palette</h2>
             <p>
@@ -585,6 +658,15 @@
           </div>
           <div class="section__fig">
             <div data-colors></div>
+          </div>
+        </aside>
+
+        <aside class="section section--vertical">
+          <div class="section__text">
+            <h2>Randomly Generated Samples</h2>
+          </div>
+          <div class="section__fig">
+            <div data-rndsamples></div>
           </div>
         </aside>
 
@@ -608,7 +690,7 @@
         <aside class="section">
           <div class="section__text">
             <h2>Color Ramp</h2>
-            <p>Showing a gradient of 4 random colors sorted by light</p>
+            <p>All generated colors shown as a continuous gradient.</p>
           </div>
           <div class="section__fig">
             <div data-ramp></div>
@@ -625,8 +707,8 @@
               convert the the HSL colors into different color models. We
               deliberately choose to only deliver HSL
               <code>[0…360, 0…1, 0…1]</code> to keep the function fast and
-              lightweight. There are plenty of awesome color libraries if you
-              need to have the colors converted to an other color model.
+              lightweight as possible. There are plenty of awesome color libraries 
+              if you need to have the colors converted to an other color model.
             </p>
           </div>
           <div class="section__fig">
@@ -654,6 +736,61 @@
       } from "./index.mjs";
 
       console.clear();
+
+      const newOptions = () => {
+        return {
+          total: 5 + Math.floor(Math.random() * 5),
+          hCenter: Math.random() * 360,
+          hCycles: Math.random() * 1.25,
+          sRange: [
+            .2 + Math.random() * .4,
+            .25 + Math.random() * .7
+          ],
+          sEasing: x => Math.pow(x, 2),
+          lRange: [
+            Math.random() * .4,
+            .65 + Math.random() * .35
+          ],
+          lEasing: x => Math.pow(x, 1.25),
+        }
+      };
+      const shuffleArray = (array) => {
+        let arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      };
+
+      const palette = (colors, method) => {
+        let allColors = shuffleArray(colors);
+
+        let localcolors = [...allColors];
+        $pal.innerHTML = "";
+
+        $pal.appendChild(paletteDom(localcolors, 1));
+        localcolors = shuffleArray(localcolors);
+
+        for (let i = 0; i < 2; i++) {
+          $pal.appendChild(paletteDom(localcolors, 2));
+          localcolors = shuffleArray(localcolors);
+        }
+
+        for (let i = 0; i < 4 * 2; i++) {
+          $pal.appendChild(paletteDom(localcolors, 4));
+          localcolors = shuffleArray(localcolors);
+        }
+
+        $ramp.style.setProperty(
+          "background",
+          `linear-gradient(90deg, ${colors
+            .map(
+              (c) => `hsl(${c.hsl[0]},${c.hsl[1] * 100}%,${c.hsl[2] * 100}%)`
+            )
+            .join(",")})`
+        );
+      };
 
       class Pane {
         constructor(
@@ -729,7 +866,6 @@
         }
 
         _inputToValue($input, ref ,key, value) {
-
           if (!$input) {
             return;
           }
@@ -862,8 +998,54 @@
         pane.addInput(PARAMS, key, param.props);
       });
 
+      const createPalette = () => {
+        const colors = generateHSLRamp(newOptions());
+        const cssHSL = colors.map(color => `hsl(${color[0]}, ${color[1] * 100}%, ${color[2] * 100}%)`);
+
+        const $w = document.createElement('artile');
+        $w.classList.add('palette');
+        $w.style.setProperty('--gc', cssHSL.join());
+        $w.style.setProperty('--gs', cssHSL.map((c, i) => `${c} ${(i / colors.length) * 100}%, ${c} ${(i + 1) / colors.length * 100}%`).join());
+        $w.style.setProperty('--crnd', cssHSL[~~(cssHSL.length * Math.random())]);
+
+
+        cssHSL.forEach((color, i) => {
+
+          $w.style.setProperty(`--c${i}`, color);
+          const $swatch = document.createElement('div');
+          $swatch.classList.add('palette__swatch');
+          $swatch.style.setProperty('--color', color);
+          $w.appendChild($swatch);
+        });
+        return $w;
+      }
+
       const $pal = document.querySelector("[data-palette]");
       const $ramp = document.querySelector("[data-ramp]");
+      const $rndsamples = document.querySelector("[data-rndsamples]");
+      const $rnd = document.querySelector("[data-randomize]");
+
+      const np = () => {
+        $rndsamples.innerHTML = '';
+        new Array(28).fill(0).forEach(_ => {
+          $rndsamples.appendChild(createPalette())
+        })
+      }
+
+      np();
+
+      $rnd.addEventListener('click', () => {
+        const newParams = newOptions();
+        
+        Object.keys(newParams).forEach(key => {
+          PARAMS[key] = newParams[key];
+        });
+
+        console.log();
+        
+        pane.updateInputs();
+      })
+
       let colors = [];
 
       function paletteDom(colorArr, x = 1) {
@@ -885,7 +1067,6 @@
       }
 
       function bam() {
-        console.log(typeof PARAMS.total, PARAMS)
         colors = generateHSLRamp({
           total: PARAMS.total,
           hCenter: PARAMS.hCenter,
@@ -914,104 +1095,32 @@
         });
 
 
-/*
+
         document.querySelector(
           "[data-code]"
         ).innerHTML = `generateHSLRamp({
   total: ${PARAMS.total},
-  centerHue: ${PARAMS.centerHue},
-  hueCycle: ${PARAMS.hueCycle},
-  curveMethod: '${PARAMS.curveMethod}',
-  curveAccent: ${PARAMS.curveAccent},
-  offsetTint: ${PARAMS.offsetTint},
-  offsetShade: ${PARAMS.offsetShade},
-  tintShadeHueShift: ${PARAMS.tintShadeHueShift},
-  offsetCurveModTint: ${PARAMS.offsetCurveModTint},
-  offsetCurveModShade: ${PARAMS.offsetCurveModShade},
-  minSaturationLight: [${PARAMS.minSaturation}, ${PARAMS.minLight}],
-  maxSaturationLight: [${PARAMS.maxSaturation}, ${PARAMS.maxLight}],
+  hCenter: ${PARAMS.hCenter},
+  hCycles: ${PARAMS.hCycles},
+  sRange: [${PARAMS.minSaturation}, ${PARAMS.maxSaturation}],
+  lRange: [${PARAMS.minLight}, ${PARAMS.maxLight}],
 });
-`;*/
+`;
 
         document.querySelector("[data-colors]").innerHTML = colors.reduce(
           (r, c) => {
+            const bestcontrast = c.contrast.white < c.contrast.black ? "black" : "white";
+           
             return `${r}<i style="--w: ${1 / PARAMS.total}; --h: ${
               c.hsl[0]
-            }; --s: ${c.hsl[1] * 100}; --l: ${c.hsl[2] * 100}"></i>`;
+            }; --s: ${c.hsl[1] * 100}; --l: ${c.hsl[2] * 100}; --c: ${bestcontrast};">
+              <b>
+                ${c.hsl.map((c, i) => Math.round(c * (i ? 100 : 1)) + (i ? '%' : '°')).join(' ')}
+              </b>
+            </i>`;
           },
           ""
         );
-
-        const shuffleArray = (array) => {
-          let arr = [...array];
-          for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-          }
-          return arr;
-        };
-
-        const palette = (colors, method) => {
-          let allColors = shuffleArray(colors);
-
-          switch (method) {
-            case "random":
-              allColors = shuffleArray(colors);
-              break;
-            case "l2md":
-              allColors = [
-                lightColors[0],
-                mediumColors[0],
-                darkColors[0],
-                lightColors[1],
-              ];
-              break;
-            case "lmd2":
-              allColors = [
-                darkColors[0],
-                mediumColors[0],
-                lightColors[0],
-                darkColors[1],
-              ];
-              break;
-            case "lm2d":
-              allColors = [
-                mediumColors[1],
-                mediumColors[0],
-                lightColors[0],
-                darkColors[1],
-              ];
-              break;
-          }
-
-          let localcolors = [...allColors];
-          $pal.innerHTML = "";
-
-          $pal.appendChild(paletteDom(localcolors, 1));
-          localcolors = shuffleArray(localcolors);
-
-          for (let i = 0; i < 2; i++) {
-            $pal.appendChild(paletteDom(localcolors, 2));
-            localcolors = shuffleArray(localcolors);
-          }
-
-          for (let i = 0; i < 4 * 2; i++) {
-            $pal.appendChild(paletteDom(localcolors, 4));
-            localcolors = shuffleArray(localcolors);
-          }
-
-          $ramp.style.setProperty(
-            "background",
-            `linear-gradient(90deg, ${allColors
-              .slice(0, 4)
-              .sort((a, b) => b.hsl[2] - a.hsl[2])
-              .map(
-                (c) => `hsl(${c.hsl[0]},${c.hsl[1] * 100}%,${c.hsl[2] * 100}%)`
-              )
-              .join(",")})`
-          );
-        };
-
 
         palette(colors, "random");
         list(colors);
@@ -1100,7 +1209,7 @@
         }, 1000);
       }
 
-      $pal.addEventListener("pointerdown", () => {
+      $pal.addEventListener("pointerdown", (e) => {
         palette(colors, "random");
         timer = setInterval(() => palette(colors, "random"), 100);
       });
