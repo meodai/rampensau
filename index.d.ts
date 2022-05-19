@@ -17,14 +17,6 @@ export declare type GenerateHSLRampArgument = {
  */
 export declare function generateHSLRamp({ total, hCenter, hCycles, sRange, sEasing, lRange, lEasing, }?: GenerateHSLRampArgument): Vector3[];
 export declare const generateHSLRampParams: {
-    total: {
-        default: number;
-        props: {
-            min: number;
-            max: number;
-            step: number;
-        };
-    };
     hCenter: {
         default: number;
         props: {
@@ -41,22 +33,6 @@ export declare const generateHSLRampParams: {
             step: number;
         };
     };
-    minSaturation: {
-        default: number;
-        props: {
-            min: number;
-            max: number;
-            step: number;
-        };
-    };
-    maxSaturation: {
-        default: number;
-        props: {
-            min: number;
-            max: number;
-            step: number;
-        };
-    };
     minLight: {
         default: number;
         props: {
@@ -66,6 +42,30 @@ export declare const generateHSLRampParams: {
         };
     };
     maxLight: {
+        default: number;
+        props: {
+            min: number;
+            max: number;
+            step: number;
+        };
+    };
+    total: {
+        default: number;
+        props: {
+            min: number;
+            max: number;
+            step: number;
+        };
+    };
+    minSaturation: {
+        default: number;
+        props: {
+            min: number;
+            max: number;
+            step: number;
+        };
+    };
+    maxSaturation: {
         default: number;
         props: {
             min: number;
