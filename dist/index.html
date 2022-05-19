@@ -203,7 +203,8 @@
         flex-wrap: wrap;
       }
       [data-palette] .palette-sample {
-        outline: 4px solid var(--light);
+        box-shadow: inset 0 0 0 1px var(--dark),
+                    inset 0 0 0 2px var(--light);
       }
       .palette-sample {
         position: relative;
@@ -250,6 +251,7 @@
       }
       [data-ramp] {
         height: 10rem;
+        box-shadow: 0 0 0 1px var(--dark);
       }
       [data-list] {
         margin: 0 0 2rem;
@@ -675,6 +677,11 @@
         <aside class="section section--vertical">
           <div class="section__text">
             <h2>Randomly Generated Samples</h2>
+            <p>
+              All samples use the same <code>maxLight</code>, <code>maxLight</code>,
+              <code>maxSaturation</code> and <code>minSaturation</code> values but 
+              randomizes the other settings.
+            </p>
           </div>
           <div class="section__fig">
             <div data-rndsamples></div>
@@ -687,10 +694,7 @@
             <p>click & hold to re-generate</p>
             <p>
               Each of those squares shows four random entires from the generated
-              colors. In a single square every color is unique. But because the
-              returned colors are segragated in <code>light</code>,
-              <code>base</code> and <code>dark</code>. Depending on your needs,
-              you could make sure to have a certain amount of each.
+              colors. In a single square every color is unique.
             </p>
           </div>
           <div class="section__fig">
