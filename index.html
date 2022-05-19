@@ -1185,7 +1185,7 @@
         document.documentElement.style.setProperty(`--csecondlast`, bestContrastTobgc.hex);
 
         document.documentElement.style.setProperty(`--ts`, 
-          colors.reverse().map((c,i) => `0 ${i * 4}px ${c.hex}`).join()
+          colors.reverse().map((c,i) => `0 ${i * 4}px ${0}px ${c.hex}`).join()
         );
 
         document.documentElement.style.setProperty(`--tss`,
