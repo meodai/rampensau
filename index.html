@@ -118,12 +118,16 @@
       }
 
       h1 {
+        position: relative;
+        z-index: -1;
         font-size: calc(.64rem + 3vw);
         font-weight: 900;
         letter-spacing: -0.055em;
         margin-top: 0;
+        /*margin-bottom: var(--tss);*/
         line-height: 0.85;
         margin-left: -0.045em;
+        text-shadow: var(--ts);
       }
 
       h2,
@@ -267,6 +271,7 @@
         padding-bottom: 0.5em;
       }
 
+
       [data-list] h3 {
         display: none;
         margin-top: 0;
@@ -280,6 +285,8 @@
         width: 100%;
         height: 1.2em;
         margin-bottom: 0.25rem;
+
+        box-shadow: 0 0 0 2px var(--dark);
       }
       .swatch::after {
         position: absolute;
@@ -614,10 +621,10 @@
         <aside>
           <h1>Rampen&shy;Sau</h1>
           <p>
-            RampenSau is lightweight, dependency free and fast JavaScript
-            function written in TypeScript. It generates color ramps based on a
-            curve within the HSL color model. This page serves as preview for
-            the variety of options the function takes.
+            Rampensau is lightweight, dependency free and blazing fast JavaScript
+            function written in TypeScript. It is using hue cycling and easing functions,
+            to generate color pleasing ramps.
+            This page serves as preview for the variety of options the function takes.
           </p>
           <a class="projectlink" href="https://github.com/meodai/rampensau">Github</a>
         </aside>
@@ -1060,13 +1067,10 @@
           PARAMS[key] = newParams[key];
         });
 
-
         pane.updateInputs();
       }
 
-      $rnd.addEventListener('click', () => {
-        newPalette()
-      })
+      $rnd.addEventListener('click', newPalette)
 
 
       let colors = [];
@@ -1164,8 +1168,16 @@
         const bestContrastTobgc = remColors.sort(
           (a, b) => culori.wcagContrast(a.hex, bgc.hex) - culori.wcagContrast(b.hex, bgc.hex)
         ).pop();
-        console.log(bestContrastTobgc)
+
         document.documentElement.style.setProperty(`--csecondlast`, bestContrastTobgc.hex);
+
+        document.documentElement.style.setProperty(`--ts`, 
+          colors.reverse().map((c,i) => `0 ${i * 4}px ${c.hex}`).join()
+        );
+
+        document.documentElement.style.setProperty(`--tss`,
+          (colors.length * 4) + 'px'
+        );
 
         names(colors);
         np();
