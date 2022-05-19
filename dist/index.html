@@ -4,23 +4,23 @@
   <head>
     <meta charset="utf-8" />
     <!-- Primary Meta Tags -->
-    <title>RampenSau — Color ramp generator using curves within the HSV color model</title>
-    <meta name="title" content="FettePalette — Color ramp generator using curves within the HSV color model">
-    <meta name="description" content="FettePalette is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSV color model. This page serves as preview for the variety of options the function takes.">
+    <title>RampenSau — Color ramp generator using curves within the HSL color model</title>
+    <meta name="title" content="FettePalette — Color ramp generator using curves within the HSL color model">
+    <meta name="description" content="FettePalette is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSL color model. This page serves as preview for the variety of options the function takes.">
     <meta name="keywords" content="color, colour, generative, generative-art, generative-design, palette, colorpalette">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://meodai.github.io/fettepalette/">
-    <meta property="og:title" content="FettePalette — Color ramp generator using curves within the HSV color model">
-    <meta property="og:description" content="FettePalette is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSV color model. This page serves as preview for the variety of options the function takes.">
+    <meta property="og:title" content="FettePalette — Color ramp generator using curves within the HSL color model">
+    <meta property="og:description" content="FettePalette is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSL color model. This page serves as preview for the variety of options the function takes.">
     <meta property="og:image" content="https://meodai.github.io/fettepalette/socialfb.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://meodai.github.io/fettepalette/">
-    <meta property="twitter:title" content="FettePalette — Color ramp generator using curves within the HSV color model">
-    <meta property="twitter:description" content="FettePalette is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSV color model. This page serves as preview for the variety of options the function takes.FettePalette is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSV color model. This page serves as preview for the variety of options the function takes.">
+    <meta property="twitter:title" content="FettePalette — Color ramp generator using curves within the HSL color model">
+    <meta property="twitter:description" content="FettePalette is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSL color model. This page serves as preview for the variety of options the function takes.FettePalette is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSL color model. This page serves as preview for the variety of options the function takes.">
     <meta property="twitter:image" content="https://meodai.github.io/fettepalette/socialfb.png">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -613,7 +613,7 @@
           <p>
             RampenSau is lightweight, dependency free and fast JavaScript
             function written in TypeScript. It generates color ramps based on a
-            curve within the HSV color model. This page serves as preview for
+            curve within the HSL color model. This page serves as preview for
             the variety of options the function takes.
           </p>
           <a class="projectlink" href="https://github.com/meodai/rampensau">Github</a>
@@ -748,8 +748,8 @@
 
       console.clear();
 
-      const newOptions = () => {
-        return {
+      const newOptions = (overwrites = {}) => {
+        return {...{
           total: 5 + Math.floor(Math.random() * 5),
           hCenter: Math.random() * 360,
           hCycles: Math.random() * 1.25,
@@ -763,7 +763,7 @@
             .65 + Math.random() * .35
           ],
           lEasing: x => Math.pow(x, 1.25),
-        }
+        }, ...overwrites};
       };
       const shuffleArray = (array) => {
         let arr = [...array];
@@ -1010,7 +1010,10 @@
       });
 
       const createPalette = () => {
-        const colors = generateHSLRamp(newOptions());
+        const colors = generateHSLRamp(newOptions({
+          sRange: PARAMS.sRange,
+          lRange: PARAMS.lRange,
+        }));
         const cssHSL = colors.map(color => `hsl(${color[0]}, ${color[1] * 100}%, ${color[2] * 100}%)`);
 
         const $w = document.createElement('artile');
@@ -1114,11 +1117,11 @@
         document.querySelector(
           "[data-code]"
         ).innerHTML = `generateHSLRamp({
-  total: ${PARAMS.total},
-  hCenter: ${PARAMS.hCenter},
-  hCycles: ${PARAMS.hCycles},
-  sRange: [${PARAMS.minSaturation}, ${PARAMS.maxSaturation}],
-  lRange: [${PARAMS.minLight}, ${PARAMS.maxLight}],
+  total: <i>${PARAMS.total}</i>,
+  hCenter: <i>${PARAMS.hCenter}</i>,
+  hCycles: <i>${PARAMS.hCycles}</i>,
+  sRange: <i>[${PARAMS.minSaturation}, ${PARAMS.maxSaturation}]</i>,
+  lRange: <i>[${PARAMS.minLight}, ${PARAMS.maxLight}]</i>,
 });
 `;
 
@@ -1160,6 +1163,7 @@
         document.documentElement.style.setProperty(`--csecondlast`, bestContrastTobgc.hex);
 
         names(colors);
+        np();
       }
        
       const xmlns = 'http://www.w3.org/2000/svg';
