@@ -202,7 +202,7 @@
       [data-colors] i {
         flex: 1 0 auto;
         width 100%;
-        background: hsl(var(--h), calc(var(--s) * 1%), calc(var(--l) * 1%));
+        background: var(--color);
         position: relative;
       }
       [data-colors] b {
@@ -822,7 +822,7 @@
           "background",
           `linear-gradient(90deg, ${colors
             .map(
-              (c) => `hsl(${c.hsl[0]},${c.hsl[1] * 100}%,${c.hsl[2] * 100}%)`
+              (c) => c.hex
             )
             .join(",")})`
         );
@@ -1028,6 +1028,12 @@
 
       const PARAMS = {};
 
+      PARAMS['Color Mode'] = 'hsl';
+
+      pane.addInput(PARAMS, 'Color Mode', {options: 
+        ['hsl', 'okhsl', 'hsv', 'okhsv',  'hsi', 'hwb']
+      });
+
       Object.keys(generateHSLRampParams).forEach((key) => {
         const param = generateHSLRampParams[key];
         PARAMS[key] = param.default;
@@ -1035,11 +1041,14 @@
       });
 
       const createPalette = () => {
-        const colors = generateHSLRamp(newOptions({
+        let colors = generateHSLRamp(newOptions({
           sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
           lRange: [PARAMS.minLight, PARAMS.maxLight],
         }));
-        const cssHSL = colors.map(color => `hsl(${color[0]}, ${color[1] * 100}%, ${color[2] * 100}%)`);
+
+        colors = hslToColorObj(colors)
+
+        const cssHSL = colors.map(color => color.hex);
 
         const $w = document.createElement('artile');
         $w.classList.add('palette');
@@ -1099,13 +1108,53 @@
         for (let i = 0; i < 4; i++) {
           $div.style.setProperty(
             `--col-${i}`,
-            `hsl(${colorArr[i].hsl[0]},${colorArr[i].hsl[1] * 100}%,${
-              colorArr[i].hsl[2] * 100
-            }%)`
+            colorArr[i].hex
           );
         }
 
         return $div;
+      }
+
+      function hslToColorObj(colors) {
+        const colorMode = PARAMS['Color Mode'];
+        // Mutate colors object
+        return colors.map(([h, s, l]) => {
+          const channels = {};
+
+          if (colorMode === 'hsl' || colorMode === 'okhsl') {
+            channels.h = h;
+            channels.s = s;
+            channels.l = l;
+          } else if (colorMode === 'hsv' || colorMode === 'okhsv') {
+            channels.h = h;
+            channels.s = s;
+            channels.v = l;
+          } else if (colorMode === 'hsi') {
+            channels.h = h;
+            channels.s = s;
+            channels.i = l;
+          } else if (colorMode === 'hwb') {
+            channels.h = h;
+            channels.w = s;
+            channels.b = l;
+          }
+
+          const { r, g, b } = culori.converter("rgb")({
+            mode: colorMode,
+            ...channels
+          });
+
+          return {
+            hsl: [h, s, l],
+            rgb: [r * 255, g * 255, b * 255],
+            hex: culori.formatHex({ mode: colorMode, ...channels }),
+            contrast: {
+              white: culori.wcagContrast("#ffffff", { mode: 'hsl', ...channels }),
+              black: culori.wcagContrast("#000000", { mode: 'hsl', ...channels }),
+            },
+          };
+        });
+
       }
 
       function bam() {
@@ -1117,26 +1166,9 @@
           lRange: [PARAMS.minLight, PARAMS.maxLight],
         });
 
+        const colorMode = PARAMS['Color Mode'];
         // Mutate colors object
-        colors = colors.map(([h, s, l]) => {
-          const { r, g, b } = culori.converter("rgb")({
-            mode: "hsl",
-            h,
-            s,
-            l,
-          });
-          return {
-            hsl: [h, s, l],
-            rgb: [r * 255, g * 255, b * 255],
-            hex: culori.formatHex({ mode: "hsl", h, s, l }),
-            contrast: {
-              white: culori.wcagContrast("#ffffff", { mode: "hsl", h, s, l }),
-              black: culori.wcagContrast("#000000", { mode: "hsl", h, s, l }),
-            },
-          };
-        });
-
-
+        colors = hslToColorObj(colors);
 
         document.querySelector(
           "[data-code]"
@@ -1153,9 +1185,7 @@
           (r, c) => {
             const bestcontrast = c.contrast.white < c.contrast.black ? "black" : "white";
            
-            return `${r}<i style="--w: ${1 / PARAMS.total}; --h: ${
-              c.hsl[0]
-            }; --s: ${c.hsl[1] * 100}; --l: ${c.hsl[2] * 100}; --c: ${bestcontrast};">
+            return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.hex}; --c: ${bestcontrast};">
               <b>
                 ${c.hsl.map((c, i) => Math.round(c * (i ? 100 : 1)) + (i ? '%' : '°')).join(' ')}
               </b>
