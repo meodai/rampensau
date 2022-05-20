@@ -47,8 +47,45 @@ export function generateHSLRamp({
   return [...[firstColor], ...ramp];
 }
 
+export function map(
+  n: number,
+  start1: number,
+  stop1: number,
+  start2: number,
+  stop2: number
+): number {
+  return ((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2;
+}
+
+export function scaleVector(
+  vector: number[],
+  originalScale: [number, number][] = [
+    [0, 360],
+    [0, 1],
+    [0, 1],
+  ],
+  targetScale: [number, number][] = [
+    [0, 360],
+    [0, 100],
+    [0, 100],
+  ]
+): number[] {
+  return vector.map((vec, i) =>
+    map(
+      vec,
+      originalScale?.[i]?.[0] || 0,
+      originalScale?.[i]?.[1] || 1,
+      targetScale?.[i]?.[0] || 0,
+      targetScale?.[i]?.[1] || 100
+    )
+  );
+}
+
 export function hslColorsToCSS(colors: Vector3[]): string[] {
-  return colors.map(([h, s, l]) => `hsl(${h}, ${s * 100}%, ${l * 100}%)`);
+  return colors.map((hsl) => {
+    const [h, s, l] = scaleVector(hsl);
+    return `hsl(${h}, ${s}%, ${l}%)`;
+  });
 }
 
 export const generateHSLRampParams = {

@@ -20,8 +20,25 @@ function generateHSLRamp({
   ]);
   return [...[firstColor], ...ramp];
 }
+function map(n, start1, stop1, start2, stop2) {
+  return (n - start1) / (stop1 - start1) * (stop2 - start2) + start2;
+}
+function scaleVector(vector, originalScale = [
+  [0, 360],
+  [0, 1],
+  [0, 1]
+], targetScale = [
+  [0, 360],
+  [0, 100],
+  [0, 100]
+]) {
+  return vector.map((vec, i) => map(vec, originalScale?.[i]?.[0] || 0, originalScale?.[i]?.[1] || 1, targetScale?.[i]?.[0] || 0, targetScale?.[i]?.[1] || 100));
+}
 function hslColorsToCSS(colors) {
-  return colors.map(([h, s, l]) => `hsl(${h}, ${s * 100}%, ${l * 100}%)`);
+  return colors.map((hsl) => {
+    const [h, s, l] = scaleVector(hsl);
+    return `hsl(${h}, ${s}%, ${l}%)`;
+  });
 }
 var generateHSLRampParams = {
   hCenter: {
@@ -56,5 +73,7 @@ var generateHSLRampParams = {
 export {
   generateHSLRamp,
   generateHSLRampParams,
-  hslColorsToCSS
+  hslColorsToCSS,
+  map,
+  scaleVector
 };

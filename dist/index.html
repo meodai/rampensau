@@ -769,6 +769,7 @@
       import {
         generateHSLRamp,
         generateHSLRampParams,
+        scaleVector,
       } from "./index.mjs";
 
       console.clear();
@@ -1185,10 +1186,9 @@
         document.querySelector("[data-colors]").innerHTML = colors.reduce(
           (r, c) => {
             const bestcontrast = c.contrast.white < c.contrast.black ? "black" : "white";
-           
             return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.hex}; --c: ${bestcontrast};">
               <b>
-                ${c.hsl.map((c, i) => Math.round(c * (i ? 100 : 1)) + (i ? '%' : '°')).join(' ')}
+                ${scaleVector(c.hsl).map((c, i) => Math.round(c) + (i ? '%' : '°')).join(' ')}
               </b>
             </i>`;
           },
