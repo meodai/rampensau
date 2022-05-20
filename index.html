@@ -95,6 +95,22 @@
         content: '↗';
       }
 
+      [data-settingsring] {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: conic-gradient(
+            hsl(360, 100%, 50%),
+            hsl(315, 100%, 50%),
+            hsl(270, 100%, 50%),
+            hsl(225, 100%, 50%),
+            hsl(180, 100%, 50%),
+            hsl(135, 100%, 50%),
+            hsl(90, 100%, 50%),
+            hsl(45, 100%, 50%),
+            hsl(0, 100%, 50%));
+      }
+
       .main {
         margin-left: var(--sidebarwidth);
         background: var(--light);
@@ -634,16 +650,20 @@
         <aside>
           <h1>Rampen&shy;Sau</h1>
           <p>
-            Rampensau is lightweight, dependency free and blazing fast JavaScript
+            Rampensau is a lightweight, dependency-free and blazingly fast JavaScript 
             function written in TypeScript. It makes use of hue cycling and easing 
-            functions to generate pleasing color ramps.
-            This page serves as preview for the variety of options the function supports.
+            functions to generate pleasing color ramps. 
+            This page serves as a preview of the variety of options the function 
+            supports.
           </p>
           <a class="projectlink" href="https://github.com/meodai/rampensau">Github</a>
         </aside>
         <aside>
           <h3>Settings</h3>
           <button class="rnd-settings" data-randomize>Randomize Settings</button>
+          <!--div class="settings__inner">
+            <div data-settingsring></div>
+          </div-->
           <div class="settings__inner">
             <div data-pane></div>
           </div>
