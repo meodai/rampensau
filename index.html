@@ -81,8 +81,8 @@
         border: 2px solid currentColor;
         display: block;
         width: 100%;
-        margin-bottom: 2.5rem;
-        box-shadow: var(--ts);
+        /*margin-bottom: 2.5rem;*/
+        /*box-shadow: var(--ts);*/
       }
 
       .projectlink {
@@ -95,20 +95,66 @@
         content: '↗';
       }
 
-      [data-settingsring] {
-        width: 2rem;
-        height: 2rem;
+      /*
+        --total
+        --hCenter
+        --hCycles
+        --sRangeMin
+        --sRangeMax
+        --lRangeMin
+        --lRangeMax
+      */
+
+      [data-viz] {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1;
+      }
+
+      [data-viz] .disc {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        width: 7rem;
+        height: 7rem;
+        transform: translate(-50%, 0) translateY(calc(-75% * var(--c-i)));
+      }
+
+      [data-viz] .disc::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         border-radius: 50%;
         background: conic-gradient(
-            hsl(360, 100%, 50%),
-            hsl(315, 100%, 50%),
-            hsl(270, 100%, 50%),
-            hsl(225, 100%, 50%),
-            hsl(180, 100%, 50%),
-            hsl(135, 100%, 50%),
-            hsl(90, 100%, 50%),
-            hsl(45, 100%, 50%),
-            hsl(0, 100%, 50%));
+            hsl(360, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+            hsl(315, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+            hsl(270, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+            hsl(225, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+            hsl(180, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+            hsl(135, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+            hsl(90, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+            hsl(45, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+            hsl(0, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)));
+        mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
+        -webkit-mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
+      }
+
+      [data-viz] .disc::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: .6rem;
+        border-radius: 50%;
+        height: .6rem;
+        transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.4rem);
+        transform-origin: 50% 50%;
+        background: var(--light);
+        box-shadow: 0 0 0 1px var(--dark);
+        background: hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
       }
 
       .main {
@@ -662,9 +708,9 @@
         <aside>
           <h3>Settings</h3>
           <button class="rnd-settings" data-randomize>Randomize Settings</button>
-          <!--div class="settings__inner">
-            <div data-settingsring></div>
-          </div-->
+          <div class="settings__inner">
+            <div data-viz></div>
+          </div>
           <div class="settings__inner">
             <div data-pane></div>
           </div>
@@ -1180,6 +1226,27 @@
 
       }
 
+      const $viz = document.querySelector("[data-viz]");
+
+      function createDisc(color, i) {
+        const $disc = document.createElement("div");
+        $disc.classList.add("disc");
+        $disc.style.setProperty("--c-h", color.hsl[0]);
+        $disc.style.setProperty("--c-s", color.hsl[1]);
+        $disc.style.setProperty("--c-l", color.hsl[2]);
+        $disc.style.setProperty("--c-i", i);
+
+        return $disc;
+      }
+
+      function viz (colors) {
+        $viz.innerHTML = '';
+        
+        colors.forEach((color, i) => {
+          $viz.appendChild(createDisc(color, i/colors.length));
+        })
+      }
+
       function bam() {
         colors = generateHSLRamp({
           total: PARAMS.total,
@@ -1189,9 +1256,19 @@
           lRange: [PARAMS.minLight, PARAMS.maxLight],
         });
 
+        document.documentElement.style.setProperty('--total', PARAMS.total);
+        document.documentElement.style.setProperty('--hCenter', PARAMS.hCenter);
+        document.documentElement.style.setProperty('--hCycles', PARAMS.hCycles);
+        document.documentElement.style.setProperty('--sRangeMin', PARAMS.minSaturation);
+        document.documentElement.style.setProperty('--sRangeMax', PARAMS.maxSaturation);
+        document.documentElement.style.setProperty('--lRangeMin', PARAMS.minLight);
+        document.documentElement.style.setProperty('--lRangeMax', PARAMS.maxLight);
+
         const colorMode = PARAMS['Color Mode'];
         // Mutate colors object
         colors = hslToColorObj(colors);
+
+        viz(colors);
 
         document.querySelector(
           "[data-code]"
@@ -1314,11 +1391,9 @@
         $names.innerHTML = `<strong style="--col: #fff">…</strong>`;
         clearTimeout(timer);
         timer = setTimeout(() => {
-          let hexes = colors.map((c) => c.hex.replace("#", ""));
+          const hexes = colors.map((c) => c.hex.replace("#", ""));
           fetch(
-            `https://api.color.pizza/v1/?values=${hexes.join(
-              ","
-            )}&noduplicates=true&goodnamesonly=true}`
+            `https://api.color.pizza/v1/?values=${hexes.join()}&goodnamesonly=true&noduplicates=true`
           )
             .then((r) => r.json())
             .then((d) => {
