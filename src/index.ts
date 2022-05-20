@@ -3,12 +3,13 @@ export type Vector2 = [number, number];
 export type Vector3 = [number, number, number];
 export type GenerateHSLRampArgument = {
   total?: number;
-  hCenter?: number;
+  hStart?: number;
   hCycles?: number;
   sRange?: Vector2;
   lRange?: Vector2;
   sEasing?: FuncNumberReturn;
   lEasing?: FuncNumberReturn;
+  slScale?: number;
 };
 
 /**
@@ -18,7 +19,7 @@ export type GenerateHSLRampArgument = {
  */
 export function generateHSLRamp({
   total = 9,
-  hCenter = Math.random() * 360,
+  hStart = Math.random() * 360,
   hCycles = 1,
   sRange = [0.4, 0.35],
   sEasing = (x) => Math.pow(x, 2),
@@ -28,9 +29,7 @@ export function generateHSLRamp({
   const hueSlice: number = 360 / total;
   const hues: number[] = new Array(total)
     .fill(0)
-    .map(
-      (_, i): number => (360 + (-180 + hCenter + i * hCycles * hueSlice)) % 360
-    );
+    .map((_, i): number => (360 + (hStart + i * hCycles * hueSlice)) % 360);
   const lDiff: number = lRange[1] - lRange[0];
   const sDiff: number = sRange[1] - sRange[0];
 
@@ -89,7 +88,7 @@ export function hslColorsToCSS(colors: Vector3[]): string[] {
 }
 
 export const generateHSLRampParams = {
-  hCenter: {
+  hStart: {
     default: 0,
     props: { min: 0, max: 360, step: 0.1 },
   },

@@ -18,7 +18,7 @@ var rampensau = (() => {
   });
   function generateHSLRamp({
     total = 9,
-    hCenter = Math.random() * 360,
+    hStart = Math.random() * 360,
     hCycles = 1,
     sRange = [0.4, 0.35],
     sEasing = (x) => Math.pow(x, 2),
@@ -26,7 +26,7 @@ var rampensau = (() => {
     lEasing = (x) => Math.pow(x, 1.5)
   } = {}) {
     const hueSlice = 360 / total;
-    const hues = new Array(total).fill(0).map((_, i) => (360 + (-180 + hCenter + i * hCycles * hueSlice)) % 360);
+    const hues = new Array(total).fill(0).map((_, i) => (360 + (hStart + i * hCycles * hueSlice)) % 360);
     const lDiff = lRange[1] - lRange[0];
     const sDiff = sRange[1] - sRange[0];
     const firstColor = [hues.pop() || 0, sRange[0], lRange[0]];
@@ -61,7 +61,7 @@ var rampensau = (() => {
     });
   }
   var generateHSLRampParams = {
-    hCenter: {
+    hStart: {
       default: 0,
       props: { min: 0, max: 360, step: 0.1 }
     },

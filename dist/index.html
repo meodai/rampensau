@@ -97,7 +97,7 @@
 
       /*
         --total
-        --hCenter
+        --hStart
         --hCycles
         --sRangeMin
         --sRangeMax
@@ -844,7 +844,7 @@
       const newOptions = (overwrites = {}) => {
         return {...{
           total: 5 + Math.floor(Math.random() * 5),
-          hCenter: Math.random() * 360,
+          hStart: Math.random() * 360,
           hCycles: Math.random() * 1.25,
           sRange: [
             .2 + Math.random() * .4,
@@ -1250,14 +1250,14 @@
       function bam() {
         colors = generateHSLRamp({
           total: PARAMS.total,
-          hCenter: PARAMS.hCenter,
+          hStart: PARAMS.hStart,
           hCycles: PARAMS.hCycles,
           sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
           lRange: [PARAMS.minLight, PARAMS.maxLight],
         });
 
         document.documentElement.style.setProperty('--total', PARAMS.total);
-        document.documentElement.style.setProperty('--hCenter', PARAMS.hCenter);
+        document.documentElement.style.setProperty('--hStart', PARAMS.hStart);
         document.documentElement.style.setProperty('--hCycles', PARAMS.hCycles);
         document.documentElement.style.setProperty('--sRangeMin', PARAMS.minSaturation);
         document.documentElement.style.setProperty('--sRangeMax', PARAMS.maxSaturation);
@@ -1274,7 +1274,7 @@
           "[data-code]"
         ).innerHTML = `generateHSLRamp({
   total: <i>${PARAMS.total}</i>,
-  hCenter: <i>${PARAMS.hCenter}</i>,
+  hStart: <i>${PARAMS.hStart}</i>,
   hCycles: <i>${PARAMS.hCycles}</i>,
   sRange: <i>[${PARAMS.minSaturation}, ${PARAMS.maxSaturation}]</i>,
   lRange: <i>[${PARAMS.minLight}, ${PARAMS.maxLight}]</i>,
