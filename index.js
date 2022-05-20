@@ -11,7 +11,10 @@ var rampensau = (() => {
   var src_exports = {};
   __export(src_exports, {
     generateHSLRamp: () => generateHSLRamp,
-    generateHSLRampParams: () => generateHSLRampParams
+    generateHSLRampParams: () => generateHSLRampParams,
+    hslColorsToCSS: () => hslColorsToCSS,
+    map: () => map,
+    scaleVector: () => scaleVector
   });
   function generateHSLRamp({
     total = 9,
@@ -33,6 +36,29 @@ var rampensau = (() => {
       lRange[0] + lDiff * lEasing((i + 1) / (total - 1))
     ]);
     return [...[firstColor], ...ramp];
+  }
+  function map(n, start1, stop1, start2, stop2) {
+    return (n - start1) / (stop1 - start1) * (stop2 - start2) + start2;
+  }
+  function scaleVector(vector, originalScale = [
+    [0, 360],
+    [0, 1],
+    [0, 1]
+  ], targetScale = [
+    [0, 360],
+    [0, 100],
+    [0, 100]
+  ]) {
+    return vector.map((vec, i) => {
+      var _a, _b, _c, _d;
+      return map(vec, ((_a = originalScale == null ? void 0 : originalScale[i]) == null ? void 0 : _a[0]) || 0, ((_b = originalScale == null ? void 0 : originalScale[i]) == null ? void 0 : _b[1]) || 1, ((_c = targetScale == null ? void 0 : targetScale[i]) == null ? void 0 : _c[0]) || 0, ((_d = targetScale == null ? void 0 : targetScale[i]) == null ? void 0 : _d[1]) || 100);
+    });
+  }
+  function hslColorsToCSS(colors) {
+    return colors.map((hsl) => {
+      const [h, s, l] = scaleVector(hsl);
+      return `hsl(${h}, ${s}%, ${l}%)`;
+    });
   }
   var generateHSLRampParams = {
     hCenter: {
