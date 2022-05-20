@@ -34,7 +34,7 @@ import { generateHSLRamp } from 'rampensau';
 
 function generateHSLRamp  ({
   total   : 9,                          // number of colors in the ramp
-  hCenter : Math.random() * 360,        // hue center at the center of the ramp
+  hStart  : Math.random() * 360,        // hue center at the start of the ramp
   hCycles : 1,                          // number of hue cycles 
                                         // (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
   sRange  : [0.4, 0.35],                // saturation range
@@ -52,7 +52,7 @@ Function returns an array of colors in HSL format (`[0…360,0…1,0…1]`).
 #### Options
 
 - `total` int 3…∞ → Amount of base colors.
-- `hCenter` float 0…360 → 0 Red, 180 Teal etc..
+- `hStart` float 0…360 → 0 Red, 180 Teal etc..
 - `hCycles` float -∞…0…+∞ → Number of hue cycles. (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
 - `sRange` array [0…1,0…1] → Saturation Range
 - `sEasing` function(x) → Saturation easing function

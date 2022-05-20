@@ -140,6 +140,7 @@
             hsl(0, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)));
         mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
         -webkit-mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
+        /*transform: scale(calc(1 - var(--c-l) + .5));*/
       }
 
       [data-viz] .disc::after {
