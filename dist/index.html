@@ -151,10 +151,10 @@
         width: .6rem;
         border-radius: 50%;
         height: .6rem;
-        transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.4rem);
+        transform: translate(-50%, -50%) rotate(calc(var(--c-h) * -1deg)) translateY(-3.3rem);
         transform-origin: 50% 50%;
-        background: var(--light);
-        box-shadow: 0 0 0 1px var(--dark);
+        box-shadow: 0 0 0 1px var(--dark),
+                    0 0 0 2px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
         background: hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
       }
 
@@ -740,11 +740,6 @@
           </footer>
       </section>
       <section class="main">
-
-        <!--p>
-        <mark>Fette­Palette</mark> is a function that returns an object containing
-        as many base colors, tints and shades as set in <code>colors</code>.
-      </p-->
 
         <aside class="section section--vertical section--first">
           <div class="section__text">
