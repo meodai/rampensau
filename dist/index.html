@@ -1028,16 +1028,17 @@
 
       const PARAMS = {};
 
-      PARAMS['Color Mode'] = 'hsl';
-
-      pane.addInput(PARAMS, 'Color Mode', {options: 
-        ['hsl', 'okhsl', 'hsv', 'okhsv',  'hsi', 'hwb']
-      });
-
       Object.keys(generateHSLRampParams).forEach((key) => {
         const param = generateHSLRampParams[key];
         PARAMS[key] = param.default;
         pane.addInput(PARAMS, key, param.props);
+      });
+
+      PARAMS['Color Mode'] = 'hsl';
+
+      pane.addInput(PARAMS, 'Color Mode', {
+        options:
+          ['hsl', 'okhsl', 'hsv', 'okhsv', 'hsi', 'hwb']
       });
 
       const createPalette = () => {
