@@ -1314,11 +1314,11 @@
         $names.innerHTML = `<strong style="--col: #fff">…</strong>`;
         clearTimeout(timer);
         timer = setTimeout(() => {
-          let hexes = colors.map((c) => c.hex.replace("#", ""));
+          const hexes = colors.map((c) => c.hex.replace("#", ""));
           fetch(
             `https://api.color.pizza/v1/?values=${hexes.join(
               ","
-            )}&noduplicates=true&goodnamesonly=true}`
+            )}&goodnamesonly=true&noduplicates=true`
           )
             .then((r) => r.json())
             .then((d) => {
