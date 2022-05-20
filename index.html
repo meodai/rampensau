@@ -109,6 +109,7 @@
         position: relative;
         width: 100%;
         aspect-ratio: 1;
+        perspective: 300px;
       }
 
       [data-viz] .disc {
@@ -117,7 +118,7 @@
         left: 50%;
         width: 7rem;
         height: 7rem;
-        transform: translate(-50%, 0) translateY(calc(-75% * var(--c-i)));
+        transform: translate(-50%, 0) translateY(calc(-100% * var(--c-i))) rotateX(34deg);
       }
 
       [data-viz] .disc::before {
