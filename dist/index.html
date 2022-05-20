@@ -905,7 +905,7 @@
           if (!$input) {
             return;
           }
-          console.log($input)
+
           if ( $input.matches('select') ) {
             Array.from($input.querySelectorAll('option')).forEach($input => 
               $input.selected = $input.value === (value || ref[key])
@@ -1036,8 +1036,8 @@
 
       const createPalette = () => {
         const colors = generateHSLRamp(newOptions({
-          sRange: PARAMS.sRange,
-          lRange: PARAMS.lRange,
+          sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
+          lRange: [PARAMS.minLight, PARAMS.maxLight],
         }));
         const cssHSL = colors.map(color => `hsl(${color[0]}, ${color[1] * 100}%, ${color[2] * 100}%)`);
 
@@ -1058,6 +1058,8 @@
         });
         return $w;
       }
+
+
 
       const $pal = document.querySelector("[data-palette]");
       const $ramp = document.querySelector("[data-ramp]");
