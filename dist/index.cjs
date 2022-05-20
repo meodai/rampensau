@@ -9,7 +9,8 @@ var __export = (target, all) => {
 // src/index.ts
 __export(exports, {
   generateHSLRamp: () => generateHSLRamp,
-  generateHSLRampParams: () => generateHSLRampParams
+  generateHSLRampParams: () => generateHSLRampParams,
+  hslColorsToCSS: () => hslColorsToCSS
 });
 function generateHSLRamp({
   total = 9,
@@ -31,6 +32,9 @@ function generateHSLRamp({
     lRange[0] + lDiff * lEasing((i + 1) / (total - 1))
   ]);
   return [...[firstColor], ...ramp];
+}
+function hslColorsToCSS(colors) {
+  return colors.map(([h, s, l]) => `hsl(${h}, ${s * 100}%, ${l * 100}%)`);
 }
 var generateHSLRampParams = {
   hCenter: {

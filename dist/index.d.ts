@@ -16,6 +16,7 @@ export declare type GenerateHSLRampArgument = {
  * @returns {Array<number>} - The color ramp.
  */
 export declare function generateHSLRamp({ total, hCenter, hCycles, sRange, sEasing, lRange, lEasing, }?: GenerateHSLRampArgument): Vector3[];
+export declare function hslColorsToCSS(colors: Vector3[]): string[];
 export declare const generateHSLRampParams: {
     hCenter: {
         default: number;

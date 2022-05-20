@@ -20,6 +20,9 @@ function generateHSLRamp({
   ]);
   return [...[firstColor], ...ramp];
 }
+function hslColorsToCSS(colors) {
+  return colors.map(([h, s, l]) => `hsl(${h}, ${s * 100}%, ${l * 100}%)`);
+}
 var generateHSLRampParams = {
   hCenter: {
     default: 0,
@@ -52,5 +55,6 @@ var generateHSLRampParams = {
 };
 export {
   generateHSLRamp,
-  generateHSLRampParams
+  generateHSLRampParams,
+  hslColorsToCSS
 };

@@ -47,6 +47,10 @@ export function generateHSLRamp({
   return [...[firstColor], ...ramp];
 }
 
+export function hslColorsToCSS(colors: Vector3[]): string[] {
+  return colors.map(([h, s, l]) => `hsl(${h}, ${s * 100}%, ${l * 100}%)`);
+}
+
 export const generateHSLRampParams = {
   hCenter: {
     default: 0,
