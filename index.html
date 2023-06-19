@@ -400,6 +400,12 @@
       .color-info button {
         font-size: 0.6rem;
         margin-top: 0.5em;
+
+        text-align: left;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 100%;
       }
       .color-info__contrast {
         position: absolute;
@@ -1359,7 +1365,7 @@
 
       const printColors = (arr, simple, names) =>
         arr
-          .map(({ hsl, rgb, hex, contrast }, i) => {
+          .map(({ hsl, rgb, hex, css, contrast }, i) => {
             if (simple) {
               return `
           <li class="swatch swatch--simple" style="--col:${hex}; --coltext: ${
@@ -1386,7 +1392,7 @@
                 <button data-copy title="Click to copy">rgb(${Math.floor(
                   rgb[0]
                 )},${Math.floor(rgb[1])},${Math.floor(rgb[2])})</button>
-                <button data-copy title="Click to copy">${hex}</button>
+                <button data-copy title="Click to copy">${css}</button>
                 <div class="color-info__contrast">
                   <h5>wcag contrast:</h5>
                   <em><span style="color: #ffffff;"">Aa</span> ${contrast.white.toFixed(
