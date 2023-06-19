@@ -842,7 +842,7 @@
         <div data-names></div>
       </aside>
     </article>
-    <script src="https://cdn.jsdelivr.net/npm/culori@1.2.0/bundled/culori.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/culori@3.1.1/bundled/culori.umd.js"></script>
 
     <script type="module">
       import {
@@ -902,7 +902,7 @@
           "background",
           `linear-gradient(90deg, ${colors
             .map(
-              (c) => c.hex
+              (c) => c.css
             )
             .join(",")})`
         );
@@ -1118,7 +1118,7 @@
 
       pane.addInput(PARAMS, 'Color Mode', {
         options:
-          ['hsl', 'okhsl', 'hsv', 'okhsv', 'hsi', 'hwb']
+          ['hsl', 'okhsl', 'hsv', 'okhsv', 'hsi', 'hwb', 'lch', 'oklch']
       });
 
       const createPalette = () => {
@@ -1129,7 +1129,7 @@
 
         colors = hslToColorObj(colors)
 
-        const cssHSL = colors.map(color => color.hex);
+        const cssHSL = colors.map(color => color.css);
 
         const $w = document.createElement('artile');
         $w.classList.add('palette');
@@ -1218,6 +1218,15 @@
             channels.h = h;
             channels.w = s;
             channels.b = l;
+          } else if (colorMode === 'oklch') {
+            channels.l = l;
+            channels.c = s * 0.4;
+            channels.h = h;
+          } else if (colorMode === 'lch') {
+            console.log(l, s, h)
+            channels.l = l * 100;
+            channels.c = s * 150;
+            channels.h = h;
           }
 
           const { r, g, b } = culori.converter("rgb")({
@@ -1229,6 +1238,13 @@
             hsl: [h, s, l],
             rgb: [r * 255, g * 255, b * 255],
             hex: culori.formatHex({ mode: colorMode, ...channels }),
+            css: (
+              colorMode !== 'hsl' &&
+              colorMode !== 'okhsl' &&
+              colorMode !== 'okhsv' &&
+              colorMode !== 'hsv' &&
+              colorMode !== 'hsi'
+            ) ? culori.formatCss({ mode: colorMode, ...channels }) : culori.formatHex({ mode: colorMode, ...channels }),
             contrast: {
               white: culori.wcagContrast("#ffffff", { mode: 'hsl', ...channels }),
               black: culori.wcagContrast("#000000", { mode: 'hsl', ...channels }),
@@ -1296,7 +1312,7 @@
         document.querySelector("[data-colors]").innerHTML = colors.reduce(
           (r, c) => {
             const bestcontrast = c.contrast.white < c.contrast.black ? "black" : "white";
-            return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.hex}; --c: ${bestcontrast};">
+            return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.css}; --c: ${bestcontrast};">
               <b>
                 ${scaleVector(c.hsl).map((c, i) => Math.round(c) + (i ? '%' : '°')).join(' ')}
               </b>
@@ -1315,7 +1331,7 @@
           .setProperty(`--c${i}`, `hsl(${c.hsl[0]}, ${c.hsl[1] * 100}%, ${c.hsl[2] * 100}%)`);
         });
 
-        document.documentElement.style.setProperty(`--clast`, colors[colors.length - 1].hex);
+        document.documentElement.style.setProperty(`--clast`, colors[colors.length - 1].css);
         
         const remColors = [...colors];
         
@@ -1325,10 +1341,10 @@
           (a, b) => culori.wcagContrast(a.hex, bgc.hex) - culori.wcagContrast(b.hex, bgc.hex)
         ).pop();
 
-        document.documentElement.style.setProperty(`--csecondlast`, bestContrastTobgc.hex);
+        document.documentElement.style.setProperty(`--csecondlast`, bestContrastTobgc.css);
 
         document.documentElement.style.setProperty(`--ts`, 
-          colors.reverse().map((c,i) => `0 ${i * 4}px ${0}px ${c.hex}`).join()
+          colors.reverse().map((c,i) => `0 ${i * 4}px ${0}px ${c.css}`).join()
         );
 
         document.documentElement.style.setProperty(`--tss`,
