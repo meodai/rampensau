@@ -21,7 +21,7 @@ export type GenerateHSLRampArgument = {
 export function generateHSLRamp({
   total = 9,
   hStart = Math.random() * 360,
-  hEasing = (x) => x ** 2,
+  hEasing = (x) => Math.pow(x, 2),
   hCycles = 1,
   sRange = [0.4, 0.35],
   sEasing = (x) => Math.pow(x, 2),
