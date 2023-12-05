@@ -26,24 +26,17 @@ export function generateHSLRamp({
   lRange = [Math.random() * 0.1, 0.9],
   lEasing = (x) => Math.pow(x, 1.5),
 }: GenerateHSLRampArgument = {}): Vector3[] {
-  const hueSlice: number = 360 / total;
-  const hues: number[] = new Array(total)
-    .fill(0)
-    .map((_, i): number => (360 + (hStart + i * hCycles * hueSlice)) % 360);
   const lDiff: number = lRange[1] - lRange[0];
   const sDiff: number = sRange[1] - sRange[0];
 
-  const firstColor: Vector3 = [hues.pop() || 0, sRange[0], lRange[0]];
-
-  const ramp: Vector3[] = new Array(total - 1)
-    .fill(0)
-    .map((_, i) => [
-      hues.pop() || 0,
-      sRange[0] + sDiff * sEasing((i + 1) / (total - 1)),
-      lRange[0] + lDiff * lEasing((i + 1) / (total - 1)),
-    ]);
-
-  return [...[firstColor], ...ramp];
+  return new Array(total).fill(0).map((_, i) => {
+    const relI = i / (total - 1);
+    return [
+      (360 + hStart + (1 - relI) * (360 * hCycles)) % 360,
+      sRange[0] + sDiff * sEasing(relI),
+      lRange[0] + lDiff * lEasing(relI),
+    ];
+  });
 }
 
 export function map(
