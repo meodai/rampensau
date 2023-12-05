@@ -899,6 +899,7 @@
           }
           return (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2;
         },
+        relativeRandom50: (x, fr) => x + (-fr + Math.random() * fr * 2) * .5,
         random: x => Math.random(),
       };
       

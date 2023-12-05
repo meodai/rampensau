@@ -14,9 +14,9 @@ function generateHSLRamp({
   return new Array(total).fill(0).map((_, i) => {
     const relI = i / (total - 1);
     return [
-      (360 + hStart + (1 - hEasing(relI)) * (360 * hCycles)) % 360,
-      sRange[0] + sDiff * sEasing(relI),
-      lRange[0] + lDiff * lEasing(relI)
+      (360 + hStart + (1 - hEasing(relI, 1 / total)) * (360 * hCycles)) % 360,
+      sRange[0] + sDiff * sEasing(relI, 1 / total),
+      lRange[0] + lDiff * lEasing(relI, 1 / total)
     ];
   });
 }
