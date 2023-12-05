@@ -920,7 +920,7 @@
             Math.random() * .4,
             .65 + Math.random() * .35
           ],
-          lEasing: easingFunctions['easeInCubic'],
+          lEasing: easingFunctions['easeInOutSine'],
         }, ...overwrites};
       };
 
@@ -1182,7 +1182,7 @@
           },
         },
         lEasing: {
-          default: 'easeInCubic',
+          default: 'easeInOutSine',
           props: {
             options: easingFunctionsKeys
           },
@@ -1220,7 +1220,6 @@
 
 
         cssHSL.forEach((color, i) => {
-
           $w.style.setProperty(`--c${i}`, color);
           const $swatch = document.createElement('div');
           $swatch.classList.add('palette__swatch');
@@ -1289,11 +1288,11 @@
           } else if (colorMode === 'hsv' || colorMode === 'okhsv') {
             channels.h = h;
             channels.s = s;
-            channels.v = l;
+            channels.v = l * 2;
           } else if (colorMode === 'hsi') {
             channels.h = h;
             channels.s = s;
-            channels.i = l;
+            channels.i = l * 2;
           } else if (colorMode === 'hwb') {
             channels.h = h;
             channels.w = s;

@@ -37,13 +37,13 @@ function generateHSLRamp  ({
   hStart  : Math.random() * 360,        // hue at the start of the ramp
   hCycles : 1,                          // number of full hue cycles 
                                         // (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
-  hEasing : (x) => x,                   // hue easing function
+  hEasing : (x, fr) => x,                   // hue easing function
 
   sRange  : [0.4, 0.35],                // saturation range
-  sEasing : (x) => Math.pow(x, 2),      // saturation easing function
+  sEasing : (x, fr) => Math.pow(x, 2),      // saturation easing function
 
   lRange  : [Math.random() * 0.1, 0.9], // lightness range
-  lEasing : (x) => Math.pow(x, 1.5),    // lightness easing function
+  lEasing : (x, fr) => Math.pow(x, 1.5),    // lightness easing function
 });
 ```
 
@@ -55,6 +55,7 @@ Function returns an array of colors in HSL format (`[0…360,0…1,0…1]`).
 
 - `total` int 3…∞ → Amount of base colors.
 - `hStart` float 0…360 → 0 Red, 180 Teal etc..
+- `hEasing` function(x) → Hue easing function
 - `hCycles` float -∞…0…+∞ → Number of hue cycles. (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
 - `sRange` array [0…1,0…1] → Saturation Range
 - `sEasing` function(x) → Saturation easing function
