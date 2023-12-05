@@ -10,6 +10,7 @@
     (typeof self !== 'undefined' ? self : this, function() {
 var rampensau = (() => {
   var __defProp = Object.defineProperty;
+  var __pow = Math.pow;
   var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
   var __export = (target, all) => {
     __markAsModule(target);
@@ -29,6 +30,7 @@ var rampensau = (() => {
   function generateHSLRamp({
     total = 9,
     hStart = Math.random() * 360,
+    hEasing = (x) => __pow(x, 2),
     hCycles = 1,
     sRange = [0.4, 0.35],
     sEasing = (x) => Math.pow(x, 2),
@@ -40,7 +42,7 @@ var rampensau = (() => {
     return new Array(total).fill(0).map((_, i) => {
       const relI = i / (total - 1);
       return [
-        (360 + hStart + (1 - relI) * (360 * hCycles)) % 360,
+        (360 + hStart + (1 - hEasing(relI)) * (360 * hCycles)) % 360,
         sRange[0] + sDiff * sEasing(relI),
         lRange[0] + lDiff * lEasing(relI)
       ];

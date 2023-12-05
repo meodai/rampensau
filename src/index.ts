@@ -5,6 +5,7 @@ export type GenerateHSLRampArgument = {
   total?: number;
   hStart?: number;
   hCycles?: number;
+  hEasing?: FuncNumberReturn;
   sRange?: Vector2;
   lRange?: Vector2;
   sEasing?: FuncNumberReturn;
@@ -20,6 +21,7 @@ export type GenerateHSLRampArgument = {
 export function generateHSLRamp({
   total = 9,
   hStart = Math.random() * 360,
+  hEasing = (x) => x ** 2,
   hCycles = 1,
   sRange = [0.4, 0.35],
   sEasing = (x) => Math.pow(x, 2),
@@ -32,7 +34,7 @@ export function generateHSLRamp({
   return new Array(total).fill(0).map((_, i) => {
     const relI = i / (total - 1);
     return [
-      (360 + hStart + (1 - relI) * (360 * hCycles)) % 360,
+      (360 + hStart + (1 - hEasing(relI)) * (360 * hCycles)) % 360,
       sRange[0] + sDiff * sEasing(relI),
       lRange[0] + lDiff * lEasing(relI),
     ];
