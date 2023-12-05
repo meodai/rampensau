@@ -1,15 +1,15 @@
-export type FuncNumberReturn = (arg0: number) => number;
+export type ModifiedEasingFn = (x: number, fr?: number) => number;
 export type Vector2 = [number, number];
 export type Vector3 = [number, number, number];
 export type GenerateHSLRampArgument = {
   total?: number;
   hStart?: number;
   hCycles?: number;
-  hEasing?: FuncNumberReturn;
+  hEasing?: ModifiedEasingFn;
   sRange?: Vector2;
   lRange?: Vector2;
-  sEasing?: FuncNumberReturn;
-  lEasing?: FuncNumberReturn;
+  sEasing?: ModifiedEasingFn;
+  lEasing?: ModifiedEasingFn;
   slScale?: number;
 };
 /**
@@ -33,9 +33,9 @@ export function generateHSLRamp({
   return new Array(total).fill(0).map((_, i) => {
     const relI = i / (total - 1);
     return [
-      (360 + hStart + (1 - hEasing(relI)) * (360 * hCycles)) % 360,
-      sRange[0] + sDiff * sEasing(relI),
-      lRange[0] + lDiff * lEasing(relI),
+      (360 + hStart + (1 - hEasing(relI, 1 / total)) * (360 * hCycles)) % 360,
+      sRange[0] + sDiff * sEasing(relI, 1 / total),
+      lRange[0] + lDiff * lEasing(relI, 1 / total),
     ];
   });
 }

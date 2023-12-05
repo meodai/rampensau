@@ -1,15 +1,15 @@
-export declare type FuncNumberReturn = (arg0: number) => number;
+export declare type ModifiedEasingFn = (x: number, fr?: number) => number;
 export declare type Vector2 = [number, number];
 export declare type Vector3 = [number, number, number];
 export declare type GenerateHSLRampArgument = {
     total?: number;
     hStart?: number;
     hCycles?: number;
-    hEasing?: FuncNumberReturn;
+    hEasing?: ModifiedEasingFn;
     sRange?: Vector2;
     lRange?: Vector2;
-    sEasing?: FuncNumberReturn;
-    lEasing?: FuncNumberReturn;
+    sEasing?: ModifiedEasingFn;
+    lEasing?: ModifiedEasingFn;
     slScale?: number;
 };
 /**
