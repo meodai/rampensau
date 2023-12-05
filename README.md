@@ -37,6 +37,8 @@ function generateHSLRamp  ({
   hStart  : Math.random() * 360,        // hue at the start of the ramp
   hCycles : 1,                          // number of full hue cycles 
                                         // (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
+  hEasing : (x) => x,                   // hue easing function
+
   sRange  : [0.4, 0.35],                // saturation range
   sEasing : (x) => Math.pow(x, 2),      // saturation easing function
 
