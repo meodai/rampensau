@@ -241,6 +241,7 @@
         font-family: monospace;
         font-size: 0.8rem;
         max-width: 100%;
+        overflow: hidden;
       }
 
       a {
@@ -859,23 +860,69 @@
 
       console.clear();
 
+      const easingFunctions = {
+        linear: x => x,
+        easeInSine: x => 1 - Math.cos((x * Math.PI) / 2),
+        easeOutSine: x => Math.sin((x * Math.PI) / 2),
+        easeInOutSine: x => -(Math.cos(Math.PI * x) - 1) / 2,
+        easeInQuad: x => x * x,
+        easeOutQuad: x => 1 - (1 - x) * (1 - x),
+        easeInOutQuad: x => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2),
+        easeInCubic: x => x * x * x,
+        easeOutCubic: x => 1 - Math.pow(1 - x, 3),
+        easeInOutCubic: x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
+        easeInQuart: x => x * x * x * x,
+        easeOutQuart: x => 1 - Math.pow(1 - x, 4),
+        easeInOutQuart: x => (x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2),
+        easeInQuint: x => x * x * x * x * x,
+        easeOutQuint: x => 1 - Math.pow(1 - x, 5),
+        easeInOutQuint: x => (x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2),
+        easeInExpo: x => (x === 0 ? 0 : Math.pow(2, 10 * x - 10)),
+        easeOutExpo: x => (x === 1 ? 1 : 1 - Math.pow(2, -10 * x)),
+        easeInOutExpo: x => {
+          if (x === 0) {
+            return 0;
+          }
+          if (x === 1) {
+            return 1;
+          }
+          if (x < 0.5) {
+            return Math.pow(2, 20 * x - 10) / 2;
+          }
+          return (2 - Math.pow(2, -20 * x + 10)) / 2;
+        },
+        easeInCirc: x => 1 - Math.sqrt(1 - Math.pow(x, 2)),
+        easeOutCirc: x => Math.sqrt(1 - Math.pow(x - 1, 2)),
+        easeInOutCirc: x => {
+          if (x < 0.5) {
+            return (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2;
+          }
+          return (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2;
+        },
+        random: x => Math.random(),
+      };
+      
+      const easingFunctionsKeys = Object.keys(easingFunctions);
+
       const newOptions = (overwrites = {}) => {
         return {...{
           total: 5 + Math.floor(Math.random() * 5),
           hStart: Math.random() * 360,
+          hEasing: easingFunctions['linear'],
           hCycles: Math.random() * 1.25,
           sRange: [
             .2 + Math.random() * .4,
             .25 + Math.random() * .7
           ],
-          sEasing: x => Math.pow(x, 2),
+          sEasing: easingFunctions['easeInOutCubic'],
           lRange: [
             Math.random() * .4,
             .65 + Math.random() * .35
           ],
-          lEasing: x => Math.pow(x, 1.25),
+          lEasing: easingFunctions['easeInCubic'],
         }, ...overwrites};
       };
+
       const shuffleArray = (array) => {
         let arr = [...array];
         for (let i = arr.length - 1; i > 0; i--) {
@@ -1059,9 +1106,14 @@
               options.options.forEach((option) => {
                 const $opt = document.createElement("option");
                 $opt.setAttribute("value", option);
+                //console.log(reference[key])
+                if (option === reference[key]) {
+                  $opt.setAttribute("selected", true);
+                }
                 $opt.innerHTML = option;
                 $i.appendChild($opt);
               });
+              
             } else {
               $i = document.createElement("input");
               $i.setAttribute("type", "text");
@@ -1114,8 +1166,30 @@
 
       const PARAMS = {};
 
-      Object.keys(generateHSLRampParams).forEach((key) => {
-        const param = generateHSLRampParams[key];
+      const defaultParams = {
+        ...generateHSLRampParams,
+        hEasing: {
+          default: 'linear',
+          props: {
+            options: easingFunctionsKeys
+          },
+        },
+        sEasing: {
+          default: 'easeInOutCubic',
+          props: {
+            options: easingFunctionsKeys
+          },
+        },
+        lEasing: {
+          default: 'easeInCubic',
+          props: {
+            options: easingFunctionsKeys
+          },
+        },
+      };
+
+      Object.keys(defaultParams).forEach((key) => {
+        const param = defaultParams[key];
         PARAMS[key] = param.default;
         pane.addInput(PARAMS, key, param.props);
       });
@@ -1137,7 +1211,7 @@
 
         const cssHSL = colors.map(color => color.css);
 
-        const $w = document.createElement('artile');
+        const $w = document.createElement('article');
         $w.classList.add('palette');
         $w.style.setProperty('--gc', cssHSL.join());
         $w.style.setProperty('--gs', cssHSL.map((c, i) => `${c} ${(i / colors.length) * 100}%, ${c} ${(i + 1) / colors.length * 100}%`).join());
@@ -1182,7 +1256,6 @@
       }
 
       $rnd.addEventListener('click', newPalette)
-
 
       let colors = [];
 
@@ -1229,7 +1302,6 @@
             channels.c = s * 0.4;
             channels.h = h;
           } else if (colorMode === 'lch') {
-            console.log(l, s, h)
             channels.l = l * 100;
             channels.c = s * 150;
             channels.h = h;
@@ -1286,8 +1358,11 @@
           total: PARAMS.total,
           hStart: PARAMS.hStart,
           hCycles: PARAMS.hCycles,
+          hEasing: typeof PARAMS.hEasing === 'string' ? easingFunctions[PARAMS.hEasing] : PARAMS.hEasing,
           sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
+          sEasing: typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing,
           lRange: [PARAMS.minLight, PARAMS.maxLight],
+          lEasing: typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing,
         });
 
         document.documentElement.style.setProperty('--total', PARAMS.total);
@@ -1309,9 +1384,12 @@
         ).innerHTML = `generateHSLRamp({
   total: <i>${PARAMS.total}</i>,
   hStart: <i>${PARAMS.hStart}</i>,
+  hEasing: <i>${typeof PARAMS.hEasing === 'string' ? easingFunctions[PARAMS.hEasing] : PARAMS.hEasing}</i>,
   hCycles: <i>${PARAMS.hCycles}</i>,
   sRange: <i>[${PARAMS.minSaturation}, ${PARAMS.maxSaturation}]</i>,
+  sEasing: <i>${typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing}</i>,
   lRange: <i>[${PARAMS.minLight}, ${PARAMS.maxLight}]</i>,
+  lEasing: <i>${typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing}</i>,
 });
 `;
 
