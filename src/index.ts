@@ -12,7 +12,6 @@ export type GenerateHSLRampArgument = {
   lEasing?: FuncNumberReturn;
   slScale?: number;
 };
-
 /**
  * Generates a color ramp based on the HSL color space.
  * @param {GenerateHSLRampArgument} args - The arguments to generate the ramp.
