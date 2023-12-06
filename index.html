@@ -26,7 +26,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap"
       rel="stylesheet"
     />
     <link
@@ -35,7 +35,7 @@
     />
     <style>
       :root {
-        font-family: "Inter", sans-serif;
+        font-family: 'Bricolage Grotesque', sans-serif;
         --light: var(--clast);
         --dark: var(--c0);
         --highlight: var(--csecondlast);
@@ -113,7 +113,7 @@
         position: relative;
         width: 100%;
         aspect-ratio: 1;
-        perspective: 300px;
+        perspective: 200px;
       }
 
       [data-viz] .disc {
@@ -159,7 +159,7 @@
         transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.3rem);
         transform-origin: 50% 50%;
         box-shadow: 0 0 0 1px var(--dark),
-                    0 0 0 2px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
+                    0 0 0 3px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
         background: hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
       }
 
@@ -225,7 +225,7 @@
         margin: 0 0 0.75rem;
         font-size: calc(1.5rem + 2vw);
         font-weight: 800;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.02em;
         line-height: 0.9;
       }
 
@@ -274,22 +274,22 @@
         height: calc(100vmin - 8rem);
         margin-bottom: 4rem;
         flex-direction: column-reverse;
-        box-shadow: 0 0 0 2px var(--dark);
+        box-shadow: 0 0 0 1vmin var(--dark);
       }
       [data-colors] i {
         flex: 1 0 auto;
-        width 100%;
+        width: 100%;
         background: var(--color);
         position: relative;
       }
       [data-colors] b {
         position: absolute;
         top: 50%;
-        right: .7rem;
+        right: 1em;
         transform: translateY(-50%);
-        font-size: 0.7em;
+        font-size: calc(20vmin * 1/var(--total));
         color: var(--c);
-        font-weight: 900;
+        font-weight: 800;
         filter: hue-rotate(180deg);
       }
 
@@ -440,7 +440,7 @@
 
       .pane__label {
         font-size: 0.8rem;
-        font-weight: 400;
+        font-weight: 800;
         line-height: 1;
         margin-bottom: 0.8em;
       }
@@ -1288,15 +1288,15 @@
           } else if (colorMode === 'hsv' || colorMode === 'okhsv') {
             channels.h = h;
             channels.s = s;
-            channels.v = l * 2;
+            channels.v = l + (s * Math.min(l, 1 - l)) / 2;
           } else if (colorMode === 'hsi') {
             channels.h = h;
             channels.s = s;
             channels.i = l * 2;
           } else if (colorMode === 'hwb') {
             channels.h = h;
-            channels.w = s;
-            channels.b = l;
+            channels.w = l;
+            channels.b = s;
           } else if (colorMode === 'oklch') {
             channels.l = l;
             channels.c = s * 0.4;
@@ -1423,9 +1423,9 @@
         remColors.pop();
         const bestContrastTobgc = remColors.sort(
           (a, b) => culori.wcagContrast(a.hex, bgc.hex) - culori.wcagContrast(b.hex, bgc.hex)
-        ).pop();
+        );
 
-        document.documentElement.style.setProperty(`--csecondlast`, bestContrastTobgc.css);
+        document.documentElement.style.setProperty(`--csecondlast`, bestContrastTobgc.at(-2).css);
 
         document.documentElement.style.setProperty(`--ts`, 
           colors.reverse().map((c,i) => `0 ${i * 4}px ${0}px ${c.css}`).join()
