@@ -68,6 +68,10 @@ var generateHSLRampParams = {
     default: 1,
     props: { min: -1.25, max: 1.5, step: 1e-3 }
   },
+  hStartCenter: {
+    default: 0.5,
+    props: { min: 0, max: 1, step: 1e-3 }
+  },
   minLight: {
     default: 0.1,
     props: { min: 0, max: 1, step: 1e-3 }

@@ -923,6 +923,7 @@
         return {...{
           total: 5 + Math.floor(Math.random() * 5),
           hStart: Math.random() * 360,
+          hStartCenter: .5,
           hEasing: easingFunctions['linear'],
           hCycles: Math.random() * 1.25,
           sRange: [
@@ -1373,6 +1374,7 @@
           total: PARAMS.total,
           hStart: PARAMS.hStart,
           hCycles: PARAMS.hCycles,
+          hStartCenter: PARAMS.hStartCenter,
           hEasing: typeof PARAMS.hEasing === 'string' ? easingFunctions[PARAMS.hEasing] : PARAMS.hEasing,
           sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
           sEasing: typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing,

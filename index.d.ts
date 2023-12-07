@@ -39,6 +39,14 @@ export declare const generateHSLRampParams: {
             step: number;
         };
     };
+    hStartCenter: {
+        default: number;
+        props: {
+            min: number;
+            max: number;
+            step: number;
+        };
+    };
     minLight: {
         default: number;
         props: {
