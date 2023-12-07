@@ -268,6 +268,7 @@
         text-decoration-style: dotted;
       }
       [data-colors] {
+        position: relative;
         display: flex;
         flex-wrap: wrap;
         width: 100%;
@@ -275,7 +276,19 @@
         margin-bottom: 4rem;
         flex-direction: column-reverse;
         box-shadow: 0 0 0 1vmin var(--dark);
+        overflow: hidden;
       }
+      [data-colors]::after {
+        content: '';
+        position: absolute;
+        inset: -1vmin;
+        background: linear-gradient(0deg, var(--gradient));
+        opacity: 1;
+        z-index: 1;
+        filter: blur(10vmin);
+        transform: scale(0.9);
+      }
+
       [data-colors] i {
         flex: 1 0 auto;
         width: 100%;
@@ -291,6 +304,7 @@
         color: var(--c);
         font-weight: 800;
         filter: hue-rotate(180deg);
+        z-index: 2;
       }
 
       [data-palette] {
@@ -1226,6 +1240,7 @@
           $swatch.style.setProperty('--color', color);
           $w.appendChild($swatch);
         });
+
         return $w;
       }
 
@@ -1393,6 +1408,12 @@
 });
 `;
 
+        document.documentElement.style.setProperty(
+          "--gradient",
+          colors
+            .map((c) => c.css)
+            .join(",")
+        );
         document.querySelector("[data-colors]").innerHTML = colors.reduce(
           (r, c) => {
             const bestcontrast = c.contrast.white < c.contrast.black ? "black" : "white";
