@@ -48,7 +48,7 @@ function generateHSLRamp  ({
   hStart  : Math.random() * 360,         // hue at the start of the ramp
   hCycles : 1,                           // number of full hue cycles 
                                          // (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
-  hCenter : 0.5,                         // where in the ramp the hue should be centered
+  hStartCenter : 0.5,                    // where in the ramp the hue should be centered
   hEasing : (x, fr) => x,                // hue easing function
 
   sRange  : [0.4, 0.35],                 // saturation range
@@ -68,14 +68,14 @@ Function returns an array of colors in HSL format (`[0…360,0…1,0…1]`).
 
 - `total` int 3…∞           → Amount of base colors.
 - `hStart` float 0…360      → Starting point of the hue ramp. 0 Red, 180 Teal etc..
-- `hCenter`: float 0…1      → Center the hue in the color ramp.
+- `hStartCenter`: float 0…1      → Center the hue in the color ramp.
 - `hCycles` float -∞…0…+∞   → Number of hue cycles. (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
 - `sRange` array [0…1,0…1]  → Saturation Range
 - `lRange` array [0…1,0…1]  → Lightness Range
 
 ##### Hue Start & Center
 
-The `hStart` sets the starting point of the hue ramp. The `hCenter` sets where in the hue in the ramp the  should be centered. If your ramp starts with a high or low lightness, you might want to center the hue in the middle of the ramp. Thats is way the default value for `hCenter` is `0.5`. (In the center of a given ramp).
+The `hStart` sets the starting point of the hue ramp. The `hStartCenter` sets where in the hue in the ramp the  should be centered. If your ramp starts with a high or low lightness, you might want to center the hue in the middle of the ramp. Thats is way the default value for `hStartCenter` is `0.5`. (In the center of a given ramp).
 
 ##### Easing Functions
 
