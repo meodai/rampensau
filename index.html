@@ -113,7 +113,7 @@
         position: relative;
         width: 100%;
         aspect-ratio: 1;
-        perspective: 200px;
+        perspective: 300px;
       }
 
       [data-viz] .disc {
@@ -122,8 +122,10 @@
         left: 50%;
         width: 7rem;
         height: 7rem;
-        transform: translate(-50%, 0) translateY(calc(-100% * var(--c-i))) rotateX(34deg);
+        transform: translate(-50%, 0) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(calc(.1 + var(--c-i2) * .9)) scale(1.5);
+        transition: calc(300ms - 50ms + var(--c-i2) * 200ms) transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
       }
+
 
       [data-viz] .disc::before {
         content: "";
@@ -156,11 +158,20 @@
         width: .6rem;
         border-radius: 50%;
         height: .6rem;
-        transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.3rem);
+        transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.3rem) scale(calc(3 - var(--c-i2) * 4.5));
         transform-origin: 50% 50%;
         box-shadow: 0 0 0 1px var(--dark),
                     0 0 0 3px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
         background: hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
+        transition: calc(300ms - 50ms + var(--c-i2) * 200ms) transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        
+      }
+
+      [data-viz]:hover .disc {
+        transform: translate(-50%, 0) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(1) scale(1);
+      }
+      [data-viz]:hover .disc::after {
+        transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.3rem) scale(1);
       }
 
       .main {
@@ -1357,6 +1368,8 @@
         $disc.style.setProperty("--c-s", color.hsl[1]);
         $disc.style.setProperty("--c-l", color.hsl[2]);
         $disc.style.setProperty("--c-i", i);
+        // number going from 0 to 0.5 and back to 0
+        $disc.style.setProperty("--c-i2", i > 0.5 ? 1 - i : i);
 
         return $disc;
       }
