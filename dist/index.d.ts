@@ -4,6 +4,7 @@ export declare type Vector3 = [number, number, number];
 export declare type GenerateHSLRampArgument = {
     total?: number;
     hStart?: number;
+    hStartCenter?: number;
     hCycles?: number;
     hEasing?: ModifiedEasingFn;
     sRange?: Vector2;
@@ -17,7 +18,7 @@ export declare type GenerateHSLRampArgument = {
  * @param {GenerateHSLRampArgument} args - The arguments to generate the ramp.
  * @returns {Array<number>} - The color ramp.
  */
-export declare function generateHSLRamp({ total, hStart, hEasing, hCycles, sRange, sEasing, lRange, lEasing, }?: GenerateHSLRampArgument): Vector3[];
+export declare function generateHSLRamp({ total, hStart, hStartCenter, hEasing, hCycles, sRange, sEasing, lRange, lEasing, }?: GenerateHSLRampArgument): Vector3[];
 export declare function map(n: number, start1: number, stop1: number, start2: number, stop2: number): number;
 export declare function scaleVector(vector: number[], originalScale?: [number, number][], targetScale?: [number, number][]): number[];
 export declare function hslColorsToCSS(colors: Vector3[]): string[];
