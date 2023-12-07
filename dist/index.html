@@ -122,7 +122,7 @@
         left: 50%;
         width: 7rem;
         height: 7rem;
-        transform: translate(-50%, 0) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(calc(.1 + var(--c-i2) * .9)) scale(1.5);
+        transform: translate(-50%, 0) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(calc(sin(.1 + var(--c-i2) * .9))) scale(1.5);
         transition: calc(300ms - 50ms + var(--c-i2) * 200ms) transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
       }
 
@@ -147,7 +147,8 @@
             hsl(0, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)));
         mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
         -webkit-mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
-        transform: scaleX(-1); // lazy flip the gradient
+        transform: scaleX(-1); /* lazy flip the gradient */
+        opacity: 0.55;
       }
 
       [data-viz] .disc::after {
@@ -164,7 +165,7 @@
                     0 0 0 3px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
         background: hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
         transition: calc(300ms - 50ms + var(--c-i2) * 200ms) transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        
+        transition-duration: calc(100ms + var(--c-i2) * 200ms);
       }
 
       [data-viz]:hover .disc {
