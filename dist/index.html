@@ -255,6 +255,10 @@
         max-width: 100%;
         overflow: hidden;
       }
+      code {
+        margin-top: 1em;
+        display: block;
+      }
 
       a {
         font-size: 1em;
@@ -306,13 +310,35 @@
         width: 100%;
         background: var(--color);
         position: relative;
+
+        font-size: calc(20vmin * 1/var(--total));
       }
+      [data-colors] span {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        background: var(--color);
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+        display: none;
+      }
+      [data-colors] span::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 0.1%;
+        aspect-ratio: 1;
+      }
+
       [data-colors] b {
         position: absolute;
         top: 50%;
         right: 1em;
         transform: translateY(-50%);
-        font-size: calc(20vmin * 1/var(--total));
         color: var(--c);
         font-weight: 800;
         filter: hue-rotate(180deg);
@@ -764,6 +790,10 @@
         </aside>
         <aside>
           <h3 class="code-title">Function Call</h3>
+          <p>
+            Calling the function with the following options will generate the
+            color ramp you see above.
+          </p>
           <code>
                     <pre data-code></pre>
                   </code>
@@ -1134,7 +1164,6 @@
               options.options.forEach((option) => {
                 const $opt = document.createElement("option");
                 $opt.setAttribute("value", option);
-                //console.log(reference[key])
                 if (option === reference[key]) {
                   $opt.setAttribute("selected", true);
                 }
@@ -1344,13 +1373,9 @@
             hsl: [h, s, l],
             rgb: [r * 255, g * 255, b * 255],
             hex: culori.formatHex({ mode: colorMode, ...channels }),
-            css: (
-              colorMode !== 'hsl' &&
-              colorMode !== 'okhsl' &&
-              colorMode !== 'okhsv' &&
-              colorMode !== 'hsv' &&
-              colorMode !== 'hsi'
-            ) ? culori.formatCss({ mode: colorMode, ...channels }) : culori.formatHex({ mode: colorMode, ...channels }),
+            css: culori.formatHex(
+              { mode: colorMode, ...channels }
+            ),
             contrast: {
               white: culori.wcagContrast("#ffffff", { mode: 'hsl', ...channels }),
               black: culori.wcagContrast("#000000", { mode: 'hsl', ...channels }),
@@ -1414,13 +1439,17 @@
           "[data-code]"
         ).innerHTML = `generateHSLRamp({
   total: <i>${PARAMS.total}</i>,
-  hStart: <i>${PARAMS.hStart}</i>,
-  hEasing: <i>${typeof PARAMS.hEasing === 'string' ? easingFunctions[PARAMS.hEasing] : PARAMS.hEasing}</i>,
-  hCycles: <i>${PARAMS.hCycles}</i>,
-  sRange: <i>[${PARAMS.minSaturation}, ${PARAMS.maxSaturation}]</i>,
-  sEasing: <i>${typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing}</i>,
-  lRange: <i>[${PARAMS.minLight}, ${PARAMS.maxLight}]</i>,
-  lEasing: <i>${typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing}</i>,
+  hStart: <i>${PARAMS.hStart.toFixed(3)}</i>,
+  hStartCenter: <i>${PARAMS.hStartCenter.toFixed(3)}</i>,
+  hEasing: 
+    <i>${typeof PARAMS.hEasing === 'string' ? easingFunctions[PARAMS.hEasing] : PARAMS.hEasing}</i>,
+  hCycles: <i>${PARAMS.hCycles.toFixed(3)}</i>,
+  sRange: <i>[${PARAMS.minSaturation.toFixed(3)}, ${PARAMS.maxSaturation.toFixed(3)}]</i>,
+  sEasing: 
+    <i>${typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing}</i>,
+  lRange: <i>[${PARAMS.minLight.toFixed(3)}, ${PARAMS.maxLight.toFixed(3)}]</i>,
+  lEasing: 
+    <i>${typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing}</i>,
 });
 `;
 
@@ -1433,10 +1462,11 @@
         document.querySelector("[data-colors]").innerHTML = colors.reduce(
           (r, c) => {
             const bestcontrast = c.contrast.white < c.contrast.black ? "black" : "white";
-            return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.css}; --c: ${bestcontrast};">
+            return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.css}; --c: ${bestcontrast}; --h: ${c.hsl[0]};">
               <b>
                 ${scaleVector(c.hsl).map((c, i) => Math.round(c) + (i ? '%' : '°')).join(' ')}
               </b>
+              <span></span>
             </i>`;
           },
           ""
