@@ -85,11 +85,11 @@ var rampensau = (() => {
       props: { min: 0, max: 1, step: 1e-3 }
     },
     minLight: {
-      default: 0.1,
+      default: Math.random() * 0.2,
       props: { min: 0, max: 1, step: 1e-3 }
     },
     maxLight: {
-      default: 0.9,
+      default: 0.89 + Math.random() * 0.11,
       props: { min: 0, max: 1, step: 1e-3 }
     },
     total: {
