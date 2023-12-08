@@ -315,14 +315,25 @@
       }
       [data-colors] span {
         position: absolute;
-        left: 50%;
-        top: 0;
+        left: 1em;
+        top: 50%;
         background: var(--color);
-        width: 1em;
-        height: 1em;
+        width: .8em;
+        height: .8em;
         border-radius: 50%;
-        transform: translateY(-50%);
+        transform: translateY(-50%) rotate(calc(var(--h) * 1deg));
         z-index: 2;
+        box-shadow: 0 0 0 2px var(--c);
+        overflow: hidden;
+        display: none;
+      }
+      [data-colors] span::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        transform-origin: 50% 50%;
+        transform: rotate(calc(var(--h) * -1deg)) translateY(calc(-1 * var(--l) * 100%));
+        background: var(--c);
         display: none;
       }
       [data-colors] span::after {
@@ -330,8 +341,10 @@
         position: absolute;
         top: 0;
         left: 50%;
-        width: 0.1%;
+        width: 30%;
         aspect-ratio: 1;
+        background: var(--c);
+        transform: translate(-50%, -50%) rotate(45deg);
       }
 
       [data-colors] b {
@@ -1462,7 +1475,7 @@
         document.querySelector("[data-colors]").innerHTML = colors.reduce(
           (r, c) => {
             const bestcontrast = c.contrast.white < c.contrast.black ? "black" : "white";
-            return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.css}; --c: ${bestcontrast}; --h: ${c.hsl[0]};">
+            return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.css}; --c: ${bestcontrast}; --h: ${c.hsl[0]}; --l: ${c.hsl[2]};">
               <b>
                 ${scaleVector(c.hsl).map((c, i) => Math.round(c) + (i ? '%' : '°')).join(' ')}
               </b>
