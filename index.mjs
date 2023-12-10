@@ -8,19 +8,64 @@ function generateHSLRamp({
   sRange = [0.4, 0.35],
   sEasing = (x) => Math.pow(x, 2),
   lRange = [Math.random() * 0.1, 0.9],
-  lEasing = (x) => Math.pow(x, 1.5)
+  lEasing = (x) => Math.pow(x, 1.5),
+  hueList
 } = {}) {
   const lDiff = lRange[1] - lRange[0];
   const sDiff = sRange[1] - sRange[0];
-  return new Array(total).fill(0).map((_, i) => {
-    const relI = i / (total - 1);
-    const fraction = 1 / total;
+  const length = hueList && hueList.length > 0 ? hueList.length : total;
+  return Array.from({ length }, (_, i) => {
+    const relI = i / (length - 1);
+    const fraction = 1 / length;
     return [
-      (360 + hStart + (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % 360,
+      hueList ? hueList[i] : (360 + hStart + (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % 360,
       sRange[0] + sDiff * sEasing(relI, fraction),
       lRange[0] + lDiff * lEasing(relI, fraction)
     ];
   });
+}
+function shuffleArray(array, rndFn = Math.random) {
+  let currentIndex = array.length, randomIndex;
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(rndFn() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex]
+    ];
+  }
+  return array;
+}
+var colorHarmonies = {
+  complementary: (h) => [h, (h + 180) % 360],
+  splitComplementary: (h) => [h, (h + 150) % 360, (h + 210) % 360],
+  triadic: (h) => [h, (h + 120) % 360, (h + 240) % 360],
+  tetradic: (h) => [h, (h + 90) % 360, (h + 180) % 360, (h + 270) % 360],
+  analogous: (h) => [
+    h,
+    (h + 30) % 360,
+    (h + 60) % 360,
+    (h + 90) % 360,
+    (h + 120) % 360,
+    (h + 150) % 360
+  ]
+};
+function uniqueRandomHues({
+  startHue = 0,
+  total = 9,
+  minHueDiffAngle = 60,
+  rndFn = Math.random
+} = {}) {
+  minHueDiffAngle = Math.min(minHueDiffAngle, 360 / total);
+  const baseHue = startHue || rndFn() * 360;
+  const huesToPickFrom = Array.from({
+    length: Math.round(360 / minHueDiffAngle)
+  }, (_, i) => (baseHue + i * minHueDiffAngle) % 360);
+  let randomizedHues = shuffleArray(huesToPickFrom, rndFn);
+  if (randomizedHues.length > total) {
+    randomizedHues = randomizedHues.slice(0, total);
+  }
+  return randomizedHues;
 }
 function map(n, start1, stop1, start2, stop2) {
   return (n - start1) / (stop1 - start1) * (stop2 - start2) + start2;
@@ -77,9 +122,12 @@ var generateHSLRampParams = {
   }
 };
 export {
+  colorHarmonies,
   generateHSLRamp,
   generateHSLRampParams,
   hslColorsToCSS,
   map,
-  scaleVector
+  scaleVector,
+  shuffleArray,
+  uniqueRandomHues
 };

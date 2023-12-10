@@ -1048,6 +1048,7 @@
         generateHSLRamp,
         generateHSLRampParams,
         scaleVector,
+        uniqueRandomHues,
       } from "./index.mjs";
 
       console.clear();
@@ -1107,6 +1108,7 @@
           hStartCenter: .5,
           hEasing: easingFunctions['linear'],
           hCycles: Math.random() * 1.25,
+
           sRange: [
             Math.pow(0.005 + Math.random() * .25, cPow),
             Math.pow(1 - Math.random(), cPow)
@@ -1131,6 +1133,8 @@
 
       const palette = (colors, method) => {
         let allColors = shuffleArray(colors);
+
+        console.log(allColors)
 
         let localcolors = [...allColors];
         $pal.innerHTML = "";
@@ -1558,9 +1562,10 @@
           sEasing: typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing,
           lRange: [PARAMS.minLight, PARAMS.maxLight],
           lEasing: typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing,
+          //hueList: uniqueRandomHues({startHue: PARAMS.hStart, total: 5, minDistance: 90}),
         });
 
-        document.documentElement.style.setProperty('--total', PARAMS.total);
+        document.documentElement.style.setProperty('--total', colors.length);
         document.documentElement.style.setProperty('--hStart', PARAMS.hStart);
         document.documentElement.style.setProperty('--hCycles', PARAMS.hCycles);
         document.documentElement.style.setProperty('--sRangeMin', PARAMS.minSaturation);
