@@ -67,26 +67,7 @@ function uniqueRandomHues({
   }
   return randomizedHues;
 }
-function map(n, start1, stop1, start2, stop2) {
-  return (n - start1) / (stop1 - start1) * (stop2 - start2) + start2;
-}
-function scaleVector(vector, originalScale = [
-  [0, 360],
-  [0, 1],
-  [0, 1]
-], targetScale = [
-  [0, 360],
-  [0, 100],
-  [0, 100]
-]) {
-  return vector.map((vec, i) => map(vec, originalScale?.[i]?.[0] || 0, originalScale?.[i]?.[1] || 1, targetScale?.[i]?.[0] || 0, targetScale?.[i]?.[1] || 100));
-}
-function hslColorsToCSS(colors) {
-  return colors.map((hsl) => {
-    const [h, s, l] = scaleVector(hsl);
-    return `hsl(${h}, ${s}%, ${l}%)`;
-  });
-}
+var hxxToCSSxLCH = ([hue, chroma, lightness] = [0, 0, 0], mode = "oklch") => `${mode}(${(lightness * 100).toFixed(2)}% ${chroma.toFixed(4)} ${hue.toFixed(2)})`;
 var generateHSLRampParams = {
   hStart: {
     default: 0,
@@ -125,9 +106,7 @@ export {
   colorHarmonies,
   generateHSLRamp,
   generateHSLRampParams,
-  hslColorsToCSS,
-  map,
-  scaleVector,
+  hxxToCSSxLCH,
   shuffleArray,
   uniqueRandomHues
 };

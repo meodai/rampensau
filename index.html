@@ -1047,7 +1047,6 @@
       import {
         generateHSLRamp,
         generateHSLRampParams,
-        scaleVector,
         uniqueRandomHues,
       } from "./index.mjs";
 
@@ -1608,7 +1607,7 @@
             const bestcontrast = c.contrast.white < c.contrast.black ? "black" : "white";
             return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.css}; --c: ${bestcontrast}; --h: ${c.hsl[0]}; --l: ${c.hsl[2]};">
               <b>
-                ${scaleVector(c.hsl).map((c, i) => Math.round(c) + (i ? '%' : '°')).join(' ')}
+                ${c.hsl.map((c, i) => Math.round(i ? c * 100: c) + (i ? '%' : '°')).join(' ')}
               </b>
               <span></span>
             </i>`;

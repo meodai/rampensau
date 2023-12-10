@@ -61,9 +61,17 @@ export declare function uniqueRandomHues({ startHue, total, minHueDiffAngle, rnd
     minHueDiffAngle?: number | undefined;
     rndFn?: (() => number) | undefined;
 }): number[];
-export declare function map(n: number, start1: number, stop1: number, start2: number, stop2: number): number;
-export declare function scaleVector(vector: number[], originalScale?: [number, number][], targetScale?: [number, number][]): number[];
-export declare function hslColorsToCSS(colors: Vector3[]): string[];
+export declare type hxxToCSSxLCHMode = "oklch" | "lch" | "hsl";
+/**
+ * Converts Hxx (Hue, Chroma, Lightness) values to a CSS `oklch()` color function string.
+ *
+ * @param {Object} hxx - An object with hue, chroma, and lightness properties.
+ * @param {number} hxx.hue - The hue value.
+ * @param {number} hxx.chroma - The chroma value.
+ * @param {number} hxx.lightness - The lightness value.
+ * @returns {string} - The CSS color function string in the format `oklch(lightness% chroma hue)`.
+ */
+export declare const hxxToCSSxLCH: ([hue, chroma, lightness]?: Vector3, mode?: hxxToCSSxLCHMode) => string;
 export declare const generateHSLRampParams: {
     hStart: {
         default: number;
