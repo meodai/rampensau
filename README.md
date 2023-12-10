@@ -1,10 +1,9 @@
 # Rampensau 🐷
 
-Rampensau is a color palette generation function that utilizes hue cycling and 
-easing functions to generate color ramps. 
+Rampensau is a color palette generation function that utilizes hue cycling and
+easing functions to generate color ramps.
 
 The perfect tool for generating color palettes for data visualizations, visual design, generative art, or just for fun.
-
 
 ![generated Rampensau color palettes Animation](./rampensau.gif)
 
@@ -61,15 +60,22 @@ function generateHSLRamp  ({
 
 ### generateHSLRamp(Options{})
 
-Function returns an array of colors in HSL format (`[0…360,0…1,0…1]`). 
+Function returns an array of colors in HSL format (`[0…360,0…1,0…1]`).
 (But it can easily to any other cartesian color format)
 
 #### Options
+
+Either:
 
 - `total` int 3…∞           → Amount of base colors.
 - `hStart` float 0…360      → Starting point of the hue ramp. 0 Red, 180 Teal etc..
 - `hStartCenter`: float 0…1      → Center the hue in the color ramp.
 - `hCycles` float -∞…0…+∞   → Number of hue cycles. (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
+
+Or:
+
+- `hueList` array [0…360]   → List of hues to use. All other hue options will be ignored.
+
 - `sRange` array [0…1,0…1]  → Saturation Range
 - `lRange` array [0…1,0…1]  → Lightness Range
 
@@ -77,14 +83,66 @@ Function returns an array of colors in HSL format (`[0…360,0…1,0…1]`).
 
 The `hStart` sets the starting point of the hue ramp. The `hStartCenter` sets where in the hue in the ramp the  should be centered. If your ramp starts with a high or low lightness, you might want to center the hue in the middle of the ramp. Thats is way the default value for `hStartCenter` is `0.5`. (In the center of a given ramp).
 
+##### Hue List
+
+If you want to use a specific list of hues, you can pass an array of hues to the `hueList` option. All other hue options will be ignored. For example, if you want to generate a ramp with 3 colors, but you want to use random unique hues, you can do this:
+
+```js
+import {
+  generateHSLRamp,
+  uniqueRandomHues,
+} from "rampensau";
+
+generateHSLRamp({
+  hueList: uniqueRandomHues({
+    startHue: Math.random() * 360, 
+    total: 5, 
+    minDistance: 90,
+  })
+})
+```
+
 ##### Easing Functions
 
-Each of the color dimensions can be eased using a custom function. 
+Each of the color dimensions can be eased using a custom function.
 The takes an input value `x` and returns a value between 0 and 1.:
 
 - `hEasing` function(x)     → Hue easing function
 - `sEasing` function(x)     → Saturation easing function
 - `lEasing` function(x)     → Saturation easing function
+
+### uniqueRandomHues(Options{})
+
+Function returns an array of unique random hues. Mostly useful for generating a list of hues to use with `hueList`. Alternatively you can use `(x) => Math.random()` as the `hEasing` function in `generateHSLRamp` but this will not guarantee unique hues.
+
+- `startHue` float 0…360        → Starting point of the hue ramp. 0 Red, 180 Teal etc..
+- `total` int 3…∞               → Amount of base colors.
+- `minHueDiffAngle` float 0…360 → Minimum angle between hues.
+- `rndFn` function()            → Random function. Defaults to `Math.random`.
+
+### colorHarmonies[colorHarmony](Options{})
+
+Function returns an array of colors in HSL format (`[0…360,0…1,0…1]`).
+
+- `colorHarmony` string → Color harmony to use. One of `complementary`, `analogous`, `triadic`, `tetradic`, `splitComplementary`, `square`, `rectangle`, `monochromatic`.
+- `hStart` float 0…360 → Starting point of the hue ramp. 0 Red, 180 Teal etc..
+
+Example:
+
+```js
+import {
+  generateHSLRamp,
+  colorHarmonies,
+} from "rampensau";
+
+generateHSLRamp({
+  hueList: colorHarmonies.splitComplementary({
+    hStart: Math.random() * 360,
+  }),
+  sRange: [0.4, 0.35],
+  lRange: [Math.random() * 0.1, 0.9],
+});
+```
 
 ## License
 
