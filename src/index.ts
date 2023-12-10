@@ -37,7 +37,6 @@ export type GenerateHSLRampArgumentFixedHues = BaseGenerateHSLRampArgument &
  * @param {GenerateHSLRampArgument} args - The arguments to generate the ramp.
  * @returns {Array<number>} - The color ramp.
  */
-
 export function generateHSLRamp(args: GenerateHSLRampArgument): Vector3[];
 export function generateHSLRamp(
   args: GenerateHSLRampArgumentFixedHues
@@ -162,46 +161,23 @@ export function uniqueRandomHues({
   return randomizedHues;
 }
 
-export function map(
-  n: number,
-  start1: number,
-  stop1: number,
-  start2: number,
-  stop2: number
-): number {
-  return ((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2;
-}
-
-export function scaleVector(
-  vector: number[],
-  originalScale: [number, number][] = [
-    [0, 360],
-    [0, 1],
-    [0, 1],
-  ],
-  targetScale: [number, number][] = [
-    [0, 360],
-    [0, 100],
-    [0, 100],
-  ]
-): number[] {
-  return vector.map((vec, i) =>
-    map(
-      vec,
-      originalScale?.[i]?.[0] || 0,
-      originalScale?.[i]?.[1] || 1,
-      targetScale?.[i]?.[0] || 0,
-      targetScale?.[i]?.[1] || 100
-    )
-  );
-}
-
-export function hslColorsToCSS(colors: Vector3[]): string[] {
-  return colors.map((hsl) => {
-    const [h, s, l] = scaleVector(hsl);
-    return `hsl(${h}, ${s}%, ${l}%)`;
-  });
-}
+export type hxxToCSSxLCHMode = "oklch" | "lch" | "hsl";
+/**
+ * Converts Hxx (Hue, Chroma, Lightness) values to a CSS `oklch()` color function string.
+ *
+ * @param {Object} hxx - An object with hue, chroma, and lightness properties.
+ * @param {number} hxx.hue - The hue value.
+ * @param {number} hxx.chroma - The chroma value.
+ * @param {number} hxx.lightness - The lightness value.
+ * @returns {string} - The CSS color function string in the format `oklch(lightness% chroma hue)`.
+ */
+export const hxxToCSSxLCH = (
+  [hue, chroma, lightness]: Vector3 = [0, 0, 0],
+  mode: hxxToCSSxLCHMode = "oklch"
+): string =>
+  `${mode}(${(lightness * 100).toFixed(2)}% ${chroma.toFixed(4)} ${hue.toFixed(
+    2
+  )})`;
 
 export const generateHSLRampParams = {
   hStart: {
