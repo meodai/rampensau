@@ -1646,15 +1646,31 @@
 
         viz(colors);
 
-        document.querySelector(
-          "[data-code]"
-        ).innerHTML = `generateHSLRamp({
-  total: <i>${PARAMS.total}</i>,
-  hStart: <i>${PARAMS.hStart.toFixed(3)}</i>,
+        let hueParams = `hStart: <i>${PARAMS.hStart.toFixed(3)}</i>,
   hStartCenter: <i>${PARAMS.hStartCenter.toFixed(3)}</i>,
   hEasing: 
     <i>${typeof PARAMS.hEasing === 'string' ? easingFunctions[PARAMS.hEasing] : PARAMS.hEasing}</i>,
   hCycles: <i>${PARAMS.hCycles.toFixed(3)}</i>,
+`
+
+        if (PARAMS.hueGenerator != 'Default') {
+          if (PARAMS.hueGenerator === 'Color Harmony') {
+            hueParams = `hueList: 
+  <i>colorHarmonies
+  .${PARAMS.colorHarmony}(${PARAMS.hStart.toFixed(1)})</i>,`
+          } else if (PARAMS.hueGenerator === 'Unique Random') {
+            hueParams = `hueList: <i>uniqueRandomHues({
+    startHue: ${PARAMS.hStart.toFixed(2)},
+    total: ${PARAMS.total},
+    minDistance: ${PARAMS.hMinDiffAngle},
+  })</i>,`
+          }
+        }
+        document.querySelector(
+          "[data-code]"
+        ).innerHTML = `generateHSLRamp({
+  total: <i>${PARAMS.total}</i>,
+  ${hueParams}
   sRange: <i>[${PARAMS.minSaturation.toFixed(3)}, ${PARAMS.maxSaturation.toFixed(3)}]</i>,
   sEasing: 
     <i>${typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing}</i>,
