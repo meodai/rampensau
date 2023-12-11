@@ -332,7 +332,8 @@
         margin-bottom: 4rem;
         flex-direction: column-reverse;
         box-shadow: 0 0 0 1vmin var(--dark);
-        overflow: hidden;
+        transition: box-shadow 300ms cubic-bezier(.7, .3, 0 ,1);
+        transition-delay: 300ms;
       }
       [data-colors]::after {
         content: '';
@@ -343,6 +344,8 @@
         z-index: 1;
         filter: blur(10vmin);
         transform: scale(0.9);
+        transition: opacity 200ms linear;
+        transition-delay: 500ms;
       }
 
       [data-colors] i {
@@ -352,7 +355,24 @@
         position: relative;
 
         font-size: calc(20vmin * 1/var(--total));
+        transition: transform 460ms cubic-bezier(.7, .3, 0 ,1);
+        transition-delay: calc(100ms + var(--i) * 200ms);
       }
+      /*
+      [data-colors]:hover {
+        overflow: visible;
+        box-shadow: 0 0 0 0 var(--dark);
+        transition-delay: 0ms;
+      }
+      [data-colors]:hover::after {
+        opacity: 0;
+        transition-delay: 0ms;
+      }
+      [data-colors]:hover i {
+        mix-blend-mode: multiply;
+        transform: rotate( calc(var(--rnd) * 5deg) ) translateX(calc(var(--rnd) * 5%)) translateY(calc(var(--rnd2) * 40%)) scale(1.05);
+      }
+      */
       [data-colors] span {
         position: absolute;
         left: 1em;
@@ -1694,9 +1714,10 @@
             .join(",")
         );
         document.querySelector("[data-colors]").innerHTML = colors.reduce(
-          (r, c) => {
+          (r, c, i) => {
+            const relI = i / PARAMS.total;
             const bestcontrast = c.contrast.white < c.contrast.black ? "black" : "white";
-            return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.css}; --c: ${bestcontrast}; --h: ${c.hsl[0]}; --l: ${c.hsl[2]};">
+            return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.css}; --c: ${bestcontrast}; --h: ${c.hsl[0]}; --l: ${c.hsl[2]}; --rnd: ${-1 + Math.random() * 2};  --rnd2: ${-1 + Math.random() * 2}; --i: ${relI};">
               <b>
                 ${c.hsl.map((c, i) => Math.round(i ? c * 100: c) + (i ? '%' : '°')).join(' ')}
               </b>
