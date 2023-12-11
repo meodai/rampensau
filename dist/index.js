@@ -139,11 +139,11 @@ var rampensau = (() => {
       props: { min: 0, max: 1, step: 1e-3 }
     },
     minSaturation: {
-      default: 0.4,
+      default: Math.random() < 0.5 ? 0.4 : 0.8 + Math.random() * 0.2,
       props: { min: 0, max: 1, step: 1e-3 }
     },
     maxSaturation: {
-      default: 0.35,
+      default: Math.random() < 0.5 ? 0.35 : 0.9 + Math.random() * 0.1,
       props: { min: 0, max: 1, step: 1e-3 }
     }
   };
