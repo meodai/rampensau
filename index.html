@@ -1585,6 +1585,7 @@
         document.querySelector('.pane__section--hstart').classList.remove('pane__section--hidden');
         document.querySelector('.pane__section--hstartcenter').classList.remove('pane__section--hidden');
         document.querySelector('.pane__section--hcycles').classList.remove('pane__section--hidden');
+        document.querySelector('.pane__section--heasing').classList.remove('pane__section--hidden');
         document.querySelector('.pane__section--colorharmony').classList.add('pane__section--hidden');
         document.querySelector('.pane__section--hmindiffangle').classList.add('pane__section--hidden');
 
@@ -1594,13 +1595,17 @@
         } else if (PARAMS.hueGenerator === 'Color Harmony') {
           document.querySelector('.pane__section--hstartcenter').classList.add('pane__section--hidden');
           document.querySelector('.pane__section--hcycles').classList.add('pane__section--hidden');
+          document.querySelector('.pane__section--heasing').classList.add('pane__section--hidden');
+          
           document.querySelector('.pane__section--colorharmony').classList.remove('pane__section--hidden');
+
           hueList = colorHarmonies[PARAMS.colorHarmony](PARAMS.hStart);
         } else if (PARAMS.hueGenerator === 'Unique Random') {
           document.querySelector('.pane__section--hmindiffangle').classList.remove('pane__section--hidden');
           document.querySelector('.pane__section--hstart').classList.add('pane__section--hidden');
           document.querySelector('.pane__section--hstartcenter').classList.add('pane__section--hidden');
           document.querySelector('.pane__section--hcycles').classList.add('pane__section--hidden');
+          document.querySelector('.pane__section--heasing').classList.add('pane__section--hidden');
           hueList = uniqueRandomHues({
             startHue: PARAMS.hStart,
             total: Math.min(PARAMS.total, 4),
