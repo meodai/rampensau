@@ -1606,9 +1606,16 @@
           document.querySelector('.pane__section--hstartcenter').classList.add('pane__section--hidden');
           document.querySelector('.pane__section--hcycles').classList.add('pane__section--hidden');
           document.querySelector('.pane__section--heasing').classList.add('pane__section--hidden');
+          
+          let totalRandomHues = 4;
+          
+          if (PARAMS.total > 4 && PARAMS.total < 8) {
+            totalRandomHues = 3;
+          }
+
           hueList = uniqueRandomHues({
             startHue: PARAMS.hStart,
-            total: Math.min(PARAMS.total, 4),
+            total: totalRandomHues,
             minDistance: PARAMS.hMinDiffAngle,
           });
         }
@@ -1662,7 +1669,7 @@
           } else if (PARAMS.hueGenerator === 'Unique Random') {
             hueParams = `hueList: <i>uniqueRandomHues({
     startHue: ${PARAMS.hStart.toFixed(2)},
-    total: ${PARAMS.total},
+    total: ${PARAMS.total > 4 && PARAMS.total < 8 ? 3 : 4},
     minDistance: ${PARAMS.hMinDiffAngle},
   })</i>,`
           }
