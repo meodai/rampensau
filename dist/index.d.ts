@@ -72,7 +72,35 @@ export declare type hxxToCSSxLCHMode = "oklch" | "lch" | "hsl";
  * @returns {string} - The CSS color function string in the format `oklch(lightness% chroma hue)`.
  */
 export declare const hxxToCSSxLCH: ([hue, chroma, lightness]?: Vector3, mode?: hxxToCSSxLCHMode) => string;
+declare type FillFunction<T> = T extends number ? (amt: number, from: T, to: T) => T : (amt: number, from: T | null, to: T | null) => T;
+/**
+ * Linearly interpolates between two values.
+ *
+ * @param {number} amt - The interpolation amount (usually between 0 and 1).
+ * @param {number} from - The starting value.
+ * @param {number} to - The ending value.
+ * @returns {number} - The interpolated value.
+ */
+export declare const lerp: FillFunction<number>;
+/**
+ * Scales and spreads an array to the target size using interpolation.
+ *
+ * @param {Array} initial - The initial array of values.
+ * @param {number} targetSize - The desired size of the resulting array.
+ * @param {function} fillFunction - The interpolation function (default is lerp).
+ * @returns {Array} The scaled and spread array.
+ * @throws {Error} If the initial array is empty or target size is invalid.
+ */
+export declare const scaleSpreadArray: <T>(initial: T[], targetSize: number, fillFunction?: FillFunction<T>) => T[];
 export declare const generateHSLRampParams: {
+    total: {
+        default: number;
+        props: {
+            min: number;
+            max: number;
+            step: number;
+        };
+    };
     hStart: {
         default: number;
         props: {
@@ -106,14 +134,6 @@ export declare const generateHSLRampParams: {
         };
     };
     maxLight: {
-        default: number;
-        props: {
-            min: number;
-            max: number;
-            step: number;
-        };
-    };
-    total: {
         default: number;
         props: {
             min: number;

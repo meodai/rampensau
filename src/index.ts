@@ -179,7 +179,71 @@ export const hxxToCSSxLCH = (
     2
   )})`;
 
+type FillFunction<T> = T extends number
+  ? (amt: number, from: T, to: T) => T
+  : (amt: number, from: T | null, to: T | null) => T;
+
+/**
+ * Linearly interpolates between two values.
+ *
+ * @param {number} amt - The interpolation amount (usually between 0 and 1).
+ * @param {number} from - The starting value.
+ * @param {number} to - The ending value.
+ * @returns {number} - The interpolated value.
+ */
+export const lerp: FillFunction<number> = (amt, from, to) =>
+  from + amt * (to - from);
+
+/**
+ * Scales and spreads an array to the target size using interpolation.
+ *
+ * @param {Array} initial - The initial array of values.
+ * @param {number} targetSize - The desired size of the resulting array.
+ * @param {function} fillFunction - The interpolation function (default is lerp).
+ * @returns {Array} The scaled and spread array.
+ * @throws {Error} If the initial array is empty or target size is invalid.
+ */
+export const scaleSpreadArray = <T>(
+  initial: T[],
+  targetSize: number,
+  fillFunction: FillFunction<T> = lerp as unknown as FillFunction<T>
+): T[] => {
+  if (initial.length === 0) {
+    throw new Error("Initial array must not be empty.");
+  }
+  if (targetSize < initial.length) {
+    throw new Error(
+      "Target size must be greater than or equal to the initial array length."
+    );
+  }
+
+  const valuesToAdd = targetSize - initial.length;
+  const chunkArray = initial.map((value) => [value]);
+
+  for (let i = 0; i < valuesToAdd; i++) {
+    (chunkArray[i % (initial.length - 1)] as T[]).push(null as unknown as T);
+  }
+
+  for (let i = 0; i < chunkArray.length - 1; i++) {
+    const currentChunk = chunkArray[i] as T[];
+    const nextChunk = chunkArray[i + 1] as T[];
+    const currentValue = currentChunk[0] as T;
+    const nextValue = nextChunk[0] as T;
+
+    for (let j = 1; j < currentChunk.length; j++) {
+      const percent = j / currentChunk.length;
+      currentChunk[j] = fillFunction(percent, currentValue, nextValue);
+    }
+  }
+
+  return chunkArray.flat() as T[];
+};
+
 export const generateHSLRampParams = {
+  total: {
+    default: 5,
+    props: { min: 4, max: 50, step: 1 },
+  },
   hStart: {
     default: 0,
     props: { min: 0, max: 360, step: 0.1 },
@@ -199,10 +263,6 @@ export const generateHSLRampParams = {
   maxLight: {
     default: 0.89 + Math.random() * 0.11,
     props: { min: 0, max: 1, step: 0.001 },
-  },
-  total: {
-    default: 5,
-    props: { min: 4, max: 50, step: 1 },
   },
   minSaturation: {
     default: 0.4,

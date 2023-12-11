@@ -566,6 +566,9 @@
       .pane__section + .pane__section {
         margin-top: calc(var(--size-gutter) * 2);
       }
+      .pane__section--hidden {
+        display: none;
+      }
       .pane__inputs {
         display: flex;
         touch-action: manipulation;
@@ -1048,6 +1051,8 @@
         generateHSLRamp,
         generateHSLRampParams,
         uniqueRandomHues,
+        colorHarmonies,
+        scaleSpreadArray,
       } from "./index.mjs";
 
       console.clear();
@@ -1132,8 +1137,6 @@
 
       const palette = (colors, method) => {
         let allColors = shuffleArray(colors);
-
-        console.log(allColors)
 
         let localcolors = [...allColors];
         $pal.innerHTML = "";
@@ -1351,7 +1354,14 @@
           $label.innerHTML = key;
           $label.classList.add(`${this.nameSpace}__label`);
 
-          $e.classList.add(`${this.nameSpace}__section`);
+
+          // make a css compatible version of the key
+          const cssKey = key.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+          $e.classList.add(
+            `${this.nameSpace}__section`, 
+            `${this.nameSpace}__section--${type}`,
+            `${this.nameSpace}__section--${cssKey}`
+          );
           $e.appendChild($label);
           $e.append($section);
 
@@ -1366,6 +1376,26 @@
       const PARAMS = {};
 
       const defaultParams = {
+        hueGenerator: {
+          default: 'Default',
+          props: {
+            options: ['Default', 'Color Harmony', 'Unique Random']
+          },
+        },
+        colorHarmony: {
+          default: 'splitComplementary',
+          props: {
+            options: Object.keys(colorHarmonies).reverse()
+          },
+        },
+        hMinDiffAngle: {
+          default: 60,
+          props: {
+            min: 15,
+            max: 180,
+            step: 1,
+          },
+        },
         ...generateHSLRampParams,
         hEasing: {
           default: 'linear',
@@ -1467,7 +1497,7 @@
         for (let i = 0; i < 4; i++) {
           $div.style.setProperty(
             `--col-${i}`,
-            colorArr[i].hex
+            colorArr[i % (colorArr.length - 1)].hex
           );
         }
 
@@ -1550,7 +1580,39 @@
         })
       }
 
-      function bam() {
+      function bam() { 
+        document.querySelector('.pane__section--hstart').classList.remove('pane__section--hidden');
+        document.querySelector('.pane__section--hstartcenter').classList.remove('pane__section--hidden');
+        document.querySelector('.pane__section--hcycles').classList.remove('pane__section--hidden');
+        document.querySelector('.pane__section--colorharmony').classList.add('pane__section--hidden');
+        document.querySelector('.pane__section--hmindiffangle').classList.add('pane__section--hidden');
+
+        let hueList;
+        
+        if (PARAMS.hueGenerator === 'Default') {
+        } else if (PARAMS.hueGenerator === 'Color Harmony') {
+          document.querySelector('.pane__section--hstartcenter').classList.add('pane__section--hidden');
+          document.querySelector('.pane__section--hcycles').classList.add('pane__section--hidden');
+          document.querySelector('.pane__section--colorharmony').classList.remove('pane__section--hidden');
+          hueList = colorHarmonies[PARAMS.colorHarmony](PARAMS.hStart);
+        } else if (PARAMS.hueGenerator === 'Unique Random') {
+          document.querySelector('.pane__section--hmindiffangle').classList.remove('pane__section--hidden');
+          document.querySelector('.pane__section--hstart').classList.add('pane__section--hidden');
+          document.querySelector('.pane__section--hstartcenter').classList.add('pane__section--hidden');
+          document.querySelector('.pane__section--hcycles').classList.add('pane__section--hidden');
+          hueList = uniqueRandomHues({
+            startHue: PARAMS.hStart,
+            total: Math.min(PARAMS.total, 4),
+            minDistance: PARAMS.hMinDiffAngle,
+          });
+        }
+
+        if (hueList && hueList.length > PARAMS.total) {
+          hueList = hueList.slice(0, PARAMS.total);
+        } else if (hueList && hueList.length < PARAMS.total) {
+          hueList = scaleSpreadArray(hueList, PARAMS.total);
+        }
+
         colors = generateHSLRamp({
           total: PARAMS.total,
           hStart: PARAMS.hStart,
@@ -1561,7 +1623,7 @@
           sEasing: typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing,
           lRange: [PARAMS.minLight, PARAMS.maxLight],
           lEasing: typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing,
-          //hueList: uniqueRandomHues({startHue: PARAMS.hStart, total: 5, minDistance: 90}),
+          hueList: hueList,
         });
 
         document.documentElement.style.setProperty('--total', colors.length);
@@ -1635,7 +1697,9 @@
           (a, b) => culori.wcagContrast(a.hex, bgc.hex) - culori.wcagContrast(b.hex, bgc.hex)
         );
 
-        document.documentElement.style.setProperty(`--csecondlast`, bestContrastTobgc.at(-2).css);
+        if (bestContrastTobgc.length) {
+          document.documentElement.style.setProperty(`--csecondlast`, bestContrastTobgc.at(-2).css);
+        }
 
         document.documentElement.style.setProperty(`--ts`, 
           colors.reverse().map((c,i) => `0 ${i * 4}px ${0}px ${c.css}`).join()
