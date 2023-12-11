@@ -68,7 +68,36 @@ function uniqueRandomHues({
   return randomizedHues;
 }
 var hxxToCSSxLCH = ([hue, chroma, lightness] = [0, 0, 0], mode = "oklch") => `${mode}(${(lightness * 100).toFixed(2)}% ${chroma.toFixed(4)} ${hue.toFixed(2)})`;
+var lerp = (amt, from, to) => from + amt * (to - from);
+var scaleSpreadArray = (initial, targetSize, fillFunction = lerp) => {
+  if (initial.length === 0) {
+    throw new Error("Initial array must not be empty.");
+  }
+  if (targetSize < initial.length) {
+    throw new Error("Target size must be greater than or equal to the initial array length.");
+  }
+  const valuesToAdd = targetSize - initial.length;
+  const chunkArray = initial.map((value) => [value]);
+  for (let i = 0; i < valuesToAdd; i++) {
+    chunkArray[i % (initial.length - 1)].push(null);
+  }
+  for (let i = 0; i < chunkArray.length - 1; i++) {
+    const currentChunk = chunkArray[i];
+    const nextChunk = chunkArray[i + 1];
+    const currentValue = currentChunk[0];
+    const nextValue = nextChunk[0];
+    for (let j = 1; j < currentChunk.length; j++) {
+      const percent = j / currentChunk.length;
+      currentChunk[j] = fillFunction(percent, currentValue, nextValue);
+    }
+  }
+  return chunkArray.flat();
+};
 var generateHSLRampParams = {
+  total: {
+    default: 5,
+    props: { min: 4, max: 50, step: 1 }
+  },
   hStart: {
     default: 0,
     props: { min: 0, max: 360, step: 0.1 }
@@ -89,10 +118,6 @@ var generateHSLRampParams = {
     default: 0.89 + Math.random() * 0.11,
     props: { min: 0, max: 1, step: 1e-3 }
   },
-  total: {
-    default: 5,
-    props: { min: 4, max: 50, step: 1 }
-  },
   minSaturation: {
     default: 0.4,
     props: { min: 0, max: 1, step: 1e-3 }
@@ -107,6 +132,8 @@ export {
   generateHSLRamp,
   generateHSLRampParams,
   hxxToCSSxLCH,
+  lerp,
+  scaleSpreadArray,
   shuffleArray,
   uniqueRandomHues
 };
