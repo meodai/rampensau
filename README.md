@@ -52,7 +52,8 @@ function generateColorRamp  ({
   hCycles : 1,                           // number of full hue cycles 
                                          // (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
   hStartCenter : 0.5,                    // where in the ramp the hue should be centered
-  hEasing : (x, fr) => x,                // hue easing function
+  hEasing : (x, fr) => x,                // hue easing function x is a value between 0 and 1 
+                                         // fr is the size of each fraction of the ramp: (1 / total)
 
   // if you want to use a specific list of hues, you can pass an array of hues to the hueList option
   // all other hue options will be ignored
