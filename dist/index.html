@@ -1561,7 +1561,7 @@
         for (let i = 0; i < 4; i++) {
           $div.style.setProperty(
             `--col-${i}`,
-            colorArr[i % (colorArr.length - 1)].hex
+            colorArr[i % (colorArr.length - 1)].css
           );
         }
 
@@ -1609,9 +1609,7 @@
             hsl: [h, s, l],
             rgb: [r * 255, g * 255, b * 255],
             hex: culori.formatHex({ mode: colorMode, ...channels }),
-            css: culori.formatHex(
-              { mode: colorMode, ...channels }
-            ),
+            css: culori.formatCss({ mode: colorMode, ...channels }),
             contrast: {
               white: culori.wcagContrast("#ffffff", { mode: 'hsl', ...channels }),
               black: culori.wcagContrast("#000000", { mode: 'hsl', ...channels }),
