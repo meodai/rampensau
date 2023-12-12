@@ -61,7 +61,7 @@ export declare function uniqueRandomHues({ startHue, total, minHueDiffAngle, rnd
     minHueDiffAngle?: number | undefined;
     rndFn?: (() => number) | undefined;
 }): number[];
-export declare type hxxToCSSxLCHMode = "oklch" | "lch" | "hsl";
+export declare type colorToCSSxLCHMode = "oklch" | "lch" | "hsl";
 /**
  * Converts Hxx (Hue, Chroma, Lightness) values to a CSS `oklch()` color function string.
  *
@@ -71,7 +71,7 @@ export declare type hxxToCSSxLCHMode = "oklch" | "lch" | "hsl";
  * @param {number} hxx.lightness - The lightness value.
  * @returns {string} - The CSS color function string in the format `oklch(lightness% chroma hue)`.
  */
-export declare const hxxToCSSxLCH: ([hue, chroma, lightness]?: Vector3, mode?: hxxToCSSxLCHMode) => string;
+export declare const colorToCSS: (color: Vector3, mode?: colorToCSSxLCHMode, precision?: number) => string;
 declare type FillFunction<T> = T extends number ? (amt: number, from: T, to: T) => T : (amt: number, from: T | null, to: T | null) => T;
 /**
  * Linearly interpolates between two values.

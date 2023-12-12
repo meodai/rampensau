@@ -74,7 +74,7 @@ function generateColorRamp  ({
 
 **generateColorRamp** is the core function of **RampenSau***, it returns an array of colors in **HSL** format (`[0…360, 0…1, 0…1]`). To get a better understanding of the options, it might be helpful to familiarize yourself with the [HSL color model](https://en.wikipedia.org/wiki/HSL_and_HSV) or to play with the interactive [Demo / Documentation](https://meodai.github.io/rampensau/).
 
-The function returns an array of colors in HXX format (`[0…360,0…1,0…1]`). (HXX because you can use HSL, HSV, LCH, OKLCH et...) The first value is the hue, the second the saturation and the third the lightness. The hue is a value between 0 and 360, the saturation and lightness are values between 0 and 1. Typically you would convert the values to a polar color model like HSL, lCH or okLCh before using them. `hsl(${color[0]} ${color[1] * 100}% ${color[2]*100}%)` / `oklch(${color[2]*100}% ${color[1]*100}% color[0])` is a good choice for CSS.
+The function returns an array of colors in HXX format (`[0…360,0…1,0…1]`). (HXX because you can use HSL, HSV, LCH, OKLCH et...) The first value is the hue, the second the saturation and the third the lightness. The hue is a value between 0 and 360, the saturation and lightness are values between 0 and 1. Typically you would convert the values to a polar color model like HSL, lCH or okLCh before using them. `hsl(${color[0]} ${color[1] * 100}% ${color[2]*100}%)` / `oklch(${color[2]*100}% ${color[1]*100}% color[0])` is a good choice for CSS. (See [colorToCSS](#colorToCSS) helper function).
 
 #### Options
 
@@ -174,6 +174,27 @@ generateColorRamp({
   lRange: [Math.random() * 0.1, 0.9],
 });
 ```
+
+### colorToCSS(color)
+
+Function returns a CSS string from a color in color format generated from **generateColorRamp** (`[0…360,0…1,0…1]`).
+
+- `color` array [0…360,0…1,0…1] → Color in color format generated from **generateColorRamp** (`[0…360,0…1,0…1]`).
+- `mode` string → Color mode to use. One of `hsl`, `hsv`, `lch`, `oklch`. Defaults to `oklch`.
+- `precision` int → Number of decimal places. Defaults to `4`.
+
+**Example**:
+  
+  ```js
+  import {
+    generateColorRamp,
+    colorToCSS,
+  } from "rampensau";
+
+  console.log( 
+    generateColorRamp().map(color => colorToCSS(color, 'oklch')) 
+  ); // ['oklch(0.0557 0.4 348.3975)', 'oklch(0.1459 0.3872 314.7438)', …]
+  ```
 
 ## License
 

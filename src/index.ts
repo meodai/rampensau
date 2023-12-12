@@ -163,7 +163,30 @@ export function uniqueRandomHues({
   return randomizedHues;
 }
 
-export type hxxToCSSxLCHMode = "oklch" | "lch" | "hsl";
+function toFixed(value: number, precision: number): number {
+  const power = Math.pow(10, precision || 0);
+  return Math.round(value * power) / power;
+}
+
+const colorModsCSS = {
+  oklch: (color, precision) => [
+    toFixed(color[2], precision),
+    toFixed(color[1] * 0.4, precision),
+    toFixed(color[0], precision),
+  ],
+  lch: (color, precision) => [
+    toFixed(color[2] * 100, precision),
+    toFixed(color[1] * 150, precision),
+    toFixed(color[0], precision),
+  ],
+  hsl: (color, precision) => [
+    toFixed(color[0], precision),
+    toFixed(color[1] * 100, precision) + "%",
+    toFixed(color[2] * 100, precision) + "%",
+  ],
+};
+
+export type colorToCSSxLCHMode = "oklch" | "lch" | "hsl";
 /**
  * Converts Hxx (Hue, Chroma, Lightness) values to a CSS `oklch()` color function string.
  *
@@ -173,13 +196,11 @@ export type hxxToCSSxLCHMode = "oklch" | "lch" | "hsl";
  * @param {number} hxx.lightness - The lightness value.
  * @returns {string} - The CSS color function string in the format `oklch(lightness% chroma hue)`.
  */
-export const hxxToCSSxLCH = (
-  [hue, chroma, lightness]: Vector3 = [0, 0, 0],
-  mode: hxxToCSSxLCHMode = "oklch"
-): string =>
-  `${mode}(${(lightness * 100).toFixed(2)}% ${chroma.toFixed(4)} ${hue.toFixed(
-    2
-  )})`;
+export const colorToCSS = (
+  color: Vector3,
+  mode: colorToCSSxLCHMode = "oklch",
+  precision = 4
+): string => `${mode}(${colorModsCSS[mode](color, precision).join(" ")})`;
 
 type FillFunction<T> = T extends number
   ? (amt: number, from: T, to: T) => T

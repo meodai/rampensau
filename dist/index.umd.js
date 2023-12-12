@@ -21,9 +21,9 @@ var rampensau = (() => {
   var src_exports = {};
   __export(src_exports, {
     colorHarmonies: () => colorHarmonies,
+    colorToCSS: () => colorToCSS,
     generateColorRamp: () => generateColorRamp,
     generateColorRampParams: () => generateColorRampParams,
-    hxxToCSSxLCH: () => hxxToCSSxLCH,
     lerp: () => lerp,
     scaleSpreadArray: () => scaleSpreadArray,
     shuffleArray: () => shuffleArray,
@@ -97,7 +97,28 @@ var rampensau = (() => {
     }
     return randomizedHues;
   }
-  var hxxToCSSxLCH = ([hue, chroma, lightness] = [0, 0, 0], mode = "oklch") => `${mode}(${(lightness * 100).toFixed(2)}% ${chroma.toFixed(4)} ${hue.toFixed(2)})`;
+  function toFixed(value, precision) {
+    const power = Math.pow(10, precision || 0);
+    return Math.round(value * power) / power;
+  }
+  var colorModsCSS = {
+    oklch: (color, precision) => [
+      toFixed(color[2], precision),
+      toFixed(color[1] * 0.4, precision),
+      toFixed(color[0], precision)
+    ],
+    lch: (color, precision) => [
+      toFixed(color[2] * 100, precision),
+      toFixed(color[1] * 150, precision),
+      toFixed(color[0], precision)
+    ],
+    hsl: (color, precision) => [
+      toFixed(color[0], precision),
+      toFixed(color[1] * 100, precision) + "%",
+      toFixed(color[2] * 100, precision) + "%"
+    ]
+  };
+  var colorToCSS = (color, mode = "oklch", precision = 4) => `${mode}(${colorModsCSS[mode](color, precision).join(" ")})`;
   var lerp = (amt, from, to) => from + amt * (to - from);
   var scaleSpreadArray = (initial, targetSize, fillFunction = lerp) => {
     if (initial.length === 0) {
