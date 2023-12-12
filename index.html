@@ -1096,6 +1096,7 @@
         uniqueRandomHues,
         colorHarmonies,
         scaleSpreadArray,
+        colorToCSS,
       } from "./index.mjs";
 
       console.clear();
@@ -1573,11 +1574,14 @@
         // Mutate colors object
         return colors.map(([h, s, l]) => {
           const channels = {};
-
+          let css;
           if (colorMode === 'hsl' || colorMode === 'okhsl') {
             channels.h = h;
             channels.s = s;
             channels.l = l;
+            if (colorMode === 'hsl') {
+              css = colorToCSS([h, s, l], 'hsl')
+            }
           } else if (colorMode === 'hsv' || colorMode === 'okhsv') {
             channels.h = h;
             channels.s = s;
@@ -1594,10 +1598,12 @@
             channels.l = l;
             channels.c = s * 0.4;
             channels.h = h;
+            css = colorToCSS([h, s, l], 'oklch');
           } else if (colorMode === 'lch') {
             channels.l = l * 100;
             channels.c = s * 150;
             channels.h = h;
+            css = colorToCSS([h, s, l], 'lch');
           }
 
           const { r, g, b } = culori.converter("rgb")({
@@ -1609,7 +1615,7 @@
             hsl: [h, s, l],
             rgb: [r * 255, g * 255, b * 255],
             hex: culori.formatHex({ mode: colorMode, ...channels }),
-            css: culori.formatCss({ mode: colorMode, ...channels }),
+            css: css || culori.formatCss({ mode: colorMode, ...channels }),
             contrast: {
               white: culori.wcagContrast("#ffffff", { mode: 'hsl', ...channels }),
               black: culori.wcagContrast("#000000", { mode: 'hsl', ...channels }),
