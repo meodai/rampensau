@@ -11,7 +11,7 @@ Check out a simple [demo](https://codepen.io/meodai/pen/yLvgxQK?editors=0010) or
 
 ## Installation
 
-Rampensau is bundled as both UMD and ES on npm. Install it using your package manager of choice:
+**Rampensau** is bundled as both UMD and ES on npm. Install it using your package manager of choice:
 
 ```js
 npm install rampensau

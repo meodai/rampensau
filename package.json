@@ -4,7 +4,7 @@
   "description": "Color ramp generator using curves within the HSL color model",
   "type": "module",
   "main": "./dist/index.cjs",
-  "module": "./dist/index.min.mjs",
+  "module": "./dist/index.mjs",
   "browser": "./dist/index.min.js",
   "jsdelivr": "./dist/index.umd.js",
   "exports": {
