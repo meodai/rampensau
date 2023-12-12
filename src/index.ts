@@ -163,27 +163,10 @@ export function uniqueRandomHues({
   return randomizedHues;
 }
 
-function toFixed(value: number, precision: number): number {
-  const power = Math.pow(10, precision || 0);
-  return Math.round(value * power) / power;
-}
-
 const colorModsCSS = {
-  oklch: (color, precision) => [
-    toFixed(color[2], precision),
-    toFixed(color[1] * 0.4, precision),
-    toFixed(color[0], precision),
-  ],
-  lch: (color, precision) => [
-    toFixed(color[2] * 100, precision),
-    toFixed(color[1] * 150, precision),
-    toFixed(color[0], precision),
-  ],
-  hsl: (color, precision) => [
-    toFixed(color[0], precision),
-    toFixed(color[1] * 100, precision) + "%",
-    toFixed(color[2] * 100, precision) + "%",
-  ],
+  oklch: (color) => [color[2], color[1] * 0.4, color[0]],
+  lch: (color) => [color[2] * 100, color[1] * 150, color[0]],
+  hsl: (color) => [color[0], color[1] * 100 + "%", color[2] * 100 + "%"],
 };
 
 export type colorToCSSxLCHMode = "oklch" | "lch" | "hsl";
@@ -198,9 +181,8 @@ export type colorToCSSxLCHMode = "oklch" | "lch" | "hsl";
  */
 export const colorToCSS = (
   color: Vector3,
-  mode: colorToCSSxLCHMode = "oklch",
-  precision = 4
-): string => `${mode}(${colorModsCSS[mode](color, precision).join(" ")})`;
+  mode: colorToCSSxLCHMode = "oklch"
+): string => `${mode}(${colorModsCSS[mode](color).join(" ")})`;
 
 type FillFunction<T> = T extends number
   ? (amt: number, from: T, to: T) => T

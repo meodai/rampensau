@@ -181,7 +181,6 @@ Function returns a CSS string from a color in color format generated from **gene
 
 - `color` array [0…360,0…1,0…1] → Color in color format generated from **generateColorRamp** (`[0…360,0…1,0…1]`).
 - `mode` string → Color mode to use. One of `hsl`, `lch` or `oklch`. Defaults to `oklch`. (Note that `hsl` is clamped to the sRGB gamut, while `lch` and `oklch` will make use of the full gamut supported by the target monitor / device.)
-- `precision` int → Number of decimal places. Defaults to `4`.
 
 **Example**:
   

@@ -71,7 +71,7 @@ export declare type colorToCSSxLCHMode = "oklch" | "lch" | "hsl";
  * @param {number} hxx.lightness - The lightness value.
  * @returns {string} - The CSS color function string in the format `oklch(lightness% chroma hue)`.
  */
-export declare const colorToCSS: (color: Vector3, mode?: colorToCSSxLCHMode, precision?: number) => string;
+export declare const colorToCSS: (color: Vector3, mode?: colorToCSSxLCHMode) => string;
 declare type FillFunction<T> = T extends number ? (amt: number, from: T, to: T) => T : (amt: number, from: T | null, to: T | null) => T;
 /**
  * Linearly interpolates between two values.
