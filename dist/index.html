@@ -108,6 +108,7 @@
         padding: 1rem 2rem 1rem;
         margin: 1rem -2rem 0;
         background: var(--dark);
+        box-shadow: 0 0 5rem var(--dark);
       }
 
       .code-title {
@@ -136,8 +137,14 @@
         border: 2px solid currentColor;
         display: block;
         width: 100%;
+        font-weight: 900;
         /*margin-bottom: 2.5rem;*/
-        /*box-shadow: var(--ts);*/
+      }
+
+      .rnd-settings:hover {
+        background: var(--highlight);
+        color: var(--dark);
+        border-color: var(--highlight);
       }
 
       .projectlink {
@@ -158,7 +165,8 @@
         position: relative;
         width: 100%;
         aspect-ratio: 1;
-        perspective: 300px;
+        perspective: 500px;
+        margin-bottom: -3rem;
       }
 
       [data-viz] .disc {
@@ -949,11 +957,11 @@
             <a class="projectlink" href="https://github.com/meodai/rampensau">Github</a>
           </aside>
           <aside>
-            <h3>Settings</h3>
-            <button class="rnd-settings" data-randomize>Randomize Settings</button>
             <div class="settings__inner">
               <div data-viz></div>
             </div>
+            <h3>Settings</h3>
+            <button class="rnd-settings" data-randomize>Randomize Settings</button>
             <div class="settings__inner">
               <div data-pane></div>
             </div>
