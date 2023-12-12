@@ -1,11 +1,11 @@
 # RampenSau 🐷
 
 **RampenSau** is a color palette generation function that utilizes **hue cycling** and
-**easing functions** to generate color ramps. 
+**easing functions** to generate color ramps. It can generate a sequence of hues, or use a list of hues to generate a color ramp.
 
 Perfect for generating color palettes for data visualizations, visual design, generative art, or just for fun.
 
-![generated Rampensau color palettes Animation](./rampensau.gif)
+![generated RampenSau color palettes Animation](./rampensau.gif)
 
 Check out a simple [demo](https://codepen.io/meodai/pen/yLvgxQK?editors=0010) or see it in action over on [farbvelo](https://farbvelo.elastiq.ch/).
 
@@ -17,17 +17,17 @@ Check out a simple [demo](https://codepen.io/meodai/pen/yLvgxQK?editors=0010) or
 npm install rampensau
 ```
 
-You can then import rampensau into your project:
+You can then import RampenSau into your project:
 
 ```js
-// CJS style
-let generateRandomColorRamp = require("rampensau");
-
 // ES style: import individual methods
 import { generateRandomColorRamp } from "rampensau";
 
 // Depending on your setup, you might need to import the MJS version directly
 import { generateRandomColorRamp } from "rampensau/dist/index.mjs";
+
+// CJS style
+let generateRandomColorRamp = require("rampensau");
 ```
 
 Or include it directly in your HTML:
@@ -40,12 +40,13 @@ Or include it directly in your HTML:
 </script>
 ```
 
-## Usage
+## Basic Usage
 
 ```js
 import { generateColorRamp } from 'rampensau';
 
 function generateColorRamp  ({
+  // hue generation options
   total   : 9,                           // number of colors in the ramp
   hStart  : Math.random() * 360,         // hue at the start of the ramp
   hCycles : 1,                           // number of full hue cycles 
@@ -53,9 +54,16 @@ function generateColorRamp  ({
   hStartCenter : 0.5,                    // where in the ramp the hue should be centered
   hEasing : (x, fr) => x,                // hue easing function
 
+  // if you want to use a specific list of hues, you can pass an array of hues to the hueList option
+  // all other hue options will be ignored
+
+  // hueList : […],                      // list of hues to use
+
+  // saturation
   sRange  : [0.4, 0.35],                 // saturation range
   sEasing : (x, fr) => Math.pow(x, 2),   // saturation easing function
 
+  // lightness
   lRange  : [Math.random() * 0.1, 0.9],  // lightness range
   lEasing : (x, fr) => Math.pow(x, 1.5), // lightness easing function
 });
@@ -63,32 +71,40 @@ function generateColorRamp  ({
 
 ### generateColorRamp(Options{})
 
-Function returns an array of colors in HSL format (`[0…360,0…1,0…1]`).
-(But it can easily to any other cartesian color format)
+**generateColorRamp** is the core function of **RampenSau***, it returns an array of colors in **HSL** format (`[0…360, 0…1, 0…1]`). To get a better understanding of the options, it might be helpful to familiarize yourself with the [HSL color model](https://en.wikipedia.org/wiki/HSL_and_HSV) or to play with the interactive [Demo / Documentation](https://meodai.github.io/rampensau/).
+
+The function returns an array of colors in HXX format (`[0…360,0…1,0…1]`). The first value is the hue, the second the saturation and the third the lightness. The hue is a value between 0 and 360, the saturation and lightness are values between 0 and 1. Typically you would convert the values to a polar color model like HSL, lCH or okLCh before using them. `hsl(${color[0]} ${color[1] * 100}% ${color[2]*100}%)` / `oklch(${color[2]*100}% ${color[1]*100}% color[0])` is a good choice for CSS.
 
 #### Options
 
-Either:
+Every single option has a default value, so you can just call the function without any arguments.
+It will generate a color ramp with 9 colors, starting at a random hue, with a single hue cycle,
 
-- `total` int 3…∞           → Amount of base colors.
+While the function always generates some sort of color ramp, there are two main ways to generate hues independently of saturation and lightness: **Let the function generate a sequence of hues**, or **pass a list of hues** to use.
+
+##### Hue sequence generation
+
+If you want to generate a sequence of hues, you can use the following options:
+
+- `total` int 3…∞           → Amount of colors the function will generate.
 - `hStart` float 0…360      → Starting point of the hue ramp. 0 Red, 180 Teal etc..
-- `hStartCenter`: float 0…1      → Center the hue in the color ramp.
+- `hStartCenter`: float 0…1 → Center the hue in the color ramp.
 - `hCycles` float -∞…0…+∞   → Number of hue cycles. (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
-
-Or:
-
-- `hueList` array [0…360]   → List of hues to use. All other hue options will be ignored.
-
-- `sRange` array [0…1,0…1]  → Saturation Range
-- `lRange` array [0…1,0…1]  → Lightness Range
-
-##### Hue Start & Center
+- `hEasing` function(x)     → Hue easing function
 
 The `hStart` sets the starting point of the hue ramp. The `hStartCenter` sets where in the hue in the ramp the  should be centered. If your ramp starts with a high or low lightness, you might want to center the hue in the middle of the ramp. Thats is way the default value for `hStartCenter` is `0.5`. (In the center of a given ramp).
+
+The `hCycles` option sets the number of hue cycles. A value of `1` will generate a ramp with a single hue cycle. A value of `0.5` will generate a ramp with 180° hue cycle. A value of `2` will generate a ramp with 720° hue cycle. A value of `-1` will generate a ramp with a reversed hue cycle. A value of `-0.5` will generate a ramp with a reversed 180° hue cycle. A value of `-2` will generate a ramp with a reversed 720° hue cycle.
+
+The `hEasing` option sets the easing function for the hue. The function takes an input value `x` and returns a value between 0 and 1. The default value is `(x) => x` which will generate a linear ramp.
 
 ##### Hue List
 
 If you want to use a specific list of hues, you can pass an array of hues to the `hueList` option. All other hue options will be ignored. For example, if you want to generate a ramp with 3 colors, but you want to use random unique hues, you can do this:
+
+- `hueList` array [0…360]   → List of hues to use. All other hue options will be ignored.
+
+**Example:**
 
 ```js
 import {
@@ -105,6 +121,13 @@ generateColorRamp({
 })
 ```
 
+The `uniqueRandomHues` function will generate a list of unique hues with a minimum distance of 90° between each hue. This list is then passed to the `hueList` option of `generateColorRamp`. `uniqueRandomHues` is also exported by RampenSau, so you can use it directly.
+
+##### Saturation & Lightness
+
+- `sRange` array [0…1,0…1]  → Saturation Range
+- `lRange` array [0…1,0…1]  → Lightness Range
+
 ##### Easing Functions
 
 Each of the color dimensions can be eased using a custom function.
@@ -113,6 +136,8 @@ The takes an input value `x` and returns a value between 0 and 1.:
 - `hEasing` function(x)     → Hue easing function
 - `sEasing` function(x)     → Saturation easing function
 - `lEasing` function(x)     → Saturation easing function
+
+## Hue Generation Functions
 
 ### uniqueRandomHues(Options{})
 
