@@ -89,11 +89,13 @@ If you want to generate a sequence of hues, you can use the following options:
 
 - `total` int 3…∞           → Amount of colors the function will generate.
 - `hStart` float 0…360      → Starting point of the hue ramp. 0 Red, 180 Teal etc..
-- `hStartCenter`: float 0…1 → Center the hue in the color ramp.
+- `hStartCenter`: float 0…1 → Center the hue in the color ramp. 0 = start, 0.5 = middle, 1 = end.
 - `hCycles` float -∞…0…+∞   → Number of hue cycles. (.5 = 180°, 1 = 360°, 2 = 720°, etc.)
 - `hEasing` function(x)     → Hue easing function
 
 The `hStart` sets the starting point of the hue ramp. The `hStartCenter` sets where in the hue in the ramp the  should be centered. If your ramp starts with a high or low lightness, you might want to center the hue in the middle of the ramp. Thats is way the default value for `hStartCenter` is `0.5`. (In the center of a given ramp).
+
+The `hStartCenter` option tells the function where the start hue should be in your ramp. A value of `0` will generate a ramp that starts with the hue at the beginning of the ramp. A value of `0.5` will generate a ramp that starts with the hue in the middle of the ramp. A value of `1` will generate a ramp that starts with the hue at the end of the ramp.
 
 The `hCycles` option sets the number of hue cycles. A value of `1` will generate a ramp with a single hue cycle. A value of `0.5` will generate a ramp with 180° hue cycle. A value of `2` will generate a ramp with 720° hue cycle. A value of `-1` will generate a ramp with a reversed hue cycle. A value of `-0.5` will generate a ramp with a reversed 180° hue cycle. A value of `-2` will generate a ramp with a reversed 720° hue cycle.
 
