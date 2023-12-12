@@ -151,7 +151,7 @@ Function returns an array of unique random hues. Mostly useful for generating a 
 - `minHueDiffAngle` float 0…360 → Minimum angle between hues.
 - `rndFn` function()            → Random function. Defaults to `Math.random`.
 
-### colorHarmonies[colorHarmony](Options{})
+### colorHarmonies.colorHarmony(Options{})
 
 Function returns an array of colors in HSL format (`[0…360,0…1,0…1]`).
 
