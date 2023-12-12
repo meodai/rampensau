@@ -24,7 +24,10 @@
     <meta property="twitter:image" content="https://meodai.github.io/rampensau/socialfb.png">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap"
       rel="stylesheet"
@@ -150,16 +153,6 @@
       figcaption {
         display: none;
       }
-
-      /*
-        --total
-        --hStart
-        --hCycles
-        --sRangeMin
-        --sRangeMax
-        --lRangeMin
-        --lRangeMax
-      */
 
       [data-viz] {
         position: relative;
@@ -1090,6 +1083,21 @@
 
       console.clear();
 
+      const $favicon = document.querySelector('link[rel="icon"]');
+      const $favCanvas = document.createElement("canvas");
+      const favCtx = $favCanvas.getContext("2d");
+
+      function updateFavicon(colors) {
+        $favCanvas.width = 64;
+        $favCanvas.height = 64;
+        favCtx.clearRect(0, 0, 64, 64);
+        colors.forEach((c, i) => {
+          favCtx.fillStyle = c;
+          favCtx.fillRect(0, i * 64 / colors.length, 64, 64 / colors.length);
+        });
+        $favicon.href = $favCanvas.toDataURL();
+      };
+
       const easingFunctions = {
         linear: x => x,
         easeInSine: x => 1 - Math.cos((x * Math.PI) / 2),
@@ -1773,6 +1781,7 @@
         );
 
         names(colors);
+        updateFavicon(colors.map(c => c.hex));
         np(hueList);
       }
        
