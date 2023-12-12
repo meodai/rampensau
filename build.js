@@ -25,7 +25,7 @@ build({
   logLevel: "info",
   bundle: true,
   format: "esm",
-  target: "es2020",
+  target: "es2019",
   outfile: "dist/index.mjs",
 });
 
@@ -36,7 +36,7 @@ build({
   bundle: true,
   minify: true,
   format: "esm",
-  target: "es2020",
+  target: "es2019",
   outfile: "dist/index.min.mjs",
 });
 
