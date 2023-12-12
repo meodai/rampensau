@@ -165,8 +165,14 @@
         position: relative;
         width: 100%;
         aspect-ratio: 1;
-        perspective: 500px;
+        perspective: 300px;
         margin-bottom: -3rem;
+        will-change: perspective;
+        transition: perspective 300ms cubic-bezier(.7, .3, 0 ,1);
+      }
+
+      [data-viz]:hover {
+        perspective: 1000px;
       }
 
       [data-viz] .disc {
@@ -175,10 +181,9 @@
         left: 50%;
         width: 7rem;
         height: 7rem;
-        transform: translate(-50%, 0) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(calc(sin(.1 + var(--c-i2) * .9))) scale(1.5);
+        transform: translate(-50%, 0) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(calc(sin(.1 + var(--c-i2) * 1.5))) scale(1.5);
         transition: calc(300ms - 50ms + var(--c-i2) * 200ms) transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
       }
-
 
       [data-viz] .disc::before {
         content: "";
