@@ -177,4 +177,4 @@ generateColorRamp({
 
 ## License
 
-Rampensau is distributed under the MIT License.
+Rampensau is distributed under the [MIT License](./LICENSE).

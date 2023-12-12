@@ -1095,7 +1095,12 @@
           favCtx.fillStyle = c;
           favCtx.fillRect(0, i * 64 / colors.length, 64, 64 / colors.length);
         });
+        // add a border
+        favCtx.strokeStyle = "#000";
+        favCtx.lineWidth = 2;
+        favCtx.strokeRect(2, 2, 60, 60);
         $favicon.href = $favCanvas.toDataURL();
+
       };
 
       const easingFunctions = {
