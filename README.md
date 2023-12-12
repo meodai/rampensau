@@ -79,7 +79,7 @@ The function returns an array of colors in HXX format (`[0…360,0…1,0…1]`).
 #### Options
 
 Every single option has a default value, so you can just call the function without any arguments.
-It will generate a color ramp with 9 colors, starting at a random hue, with a single hue cycle,
+It will generate a color ramp with 9 colors, starting at a random hue, with a single hue cycle.
 
 While the function always generates some sort of color ramp, there are two main ways to generate hues independently of saturation and lightness: **Let the function generate a sequence of hues**, or **pass a list of hues** to use.
 
@@ -97,7 +97,7 @@ The `hStart` sets the starting point of the hue ramp. The `hStartCenter` sets wh
 
 The `hStartCenter` option tells the function where the start hue should be in your ramp. A value of `0` will generate a ramp that starts with the hue at the beginning of the ramp. A value of `0.5` will generate a ramp that starts with the hue in the middle of the ramp. A value of `1` will generate a ramp that starts with the hue at the end of the ramp.
 
-The `hCycles` option sets the number of hue cycles. A value of `1` will generate a ramp with a single hue cycle. A value of `0.5` will generate a ramp with 180° hue cycle. A value of `2` will generate a ramp with 720° hue cycle. A value of `-1` will generate a ramp with a reversed hue cycle. A value of `-0.5` will generate a ramp with a reversed 180° hue cycle. A value of `-2` will generate a ramp with a reversed 720° hue cycle.
+The `hCycles` option sets the number of hue cycles. A value of `1` will generate a ramp with a single hue cycle. A value of `0.5` will generate a ramp with 180° hue cycle (starting from hStart to its complementary hue). A value of `2` will rotate around the color wheel twice. A value of `-1` will generate a ramp with a reversed hue cycle. A value of `-0.5` will generate a ramp with a reversed 180° hue cycle. A value of `-2` will generate a ramp with a reversed 720° hue cycle.
 
 The `hEasing` option sets the easing function for the hue. The function takes an input value `x` and returns a value between 0 and 1. The default value is `(x) => x` which will generate a linear ramp.
 
