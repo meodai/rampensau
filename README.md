@@ -1,9 +1,9 @@
-# Rampensau 🐷
+# RampenSau 🐷
 
-Rampensau is a color palette generation function that utilizes hue cycling and
-easing functions to generate color ramps.
+**RampenSau** is a color palette generation function that utilizes **hue cycling** and
+**easing functions** to generate color ramps. 
 
-The perfect tool for generating color palettes for data visualizations, visual design, generative art, or just for fun.
+Perfect for generating color palettes for data visualizations, visual design, generative art, or just for fun. 
 
 ![generated Rampensau color palettes Animation](./rampensau.gif)
 
