@@ -18,20 +18,20 @@ export declare type lightnessArguments = {
     lRange?: Vector2;
     lEasing?: ModifiedEasingFn;
 };
-declare type BaseGenerateHSLRampArgument = {
+declare type BaseGenerateColorRampArgument = {
     total?: number;
 } & hueArguments & saturationArguments & lightnessArguments;
-export declare type GenerateHSLRampArgument = BaseGenerateHSLRampArgument & {
+export declare type GenerateColorRampArgument = BaseGenerateColorRampArgument & {
     hueList?: never;
 };
-export declare type GenerateHSLRampArgumentFixedHues = BaseGenerateHSLRampArgument & presetHues;
+export declare type GenerateColorRampArgumentFixedHues = BaseGenerateColorRampArgument & presetHues;
 /**
  * Generates a color ramp based on the HSL color space.
- * @param {GenerateHSLRampArgument} args - The arguments to generate the ramp.
+ * @param {GenerateColorRampArgument} args - The arguments to generate the ramp.
  * @returns {Array<number>} - The color ramp.
  */
-export declare function generateHSLRamp(args: GenerateHSLRampArgument): Vector3[];
-export declare function generateHSLRamp(args: GenerateHSLRampArgumentFixedHues): Vector3[];
+export declare function generateColorRamp(args: GenerateColorRampArgument): Vector3[];
+export declare function generateColorRamp(args: GenerateColorRampArgumentFixedHues): Vector3[];
 export declare function shuffleArray<T>(array: T[], rndFn?: () => number): T[];
 export declare type colorHarmony = "complementary" | "splitComplementary" | "triadic" | "tetradic" | "analogous";
 export declare type colorHarmonyFn = (h: number) => number[];
@@ -92,7 +92,7 @@ export declare const lerp: FillFunction<number>;
  * @throws {Error} If the initial array is empty or target size is invalid.
  */
 export declare const scaleSpreadArray: <T>(initial: T[], targetSize: number, fillFunction?: FillFunction<T>) => T[];
-export declare const generateHSLRampParams: {
+export declare const generateColorRampParams: {
     total: {
         default: number;
         props: {
