@@ -1,4 +1,4 @@
-# RampenSau 🐷
+# RampenSau 🎢🐷
 
 **RampenSau** is a color palette generation function that utilizes **hue cycling** and
 **easing functions** to generate color ramps. It can generate a sequence of hues, or use a list of hues to generate a color ramp.
