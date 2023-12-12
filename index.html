@@ -198,8 +198,6 @@
             hsl(90, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
             hsl(45, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
             hsl(0, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)));
-        mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
-        -webkit-mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
         transform: scaleX(-1); /* lazy flip the gradient */
         opacity: 0.55;
       }
@@ -226,6 +224,11 @@
       }
       [data-viz]:hover .disc::after {
         transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.3rem) scale(1);
+      }
+      [data-viz]:hover .disc::before {
+        
+        mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
+        -webkit-mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
       }
 
       .main {
