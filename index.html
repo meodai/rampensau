@@ -99,9 +99,21 @@
         top: auto;
       }
 
+      .fncall {
+        position: sticky;
+        bottom: 0;
+        padding: 1rem 2rem 1rem;
+        margin: 1rem -2rem 0;
+        background: var(--dark);
+      }
+
+      .code-title {
+        margin-top: 0;
+      }
+
       .settings {
         position: absolute;
-        padding: 4.6rem 2rem;
+        padding: 4.6rem 2rem 0;
         background: var(--dark);
         color: var(--light);
         inset: 0;
@@ -795,7 +807,7 @@
       .ellogo {
         display: block;
         width: 40%;
-        margin: 4rem 0 0;
+        margin: 4rem 0;
       }
 
       [data-rndsamples] {
@@ -938,11 +950,8 @@
           <aside>
             <h1>Rampen&shy;Sau</h1>
             <p>
-              Rampensau is a lightweight, dependency-free and blazingly fast JavaScript 
-              function written in TypeScript. It makes use of hue cycling and easing 
-              functions to generate pleasing color ramps. 
-              This page serves as a preview of the variety of options the function 
-              supports.
+              RampenSau is a lightweight, dependency-free and blazingly fast color generation 
+              library. It makes use of hue cycling and easing functions to generate pleasing color ramps.
             </p>
             <a class="projectlink" href="https://github.com/meodai/rampensau">Github</a>
           </aside>
@@ -956,15 +965,10 @@
               <div data-pane></div>
             </div>
           </aside>
-          <aside>
+          <aside class="fncall">
             <h3 class="code-title">Function Call</h3>
-            <p>
-              Calling the function with the following options will generate the
-              color ramp you see above.
-            </p>
             <code class="code-sample">
-                      <pre data-code></pre>
-                    </code>
+                      <pre data-code></pre></code>
           </aside>
           <footer>
             <a href="https://www.elastiq.ch/" hreflang="en" class="ellogo"><svg xmlns="http://www.w3.org/2000/svg"
