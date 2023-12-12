@@ -87,28 +87,12 @@ var rampensau = (() => {
     }
     return randomizedHues;
   }
-  function toFixed(value, precision) {
-    const power = Math.pow(10, precision || 0);
-    return Math.round(value * power) / power;
-  }
   var colorModsCSS = {
-    oklch: (color, precision) => [
-      toFixed(color[2], precision),
-      toFixed(color[1] * 0.4, precision),
-      toFixed(color[0], precision)
-    ],
-    lch: (color, precision) => [
-      toFixed(color[2] * 100, precision),
-      toFixed(color[1] * 150, precision),
-      toFixed(color[0], precision)
-    ],
-    hsl: (color, precision) => [
-      toFixed(color[0], precision),
-      toFixed(color[1] * 100, precision) + "%",
-      toFixed(color[2] * 100, precision) + "%"
-    ]
+    oklch: (color) => [color[2], color[1] * 0.4, color[0]],
+    lch: (color) => [color[2] * 100, color[1] * 150, color[0]],
+    hsl: (color) => [color[0], color[1] * 100 + "%", color[2] * 100 + "%"]
   };
-  var colorToCSS = (color, mode = "oklch", precision = 4) => `${mode}(${colorModsCSS[mode](color, precision).join(" ")})`;
+  var colorToCSS = (color, mode = "oklch") => `${mode}(${colorModsCSS[mode](color).join(" ")})`;
   var lerp = (amt, from, to) => from + amt * (to - from);
   var scaleSpreadArray = (initial, targetSize, fillFunction = lerp) => {
     if (initial.length === 0) {
