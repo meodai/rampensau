@@ -1,5 +1,5 @@
 // src/index.ts
-function generateHSLRamp({
+function generateColorRamp({
   total = 9,
   hStart = Math.random() * 360,
   hStartCenter = 0.5,
@@ -93,7 +93,7 @@ var scaleSpreadArray = (initial, targetSize, fillFunction = lerp) => {
   }
   return chunkArray.flat();
 };
-var generateHSLRampParams = {
+var generateColorRampParams = {
   total: {
     default: 5,
     props: { min: 4, max: 50, step: 1 }
@@ -129,8 +129,8 @@ var generateHSLRampParams = {
 };
 export {
   colorHarmonies,
-  generateHSLRamp,
-  generateHSLRampParams,
+  generateColorRamp,
+  generateColorRampParams,
   hxxToCSSxLCH,
   lerp,
   scaleSpreadArray,

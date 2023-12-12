@@ -3,7 +3,7 @@
 **RampenSau** is a color palette generation function that utilizes **hue cycling** and
 **easing functions** to generate color ramps. 
 
-Perfect for generating color palettes for data visualizations, visual design, generative art, or just for fun. 
+Perfect for generating color palettes for data visualizations, visual design, generative art, or just for fun.
 
 ![generated Rampensau color palettes Animation](./rampensau.gif)
 
@@ -25,6 +25,9 @@ let generateRandomColorRamp = require("rampensau");
 
 // ES style: import individual methods
 import { generateRandomColorRamp } from "rampensau";
+
+// Depending on your setup, you might need to import the MJS version directly
+import { generateRandomColorRamp } from "rampensau/dist/index.mjs";
 ```
 
 Or include it directly in your HTML:
@@ -33,16 +36,16 @@ Or include it directly in your HTML:
 <script src="https://cdn.jsdelivr.net/npm/rampensau/dist/index.js"></script>
 <!-- or -->
 <script type="module">
-  import { generateHSLRamp } from "https://cdn.jsdelivr.net/npm/rampensau/dist/index.mjs";
+  import { generateColorRamp } from "https://cdn.jsdelivr.net/npm/rampensau/dist/index.mjs";
 </script>
 ```
 
 ## Usage
 
 ```js
-import { generateHSLRamp } from 'rampensau';
+import { generateColorRamp } from 'rampensau';
 
-function generateHSLRamp  ({
+function generateColorRamp  ({
   total   : 9,                           // number of colors in the ramp
   hStart  : Math.random() * 360,         // hue at the start of the ramp
   hCycles : 1,                           // number of full hue cycles 
@@ -58,7 +61,7 @@ function generateHSLRamp  ({
 });
 ```
 
-### generateHSLRamp(Options{})
+### generateColorRamp(Options{})
 
 Function returns an array of colors in HSL format (`[0…360,0…1,0…1]`).
 (But it can easily to any other cartesian color format)
@@ -89,11 +92,11 @@ If you want to use a specific list of hues, you can pass an array of hues to the
 
 ```js
 import {
-  generateHSLRamp,
+  generateColorRamp,
   uniqueRandomHues,
 } from "rampensau";
 
-generateHSLRamp({
+generateColorRamp({
   hueList: uniqueRandomHues({
     startHue: Math.random() * 360, 
     total: 5, 
@@ -113,7 +116,7 @@ The takes an input value `x` and returns a value between 0 and 1.:
 
 ### uniqueRandomHues(Options{})
 
-Function returns an array of unique random hues. Mostly useful for generating a list of hues to use with `hueList`. Alternatively you can use `(x) => Math.random()` as the `hEasing` function in `generateHSLRamp` but this will not guarantee unique hues.
+Function returns an array of unique random hues. Mostly useful for generating a list of hues to use with `hueList`. Alternatively you can use `(x) => Math.random()` as the `hEasing` function in `generateColorRamp` but this will not guarantee unique hues.
 
 - `startHue` float 0…360        → Starting point of the hue ramp. 0 Red, 180 Teal etc..
 - `total` int 3…∞               → Amount of base colors.
@@ -131,11 +134,11 @@ Example:
 
 ```js
 import {
-  generateHSLRamp,
+  generateColorRamp,
   colorHarmonies,
 } from "rampensau";
 
-generateHSLRamp({
+generateColorRamp({
   hueList: colorHarmonies.splitComplementary({
     hStart: Math.random() * 360,
   }),

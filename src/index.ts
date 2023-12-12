@@ -19,29 +19,29 @@ export type lightnessArguments = {
   lEasing?: ModifiedEasingFn;
 };
 
-type BaseGenerateHSLRampArgument = {
+type BaseGenerateColorRampArgument = {
   total?: number;
 } & hueArguments &
   saturationArguments &
   lightnessArguments;
 
-export type GenerateHSLRampArgument = BaseGenerateHSLRampArgument & {
+export type GenerateColorRampArgument = BaseGenerateColorRampArgument & {
   hueList?: never;
 };
 
-export type GenerateHSLRampArgumentFixedHues = BaseGenerateHSLRampArgument &
+export type GenerateColorRampArgumentFixedHues = BaseGenerateColorRampArgument &
   presetHues;
 
 /**
  * Generates a color ramp based on the HSL color space.
- * @param {GenerateHSLRampArgument} args - The arguments to generate the ramp.
+ * @param {GenerateColorRampArgument} args - The arguments to generate the ramp.
  * @returns {Array<number>} - The color ramp.
  */
-export function generateHSLRamp(args: GenerateHSLRampArgument): Vector3[];
-export function generateHSLRamp(
-  args: GenerateHSLRampArgumentFixedHues
+export function generateColorRamp(args: GenerateColorRampArgument): Vector3[];
+export function generateColorRamp(
+  args: GenerateColorRampArgumentFixedHues
 ): Vector3[];
-export function generateHSLRamp({
+export function generateColorRamp({
   total = 9,
   hStart = Math.random() * 360,
   hStartCenter = 0.5,
@@ -55,7 +55,9 @@ export function generateHSLRamp({
   lEasing = (x) => Math.pow(x, 1.5),
 
   hueList,
-}: GenerateHSLRampArgument | GenerateHSLRampArgumentFixedHues = {}): Vector3[] {
+}:
+  | GenerateColorRampArgument
+  | GenerateColorRampArgumentFixedHues = {}): Vector3[] {
   const lDiff: number = lRange[1] - lRange[0];
   const sDiff: number = sRange[1] - sRange[0];
 
@@ -239,7 +241,7 @@ export const scaleSpreadArray = <T>(
   return chunkArray.flat() as T[];
 };
 
-export const generateHSLRampParams = {
+export const generateColorRampParams = {
   total: {
     default: 5,
     props: { min: 4, max: 50, step: 1 },
