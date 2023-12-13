@@ -37,10 +37,6 @@ export type GenerateColorRampArgumentFixedHues = BaseGenerateColorRampArgument &
  * @param {GenerateColorRampArgument} args - The arguments to generate the ramp.
  * @returns {Array<number>} - The color ramp.
  */
-export function generateColorRamp(args: GenerateColorRampArgument): Vector3[];
-export function generateColorRamp(
-  args: GenerateColorRampArgumentFixedHues
-): Vector3[];
 export function generateColorRamp({
   total = 9,
   hStart = Math.random() * 360,
