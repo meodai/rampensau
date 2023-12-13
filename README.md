@@ -47,7 +47,7 @@ Or include it directly in your HTML:
 <script src="https://cdn.jsdelivr.net/npm/rampensau/dist/index.js"></script>
 <!-- or -->
 <script type="module">
-  import { generateColorRamp } from "https://cdn.jsdelivr.net/npm/rampensau/dist/index.mjs";
+  import { generateColorRamp } from "https://esm.sh/rampensau/";
 </script>
 ```
 
