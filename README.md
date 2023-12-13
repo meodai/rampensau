@@ -7,7 +7,18 @@ Perfect for generating color palettes for data visualizations, visual design, ge
 
 ![generated RampenSau color palettes Animation](./rampensau.gif)
 
-Check out a simple [demo](https://codepen.io/meodai/pen/yLvgxQK?editors=0010) or see it in action over on [farbvelo](https://farbvelo.elastiq.ch/).
+## Demos
+
+- [Offical Docs & Demo](https://meodai.github.io/rampensau/)
+  Interactive Documentation with example function calls
+- [Two Random Color Ramps](https://codepen.io/meodai/pen/yLvgxQK?editors=0010)
+  Simple set of ramps with random easing
+- [Mini HDR Posders](https://codepen.io/meodai/pen/zYeXEyw)
+  Generative posters using lCH (p3+ gamut)
+- [1000 Generative Samples](https://codepen.io/meodai/pen/ExQWwar?editors=0010)
+  Simple example generating a 1000 palettes using similar settings
+- [farbvelo](https://farbvelo.elastiq.ch/).
+  Project this code is based on
 
 ## Installation
 
