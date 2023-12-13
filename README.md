@@ -217,13 +217,13 @@ If you are already using a color library like [culori](https://culorijs.org/api/
 culori.formatCss({ mode: 'oklch', {
   l: color[2],
   c: color[1] * 0.4,
-  H: color[0],
+  h: color[0],
 })
 
 culori.formatCss({ mode: 'lch', {
   l: color[2] * 100,
   c: color[1] * 150,
-  H: color[0],
+  h: color[0],
 });
 ```
 
