@@ -30,8 +30,7 @@ export declare type GenerateColorRampArgumentFixedHues = BaseGenerateColorRampAr
  * @param {GenerateColorRampArgument} args - The arguments to generate the ramp.
  * @returns {Array<number>} - The color ramp.
  */
-export declare function generateColorRamp(args: GenerateColorRampArgument): Vector3[];
-export declare function generateColorRamp(args: GenerateColorRampArgumentFixedHues): Vector3[];
+export declare function generateColorRamp({ total, hStart, hStartCenter, hEasing, hCycles, sRange, sEasing, lRange, lEasing, hueList, }?: GenerateColorRampArgument | GenerateColorRampArgumentFixedHues): Vector3[];
 export declare function shuffleArray<T>(array: T[], rndFn?: () => number): T[];
 export declare type colorHarmony = "complementary" | "splitComplementary" | "triadic" | "tetradic" | "analogous";
 export declare type colorHarmonyFn = (h: number) => number[];
