@@ -1610,12 +1610,12 @@
             mode: colorMode,
             ...channels
           });
-
+          
           return {
             hsl: [h, s, l],
             rgb: [r * 255, g * 255, b * 255],
             hex: culori.formatHex({ mode: colorMode, ...channels }),
-            css: css || culori.formatCss({ mode: colorMode, ...channels }),
+            css: css || culori.formatHex({ mode: colorMode, ...channels }),
             contrast: {
               white: culori.wcagContrast("#ffffff", { mode: 'hsl', ...channels }),
               black: culori.wcagContrast("#000000", { mode: 'hsl', ...channels }),
