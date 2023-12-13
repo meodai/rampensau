@@ -16,7 +16,7 @@ Perfect for generating color palettes for data visualizations, visual design, ge
 - [Mini HDR Posters](https://codepen.io/meodai/pen/zYeXEyw)
   Generative posters using lCH (p3+ gamut)
 - [1000 Generative Samples](https://codepen.io/meodai/pen/ExQWwar?editors=0010)
-  Simple example generating a 1000 palettes using similar settings
+  Simple example generating a 1000 palettes using similar settings in with lch
 - [Farbvelo Color Generator](https://farbvelo.elastiq.ch/).
   Project this code is based on
 
