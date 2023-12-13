@@ -31,6 +31,13 @@ export declare type GenerateColorRampArgumentFixedHues = BaseGenerateColorRampAr
  * @returns {Array<number>} - The color ramp.
  */
 export declare function generateColorRamp({ total, hStart, hStartCenter, hEasing, hCycles, sRange, sEasing, lRange, lEasing, hueList, }?: GenerateColorRampArgument | GenerateColorRampArgumentFixedHues): Vector3[];
+/**
+ * shuffles an array in place using the Fisher-Yates algorithm.
+ * @param {Array} array - The array to shuffle.
+ * @param {function} rndFn - The random function to use.
+ * @returns {Array} - The shuffled array.
+ * @see https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+ */
 export declare function shuffleArray<T>(array: T[], rndFn?: () => number): T[];
 export declare type colorHarmony = "complementary" | "splitComplementary" | "triadic" | "tetradic" | "analogous";
 export declare type colorHarmonyFn = (h: number) => number[];
@@ -91,6 +98,10 @@ export declare const lerp: FillFunction<number>;
  * @throws {Error} If the initial array is empty or target size is invalid.
  */
 export declare const scaleSpreadArray: <T>(initial: T[], targetSize: number, fillFunction?: FillFunction<T>) => T[];
+/**
+ * A set of default parameters and sain ranges to use `generateColorRamp`
+ * when coming up with random color ramps.
+ */
 export declare const generateColorRampParams: {
     total: {
         default: number;

@@ -54,9 +54,11 @@ export function generateColorRamp({
 }:
   | GenerateColorRampArgument
   | GenerateColorRampArgumentFixedHues = {}): Vector3[] {
+  // creates a range of lightness and saturation based on the corresponding min and max values
   const lDiff: number = lRange[1] - lRange[0];
   const sDiff: number = sRange[1] - sRange[0];
 
+  // if hueList is provided, use it's length as the length of the ramp
   const length = hueList && hueList.length > 0 ? hueList.length : total;
 
   return Array.from({ length }, (_, i) => {
@@ -64,17 +66,24 @@ export function generateColorRamp({
     const fraction = 1 / length;
     return [
       hueList
-        ? hueList[i]
-        : (((360 +
-            hStart +
-            (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) %
-            360) as number), // Ensure the first element is always a number
+        ? hueList[i] // If a hue list is provided, use it otherwise calculate the hue based on the hue arguments
+        : (((360 + // Ensure the hue is always positive
+            hStart + // Add the starting hue
+            (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % // Calculate the hue based on the easing function
+            360) as number), // Ensure the hue is always positive and within the range of 0-360
       sRange[0] + sDiff * sEasing(relI, fraction),
       lRange[0] + lDiff * lEasing(relI, fraction),
     ] as Vector3; // Ensure the array is of type Vector3
   });
 }
 
+/**
+ * shuffles an array in place using the Fisher-Yates algorithm.
+ * @param {Array} array - The array to shuffle.
+ * @param {function} rndFn - The random function to use.
+ * @returns {Array} - The shuffled array.
+ * @see https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+ */
 export function shuffleArray<T>(array: T[], rndFn = Math.random): T[] {
   let currentIndex = array.length,
     randomIndex;
@@ -159,6 +168,9 @@ export function uniqueRandomHues({
   return randomizedHues;
 }
 
+/**
+ * functions to convert from the ramp's colors values to CSS color functions.
+ */
 const colorModsCSS = {
   oklch: (color) => [color[2], color[1] * 0.4, color[0]],
   lch: (color) => [color[2] * 100, color[1] * 150, color[0]],
@@ -240,6 +252,10 @@ export const scaleSpreadArray = <T>(
   return chunkArray.flat() as T[];
 };
 
+/**
+ * A set of default parameters and sain ranges to use `generateColorRamp`
+ * when coming up with random color ramps.
+ */
 export const generateColorRampParams = {
   total: {
     default: 5,
