@@ -9,15 +9,15 @@ Perfect for generating color palettes for data visualizations, visual design, ge
 
 ## Demos
 
-- [Offical Docs & Demo](https://meodai.github.io/rampensau/)
+- [Official Docs & Demo](https://meodai.github.io/rampensau/)
   Interactive Documentation with example function calls
 - [Two Random Color Ramps](https://codepen.io/meodai/pen/yLvgxQK?editors=0010)
   Simple set of ramps with random easing
-- [Mini HDR Posders](https://codepen.io/meodai/pen/zYeXEyw)
+- [Mini HDR Posters](https://codepen.io/meodai/pen/zYeXEyw)
   Generative posters using lCH (p3+ gamut)
 - [1000 Generative Samples](https://codepen.io/meodai/pen/ExQWwar?editors=0010)
   Simple example generating a 1000 palettes using similar settings
-- [farbvelo](https://farbvelo.elastiq.ch/).
+- [Farbvelo Color Generator](https://farbvelo.elastiq.ch/).
   Project this code is based on
 
 ## Installation
