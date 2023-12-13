@@ -8,8 +8,8 @@
   "browser": "./dist/index.min.js",
   "jsdelivr": "./dist/index.umd.js",
   "exports": {
-    "./require": "./dist/index.cjs",
-    ".": "./dist/index.js"
+    "require": "./dist/index.cjs",
+    "import": "./dist/index.mjs"
   },
   "types": "dist/index.d.ts",
   "scripts": {
