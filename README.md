@@ -185,6 +185,7 @@ generateColorRamp({
   lRange: [Math.random() * 0.1, 0.9],
 });
 ```
+## Helper Function
 
 ### colorToCSS(color)
 
