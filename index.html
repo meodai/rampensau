@@ -280,14 +280,18 @@
       }
 
       h1 {
-        position: relative;
         font-size: calc(.64rem + 3vw);
         font-weight: 900;
-        letter-spacing: -0.055em;
+        letter-spacing: -0.025em;
         margin-top: 0;
-        margin-bottom: var(--tss);
         line-height: 0.85;
         margin-left: -0.045em;
+        /*margin-bottom: var(--tss);*/
+        text-shadow: var(--tsss);
+        transition: text-shadow 300ms cubic-bezier(.7, .3, 0 ,1);
+      }
+
+      h1:hover {
         text-shadow: var(--ts);
       }
 
@@ -958,7 +962,7 @@
         </button>
         <section class="settings">
           <aside>
-            <h1>Rampen&shy;Sau</h1>
+            <h1>Rampen<br/>Sau</h1>
             <p>
               RampenSau is a lightweight, dependency-free and blazingly fast color generation 
               library. It makes use of hue cycling and easing functions to generate pleasing color ramps.
@@ -1799,11 +1803,15 @@
         }
 
         document.documentElement.style.setProperty(`--ts`, 
-          colors.reverse().map((c,i) => `0 ${i * 4}px ${0}px ${c.css}`).join()
+          colors.map((c,i) => `${-i * 2}px ${-i * 4}px ${0}px ${c.css}`).join()
+        );
+
+        document.documentElement.style.setProperty(`--tsss`,
+          colors.map((c, i) => `0 ${0}px ${0}px ${c.css}`).join()
         );
 
         document.documentElement.style.setProperty(`--tss`,
-          (colors.length * 4) + 'px'
+          (-colors.length * 4) + 'px'
         );
 
         names(colors);
