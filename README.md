@@ -13,6 +13,8 @@ Perfect for generating color palettes for data visualizations, visual design, ge
   Interactive Documentation with example function calls
 - [Two Random Color Ramps](https://codepen.io/meodai/pen/yLvgxQK?editors=0010)
   Simple set of ramps with random easing
+- [Color Ratios](https://codepen.io/meodai/full/vYbwbym)
+  Simple generative rectangles
 - [Mini HDR Posters](https://codepen.io/meodai/pen/zYeXEyw)
   Generative posters using lCH (p3+ gamut)
 - [1000 Generative Samples](https://codepen.io/meodai/pen/ExQWwar?editors=0010)
