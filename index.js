@@ -88,8 +88,8 @@ var rampensau = (() => {
     return randomizedHues;
   }
   var colorModsCSS = {
-    oklch: (color) => [color[2], color[1] * 0.4, color[0]],
-    lch: (color) => [color[2] * 100, color[1] * 150, color[0]],
+    oklch: (color) => [color[2] * 100 + "%", color[1] * 100 + "%", color[0]],
+    lch: (color) => [color[2] * 100 + "%", color[1] * 100 + "%", color[0]],
     hsl: (color) => [color[0], color[1] * 100 + "%", color[2] * 100 + "%"]
   };
   var colorToCSS = (color, mode = "oklch") => `${mode}(${colorModsCSS[mode](color).join(" ")})`;
