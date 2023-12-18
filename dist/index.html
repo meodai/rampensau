@@ -151,6 +151,7 @@
         display: inline-block;
         color: var(--highlight);
         margin-top: .75em;
+        font-size: 0.8em;
       }
 
       .projectlink::after {
@@ -356,7 +357,7 @@
         height: calc(100vmin - 8rem);
         margin-bottom: 4rem;
         flex-direction: column-reverse;
-        box-shadow: 0 0 0 1vmin var(--dark);
+        box-shadow: 0 0 0 2px var(--dark);
         transition: box-shadow 300ms cubic-bezier(.7, .3, 0 ,1);
         transition-delay: 300ms;
         background: var(--dark);
@@ -373,10 +374,6 @@
         transition: opacity 200ms linear;
         transition-delay: 500ms;
         will-change: opacity;
-      }
-
-      [data-colors]:hover {
-        box-shadow: 0 0 0 1px var(--dark);
       }
       [data-colors]:hover::after {
         opacity: 0;
@@ -456,18 +453,18 @@
       [data-palette] {
         display: flex;
         flex-wrap: wrap;
+        gap: 2px;
       }
       [data-palette] .palette-sample {
-        box-shadow: inset 0 0 0 2px var(--dark),
-                    inset 0 0 0 3px var(--light);
+
       }
       .palette-sample {
         position: relative;
         background: var(--col-0);
-        padding-top: calc(100% / var(--x));
+        aspect-ratio: 1;
         margin: 0;
         user-select: none;
-        flex: 0 0 calc(100% / var(--x));
+        flex: 0 0 calc(100% / var(--x) - 2px);
       }
       .palette-sample b {
         position: absolute;
@@ -789,7 +786,7 @@
         display: flex;
         margin-top: 4rem;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 2px;
       }
 
       [data-names] li {
@@ -827,7 +824,7 @@
       [data-rndsamples] {
           display: flex;
           flex-wrap: wrap;
-          gap: 1rem;
+          gap: 2px;
           min-height: 100vh;
           margin-bottom: 4rem;
       }
@@ -1011,6 +1008,9 @@
               function.
               <code>hStart</code> [<button data-pantrigger="hStart" data-panvalue="0">0° (red)</button>, <button data-pantrigger="hStart" data-panvalue="45">45° (yellow)</button>, <button data-pantrigger="hStart" data-panvalue="90">90° (green)</button>, <button data-pantrigger="hStart" data-panvalue="180">180° (teal)</button> etc.] 
               sets the starting hue, at the darkest color in generated ramp. 
+            </p>
+            <p>
+              The color set using <code>hStart</code> can be positioned anywhere in the ramp by using <code>hStartCenter</code>. <button data-pantrigger="hStartCenter" data-panvalue="0">0</button> is the start of the ramp, <button data-pantrigger="hStartCenter" data-panvalue="1">1</button> is the end of the ramp. By default <code>hStartCenter</code> is set to <button data-pantrigger="hStartCenter" data-panvalue="0.5">0.5</button> which means the starting hue is in the middle of the ramp.
             </p>
             <p>
               <code>hCycles</code> [<button data-pantrigger="hCycles" data-panvalue="0">0</button>, <button data-pantrigger="hCycles" data-panvalue="0.5">0.5</button>, <button data-pantrigger="hCycles" data-panvalue="1">1</button>, <button data-pantrigger="hCycles" data-panvalue="-0.5">-0.5</button>] 
@@ -1552,6 +1552,8 @@
 
         pane.updateInputs();
       }
+      let timers = [];
+
 
       $rnd.addEventListener('click', newPalette)
 
