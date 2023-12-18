@@ -167,6 +167,7 @@
         width: 100%;
         aspect-ratio: 1;
         perspective: 300px;
+        margin-top: -1.5rem;
         margin-bottom: -3rem;
         will-change: perspective;
         transition: perspective 300ms cubic-bezier(.7, .3, 0 ,1);
@@ -226,7 +227,7 @@
       }
 
       [data-viz]:hover .disc {
-        transform: translate(-50%, 0) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(1) scale(1);
+        transform: translate(-50%, 0) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(1);
       }
       [data-viz]:hover .disc::after {
         transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.3rem) scale(1);
@@ -1714,6 +1715,7 @@
 
         document.documentElement.style.setProperty('--total', colors.length);
         document.documentElement.style.setProperty('--hStart', PARAMS.hStart);
+        document.documentElement.style.setProperty('--hStartCenter', PARAMS.hStartCenter);
         document.documentElement.style.setProperty('--hCycles', PARAMS.hCycles);
         document.documentElement.style.setProperty('--sRangeMin', PARAMS.minSaturation);
         document.documentElement.style.setProperty('--sRangeMax', PARAMS.maxSaturation);
@@ -1805,7 +1807,7 @@
         }
 
         document.documentElement.style.setProperty(`--ts`, 
-          colors.map((c,i) => `${-i * 2}px ${-i * 4}px ${0}px ${c.css}`).join()
+          colors.map((c,i) => `${-i * 1}px ${-i * 1}px ${0}px ${c.css}`).join()
         );
 
         document.documentElement.style.setProperty(`--tsss`,
