@@ -240,6 +240,49 @@
         -webkit-mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
       }
 
+      .sl-viz {
+        position: relative;
+        aspect-ratio: 1;
+        margin-top: 1rem;
+        
+        box-shadow: inset 0 0 0 2px var(--light);
+      }
+
+
+      .sl-viz .disc--sl {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      .sl-viz .disc--sl::after {
+        content: '';
+        
+        position: absolute;
+        /*
+        background: conic-gradient( hsl(360, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(315, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(270, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(225, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(180, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(135, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(90, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(45, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(0, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)));
+        */
+        inset: 0;
+      }
+
+      .sl-viz .disc--sl::before {
+        left: calc(5% + var(--c-s) * 90%);
+        top: calc(5% + (1 - var(--c-l)) * 90%);
+        
+        content: '';
+        position: absolute;
+
+        width: .6rem;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        
+        box-shadow: 0 0 0 1px var(--light),
+                    0 0 0 3px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
+        background: hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
+        transform: translate(-50%, -50%);
+      } 
+
+
       .main {
         margin-left: var(--sidebarwidth);
         background: var(--light);
@@ -978,6 +1021,11 @@
               <div data-pane></div>
             </div>
           </aside>
+          <aside>
+            <div data-slviz class="sl-viz">
+
+            </div>
+          </aside>
           <aside class="fncall">
             <h3 class="code-title">Function Call</h3>
             <code class="code-sample">
@@ -1635,6 +1683,7 @@
       }
 
       const $viz = document.querySelector("[data-viz]");
+      const $slViz = document.querySelector("[data-slviz]");
 
       function createDisc(color, i) {
         const $disc = document.createElement("div");
@@ -1651,9 +1700,13 @@
 
       function viz (colors) {
         $viz.innerHTML = '';
+        $slViz.innerHTML = '';
         
         colors.forEach((color, i) => {
           $viz.appendChild(createDisc(color, i/colors.length));
+          const $slDisc = createDisc(color, i / colors.length);
+          $slDisc.classList.add('disc--sl');
+          $slViz.appendChild($slDisc);
         })
       }
 
