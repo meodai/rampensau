@@ -267,7 +267,7 @@ export const generateColorRampParams = {
   },
   hCycles: {
     default: 1,
-    props: { min: -1.25, max: 1.5, step: 0.001 },
+    props: { min: -2, max: 2, step: 0.001 },
   },
   hStartCenter: {
     default: 0.5,

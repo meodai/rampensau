@@ -109,7 +109,7 @@ var generateColorRampParams = {
   },
   hCycles: {
     default: 1,
-    props: { min: -1.25, max: 1.5, step: 1e-3 }
+    props: { min: -2, max: 2, step: 1e-3 }
   },
   hStartCenter: {
     default: 0.5,
