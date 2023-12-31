@@ -67,25 +67,39 @@ var rampensau = (() => {
     return array;
   }
   var colorHarmonies = {
-    complementary: (h) => [h, (h + 180) % 360],
-    splitComplementary: (h) => [h, (h + 150) % 360, (h + 210) % 360],
-    triadic: (h) => [h, (h + 120) % 360, (h + 240) % 360],
-    tetradic: (h) => [h, (h + 90) % 360, (h + 180) % 360, (h + 270) % 360],
-    monochromatic: (h) => [h],
-    doubleComplementary: (h) => [
-      h,
-      (h + 180) % 360,
-      (h + 30) % 360,
-      (h + 210) % 360
+    complementary: (h) => [(h + 360) % 360, (h + 540) % 360],
+    splitComplementary: (h) => [
+      (h + 360) % 360,
+      (h + 510) % 360,
+      (h + 570) % 360
     ],
-    compound: (h) => [h, (h + 180) % 360, (h + 60) % 360, (h + 240) % 360],
+    triadic: (h) => [(h + 360) % 360, (h + 480) % 360, (h + 600) % 360],
+    tetradic: (h) => [
+      (h + 360) % 360,
+      (h + 450) % 360,
+      (h + 540) % 360,
+      (h + 630) % 360
+    ],
+    monochromatic: (h) => [(h + 360) % 360],
+    doubleComplementary: (h) => [
+      (h + 360) % 360,
+      (h + 540) % 360,
+      (h + 390) % 360,
+      (h + 630) % 360
+    ],
+    compound: (h) => [
+      (h + 360) % 360,
+      (h + 540) % 360,
+      (h + 420) % 360,
+      (h + 600) % 360
+    ],
     analogous: (h) => [
-      h,
-      (h + 30) % 360,
-      (h + 60) % 360,
-      (h + 90) % 360,
-      (h + 120) % 360,
-      (h + 150) % 360
+      (h + 360) % 360,
+      (h + 390) % 360,
+      (h + 420) % 360,
+      (h + 450) % 360,
+      (h + 480) % 360,
+      (h + 510) % 360
     ]
   };
   function uniqueRandomHues({
