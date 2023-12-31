@@ -61,6 +61,14 @@ var rampensau = (() => {
     splitComplementary: (h) => [h, (h + 150) % 360, (h + 210) % 360],
     triadic: (h) => [h, (h + 120) % 360, (h + 240) % 360],
     tetradic: (h) => [h, (h + 90) % 360, (h + 180) % 360, (h + 270) % 360],
+    monochromatic: (h) => [h],
+    doubleComplementary: (h) => [
+      h,
+      (h + 180) % 360,
+      (h + 30) % 360,
+      (h + 210) % 360
+    ],
+    compound: (h) => [h, (h + 180) % 360, (h + 60) % 360, (h + 240) % 360],
     analogous: (h) => [
       h,
       (h + 30) % 360,

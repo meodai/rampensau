@@ -39,7 +39,7 @@ export declare function generateColorRamp({ total, hStart, hStartCenter, hEasing
  * @see https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
  */
 export declare function shuffleArray<T>(array: T[], rndFn?: () => number): T[];
-export declare type colorHarmony = "complementary" | "splitComplementary" | "triadic" | "tetradic" | "analogous";
+export declare type colorHarmony = "complementary" | "splitComplementary" | "triadic" | "tetradic" | "monochromatic" | "doubleComplementary" | "compound" | "analogous";
 export declare type colorHarmonyFn = (h: number) => number[];
 /**
  * Generates a list of hues based on a color harmony.
