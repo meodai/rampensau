@@ -21,6 +21,7 @@ export type lightnessArguments = {
 
 type BaseGenerateColorRampArgument = {
   total?: number;
+  adjustmentsFn?: (hsl: Vector3) => Vector3;
 } & hueArguments &
   saturationArguments &
   lightnessArguments;
@@ -31,6 +32,25 @@ export type GenerateColorRampArgument = BaseGenerateColorRampArgument & {
 
 export type GenerateColorRampArgumentFixedHues = BaseGenerateColorRampArgument &
   presetHues;
+
+/**
+ * Get a more evenly distributed spectrum without the over abundance of green and ultramarine
+ * https://twitter.com/harvey_rayner/status/1748159440010809665
+ * @param h
+ * @returns h
+ */
+export function harveyHue(h: number): number {
+  if (h === 1 || h === 0) return h;
+  h = 1 + (h % 1);
+
+  const seg = 1 / 6;
+  const a = (((h % seg) / seg) * Math.PI) / 2;
+  const [b, c] = [seg * Math.cos(a), seg * Math.sin(a)];
+  const i = Math.floor(h * 6);
+  const cases = [c, 1 / 3 - b, 1 / 3 + c, 2 / 3 - b, 2 / 3 + c, 1 - b];
+
+  return cases[i % 6] as number;
+}
 
 /**
  * Generates a color ramp based on the HSL color space.
@@ -50,6 +70,8 @@ export function generateColorRamp({
   lRange = [Math.random() * 0.1, 0.9],
   lEasing = (x) => Math.pow(x, 1.5),
 
+  adjustmentsFn = ([h, s, l]) => [h, s, l],
+
   hueList,
 }:
   | GenerateColorRampArgument
@@ -64,16 +86,18 @@ export function generateColorRamp({
   return Array.from({ length }, (_, i) => {
     const relI = i / (length - 1);
     const fraction = 1 / length;
-    return [
-      hueList
-        ? hueList[i] // If a hue list is provided, use it otherwise calculate the hue based on the hue arguments
-        : (((360 + // Ensure the hue is always positive
-            hStart + // Add the starting hue
-            (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % // Calculate the hue based on the easing function
-            360) as number), // Ensure the hue is always positive and within the range of 0-360
-      sRange[0] + sDiff * sEasing(relI, fraction),
-      lRange[0] + lDiff * lEasing(relI, fraction),
-    ] as Vector3; // Ensure the array is of type Vector3
+
+    const hue = hueList
+      ? (hueList[i] as number)
+      : (((360 + // Ensure the hue is always positive
+          hStart + // Add the starting hue
+          (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % // Calculate the hue based on the easing function
+          360) as number); // Ensure the hue is always positive and within the range of 0-360
+
+    const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
+    const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
+
+    return adjustmentsFn([hue, saturation, lightness]) as Vector3; // Ensure the array is of type Vector3
   });
 }
 

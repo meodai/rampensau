@@ -20,17 +20,25 @@ export declare type lightnessArguments = {
 };
 declare type BaseGenerateColorRampArgument = {
     total?: number;
+    adjustmentsFn?: (hsl: Vector3) => Vector3;
 } & hueArguments & saturationArguments & lightnessArguments;
 export declare type GenerateColorRampArgument = BaseGenerateColorRampArgument & {
     hueList?: never;
 };
 export declare type GenerateColorRampArgumentFixedHues = BaseGenerateColorRampArgument & presetHues;
 /**
+ * Get a more evenly distributed spectrum without the over abundance of green and ultramarine
+ * https://twitter.com/harvey_rayner/status/1748159440010809665
+ * @param h
+ * @returns h
+ */
+export declare function harveyHue(h: number): number;
+/**
  * Generates a color ramp based on the HSL color space.
  * @param {GenerateColorRampArgument} args - The arguments to generate the ramp.
  * @returns {Array<number>} - The color ramp.
  */
-export declare function generateColorRamp({ total, hStart, hStartCenter, hEasing, hCycles, sRange, sEasing, lRange, lEasing, hueList, }?: GenerateColorRampArgument | GenerateColorRampArgumentFixedHues): Vector3[];
+export declare function generateColorRamp({ total, hStart, hStartCenter, hEasing, hCycles, sRange, sEasing, lRange, lEasing, adjustmentsFn, hueList, }?: GenerateColorRampArgument | GenerateColorRampArgumentFixedHues): Vector3[];
 /**
  * shuffles an array in place using the Fisher-Yates algorithm.
  * @param {Array} array - The array to shuffle.
