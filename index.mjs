@@ -1,4 +1,15 @@
 // src/index.ts
+function harveyHue(h) {
+  if (h === 1 || h === 0)
+    return h;
+  h = 1 + h % 1;
+  const seg = 1 / 6;
+  const a = h % seg / seg * Math.PI / 2;
+  const [b, c] = [seg * Math.cos(a), seg * Math.sin(a)];
+  const i = Math.floor(h * 6);
+  const cases = [c, 1 / 3 - b, 1 / 3 + c, 2 / 3 - b, 2 / 3 + c, 1 - b];
+  return cases[i % 6];
+}
 function generateColorRamp({
   total = 9,
   hStart = Math.random() * 360,
@@ -9,6 +20,7 @@ function generateColorRamp({
   sEasing = (x) => Math.pow(x, 2),
   lRange = [Math.random() * 0.1, 0.9],
   lEasing = (x) => Math.pow(x, 1.5),
+  adjustmentsFn = ([h, s, l]) => [h, s, l],
   hueList
 } = {}) {
   const lDiff = lRange[1] - lRange[0];
@@ -17,11 +29,10 @@ function generateColorRamp({
   return Array.from({ length }, (_, i) => {
     const relI = i / (length - 1);
     const fraction = 1 / length;
-    return [
-      hueList ? hueList[i] : (360 + hStart + (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % 360,
-      sRange[0] + sDiff * sEasing(relI, fraction),
-      lRange[0] + lDiff * lEasing(relI, fraction)
-    ];
+    const hue = hueList ? hueList[i] : (360 + hStart + (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % 360;
+    const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
+    const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
+    return adjustmentsFn([hue, saturation, lightness]);
   });
 }
 function shuffleArray(array, rndFn = Math.random) {
@@ -159,6 +170,7 @@ export {
   colorToCSS,
   generateColorRamp,
   generateColorRampParams,
+  harveyHue,
   lerp,
   scaleSpreadArray,
   shuffleArray,

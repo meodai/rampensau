@@ -1152,6 +1152,7 @@
         colorHarmonies,
         scaleSpreadArray,
         colorToCSS,
+        harveyHue,
       } from "./index.mjs";
 
       console.clear();
@@ -1218,8 +1219,15 @@
         relativeRandom50: (x, fr) => x + (-fr + Math.random() * fr * 2) * .5,
         random: x => Math.random(),
       };
+
+      const adjustmentFunctions = {
+        none: (hsl) => hsl,
+        harveyHue: ([h,s,l]) => [harveyHue(h/360) * 360, s, l],
+        muted: ([h,s,l]) => [h, s * .5, l],
+      };
       
       const easingFunctionsKeys = Object.keys(easingFunctions);
+      const adjustmentFunctionsKeys = Object.keys(adjustmentFunctions);
 
       const newOptions = (overwrites = {}) => {
         const lPow = .1 + Math.random() * .9;
@@ -1242,6 +1250,7 @@
             Math.pow(1 - Math.random() * .15, lPow)
           ],
           lEasing: easingFunctions['easeInOutSine'],
+          adjustmentsFn: adjustmentFunctions['none'],
         }, ...overwrites};
       };
 
@@ -1534,6 +1543,12 @@
             options: easingFunctionsKeys
           },
         },
+        adjustmentsFn: {
+          default: 'none',
+          props: {
+            options: adjustmentFunctionsKeys
+          },
+        },
       };
 
       Object.keys(defaultParams).forEach((key) => {
@@ -1554,6 +1569,7 @@
           hueList,
           sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
           lRange: [PARAMS.minLight, PARAMS.maxLight],
+          adjustmentsFn: adjustmentFunctions[PARAMS.adjustmentsFn],
         }));
 
         colors = hslToColorObj(colors)
@@ -1745,7 +1761,6 @@
           hueList = uniqueRandomHues({
             startHue: PARAMS.hStart,
             total: totalRandomHues,
-            minDistance: PARAMS.hMinDiffAngle,
           });
         }
 
@@ -1766,6 +1781,7 @@
           lRange: [PARAMS.minLight, PARAMS.maxLight],
           lEasing: typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing,
           hueList: hueList,
+          adjustmentsFn: adjustmentFunctions[PARAMS.adjustmentsFn],
         });
 
         document.documentElement.style.setProperty('--total', colors.length);
