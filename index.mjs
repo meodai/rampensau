@@ -107,17 +107,17 @@ var colorModsCSS = {
 };
 var colorToCSS = (color, mode = "oklch") => `${mode}(${colorModsCSS[mode](color).join(" ")})`;
 var lerp = (amt, from, to) => from + amt * (to - from);
-var scaleSpreadArray = (initial, targetSize, fillFunction = lerp) => {
-  if (initial.length === 0) {
-    throw new Error("Initial array must not be empty.");
+var scaleSpreadArray = (valuesToFill, targetSize, fillFunction = lerp) => {
+  if (!valuesToFill || valuesToFill.length < 2) {
+    throw new Error("valuesToFill array must have at least two values.");
   }
-  if (targetSize < initial.length) {
-    throw new Error("Target size must be greater than or equal to the initial array length.");
+  if (targetSize < valuesToFill.length) {
+    throw new Error("Target size must be greater than or equal to the valuesToFill array length.");
   }
-  const valuesToAdd = targetSize - initial.length;
-  const chunkArray = initial.map((value) => [value]);
+  const valuesToAdd = targetSize - valuesToFill.length;
+  const chunkArray = valuesToFill.map((value) => [value]);
   for (let i = 0; i < valuesToAdd; i++) {
-    chunkArray[i % (initial.length - 1)].push(null);
+    chunkArray[i % (valuesToFill.length - 1)].push(null);
   }
   for (let i = 0; i < chunkArray.length - 1; i++) {
     const currentChunk = chunkArray[i];

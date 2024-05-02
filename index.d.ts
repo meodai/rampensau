@@ -99,13 +99,20 @@ export declare const lerp: FillFunction<number>;
 /**
  * Scales and spreads an array to the target size using interpolation.
  *
- * @param {Array} initial - The initial array of values.
+ * This function takes an initial array of values, a target size, and an
+ * interpolation function (defaults to `lerp`). It returns a scaled and spread
+ * version of the initial array to the target size using the specified
+ * interpolation function.
+ * The initial entries are spread as evenly as possible across the target size
+ * and the gaps are filled with interpolated values using the specified.
+ *
+ * @param {Array} valuesToFill - The initial array of values.
  * @param {number} targetSize - The desired size of the resulting array.
  * @param {function} fillFunction - The interpolation function (default is lerp).
  * @returns {Array} The scaled and spread array.
  * @throws {Error} If the initial array is empty or target size is invalid.
  */
-export declare const scaleSpreadArray: <T>(initial: T[], targetSize: number, fillFunction?: FillFunction<T>) => T[];
+export declare const scaleSpreadArray: <T>(valuesToFill: T[], targetSize: number, fillFunction?: FillFunction<T>) => T[];
 /**
  * A set of default parameters and sain ranges to use `generateColorRamp`
  * when coming up with random color ramps.
