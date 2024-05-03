@@ -1225,6 +1225,31 @@
         harveyHue: ([h,s,l]) => [harveyHue(h/360) * 360, s, l],
         muted: ([h,s,l]) => [h, s * .5, l],
         pastel: ([h,s,l]) => [h, s, .2 + l * .8],
+        pseudoPrint: ([h,s,l]) => {
+          // if light is above .9 make the hue yellowish
+          if (l > .9) {
+            h = 36;
+          }
+          // clamp white to 95
+          l = Math.min(l, .92);
+          // make sure black is never too dark
+          l = Math.max(l, .11);
+
+          // make sure none of the colors are too saturated
+          s = Math.min(s, .7);
+          // when greenish lower saturation more
+          if (h > 80 && h < 160) {
+            s = Math.min(s, .5);
+          }
+
+          // if light teal make darker
+          if (h > 172 && h < 195) {
+            l *= .8;
+            s += .15;
+          }
+
+          return [h, s, l];
+        },
       };
       
       const easingFunctionsKeys = Object.keys(easingFunctions);
