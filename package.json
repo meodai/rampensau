@@ -8,10 +8,15 @@
   "browser": "./dist/index.min.js",
   "jsdelivr": "./dist/index.umd.js",
   "exports": {
-    "require": "./dist/index.cjs",
-    "import": "./dist/index.mjs"
+    "require": {
+      "default": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "import": {
+      "default": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
   },
-  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "npm run lint && tsc --build && node ./build.js",
     "test": "npm run lint && echo \"Error: no test specified\" && exit 1",
