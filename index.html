@@ -1155,6 +1155,8 @@
         harveyHue,
       } from "./index.mjs";
 
+      import { rybHsl2rgb } from "https://esm.sh/rybitten/";
+
       console.clear();
 
       const $favicon = document.querySelector('link[rel="icon"]');
@@ -1587,7 +1589,7 @@
 
       pane.addInput(PARAMS, 'Color Mode', {
         options:
-          ['hsl', 'okhsl', 'hsv', 'okhsv', 'hsi', 'hwb', 'lch', 'oklch']
+          ['hsl', 'okhsl', 'hsv', 'okhsv', 'hsi', 'hwb', 'lch', 'oklch', 'RYBItten']
       });
 
       const createPalette = (hueList = null) => {
@@ -1703,18 +1705,25 @@
             channels.c = s * 150;
             channels.h = h;
             css = colorToCSS([h, s, l], 'lch');
+          } else if (colorMode === 'RYBItten') {
+            const [ ry, gy, by ] = rybHsl2rgb([h, s, l]);
+            channels.r = ry;
+            channels.g = gy;
+            channels.b = by;
           }
 
+          const computedColorMode = colorMode === 'RYBItten' ? 'rgb' : colorMode;
+
           const { r, g, b } = culori.converter("rgb")({
-            mode: colorMode,
+            mode: computedColorMode,
             ...channels
           });
           
           return {
             hsl: [h, s, l],
             rgb: [r * 255, g * 255, b * 255],
-            hex: culori.formatHex({ mode: colorMode, ...channels }),
-            css: css || culori.formatHex({ mode: colorMode, ...channels }),
+            hex: culori.formatHex({ mode: computedColorMode, ...channels }),
+            css: css || culori.formatHex({ mode: computedColorMode, ...channels }),
             contrast: {
               white: culori.wcagContrast("#ffffff", { mode: 'hsl', ...channels }),
               black: culori.wcagContrast("#000000", { mode: 'hsl', ...channels }),
