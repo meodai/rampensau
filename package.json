@@ -9,12 +9,12 @@
   "jsdelivr": "./dist/index.umd.js",
   "exports": {
     "require": {
-      "default": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.cjs"
     },
     "import": {
-      "default": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
     }
   },
   "scripts": {
