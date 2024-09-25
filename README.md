@@ -58,7 +58,7 @@ Or include it directly in your HTML:
 ```js
 import { generateColorRamp } from 'rampensau';
 
-function generateColorRamp  ({
+const hslColorValues = generateColorRamp({
   // hue generation options
   total   : 9,                           // number of colors in the ramp
   hStart  : Math.random() * 360,         // hue at the start of the ramp
@@ -80,7 +80,7 @@ function generateColorRamp  ({
   // lightness
   lRange  : [Math.random() * 0.1, 0.9],  // lightness range
   lEasing : (x, fr) => Math.pow(x, 1.5), // lightness easing function
-});
+}); // => [[0…360,0…1,0…1], …]
 ```
 
 ### generateColorRamp(Options{})
