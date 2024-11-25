@@ -34,13 +34,13 @@ You can then import RampenSau into your project:
 
 ```js
 // ES style: import individual methods
-import { generateRandomColorRamp } from "rampensau";
+import { generateColorRamp } from "rampensau";
 
 // Depending on your setup, you might need to import the MJS version directly
-import { generateRandomColorRamp } from "rampensau/dist/index.mjs";
+import { generateColorRamp } from "rampensau/dist/index.mjs";
 
 // CJS style
-let generateRandomColorRamp = require("rampensau");
+let generateColorRamp = require("rampensau");
 ```
 
 Or include it directly in your HTML:
