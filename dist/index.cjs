@@ -8,14 +8,109 @@ var __export = (target, all) => {
 
 // src/index.ts
 __export(exports, {
-  colorHarmonies: () => colorHarmonies,
-  colorToCSS: () => colorToCSS,
+  colorUtils: () => colorUtils_exports,
   generateColorRamp: () => generateColorRamp,
   generateColorRampParams: () => generateColorRampParams,
-  harveyHue: () => harveyHue,
+  generateColorRampWithCurve: () => generateColorRampWithCurve,
+  utils: () => utils_exports
+});
+
+// src/utils.ts
+var utils_exports = {};
+__export(utils_exports, {
   lerp: () => lerp,
+  makeCurveEasings: () => makeCurveEasings,
+  pointOnCurve: () => pointOnCurve,
   scaleSpreadArray: () => scaleSpreadArray,
-  shuffleArray: () => shuffleArray,
+  shuffleArray: () => shuffleArray
+});
+function shuffleArray(array, rndFn = Math.random) {
+  const copy = [...array];
+  let currentIndex = copy.length, randomIndex;
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(rndFn() * currentIndex);
+    currentIndex--;
+    [copy[currentIndex], copy[randomIndex]] = [
+      copy[randomIndex],
+      copy[currentIndex]
+    ];
+  }
+  return copy;
+}
+var lerp = (amt, from, to) => from + amt * (to - from);
+var scaleSpreadArray = (valuesToFill, targetSize, fillFunction = lerp) => {
+  if (!valuesToFill || valuesToFill.length < 2) {
+    throw new Error("valuesToFill array must have at least two values.");
+  }
+  if (targetSize < valuesToFill.length) {
+    throw new Error("Target size must be greater than or equal to the valuesToFill array length.");
+  }
+  const valuesToAdd = targetSize - valuesToFill.length;
+  const chunkArray = valuesToFill.map((value) => [value]);
+  for (let i = 0; i < valuesToAdd; i++) {
+    chunkArray[i % (valuesToFill.length - 1)].push(null);
+  }
+  for (let i = 0; i < chunkArray.length - 1; i++) {
+    const currentChunk = chunkArray[i];
+    const nextChunk = chunkArray[i + 1];
+    const currentValue = currentChunk[0];
+    const nextValue = nextChunk[0];
+    for (let j = 1; j < currentChunk.length; j++) {
+      const percent = j / currentChunk.length;
+      currentChunk[j] = fillFunction(percent, currentValue, nextValue);
+    }
+  }
+  return chunkArray.flat();
+};
+var pointOnCurve = (curveMethod, curveAccent) => {
+  return (t) => {
+    const limit = Math.PI / 2;
+    const slice = limit / 1;
+    const percentile = t;
+    let x = 0, y = 0;
+    if (curveMethod === "lam\xE9") {
+      const t2 = percentile * limit;
+      const exp = 2 / (2 + 20 * curveAccent);
+      const cosT = Math.cos(t2);
+      const sinT = Math.sin(t2);
+      x = Math.sign(cosT) * Math.abs(cosT) ** exp;
+      y = Math.sign(sinT) * Math.abs(sinT) ** exp;
+    } else if (curveMethod === "arc") {
+      y = Math.cos(-Math.PI / 2 + t * slice + curveAccent);
+      x = Math.sin(Math.PI / 2 + t * slice - curveAccent);
+    } else if (curveMethod === "pow") {
+      x = Math.pow(1 - percentile, 1 - curveAccent);
+      y = Math.pow(percentile, 1 - curveAccent);
+    } else if (curveMethod === "powY") {
+      x = Math.pow(1 - percentile, curveAccent);
+      y = Math.pow(percentile, 1 - curveAccent);
+    } else if (curveMethod === "powX") {
+      x = Math.pow(percentile, curveAccent);
+      y = Math.pow(percentile, 1 - curveAccent);
+    } else if (typeof curveMethod === "function") {
+      const [xFunc, yFunc] = curveMethod(t, curveAccent);
+      x = xFunc;
+      y = yFunc;
+    } else {
+      throw new Error(`pointOnCurve() curveAccent parameter is expected to be "lam\xE9" | "arc" | "pow" | "powY" | "powX" or a function but \`${curveMethod}\` given.`);
+    }
+    return { x, y };
+  };
+};
+var makeCurveEasings = (curveMethod, curveAccent) => {
+  const point = pointOnCurve(curveMethod, curveAccent);
+  return {
+    sEasing: (t) => point(t).x,
+    lEasing: (t) => point(t).y
+  };
+};
+
+// src/colorUtils.ts
+var colorUtils_exports = {};
+__export(colorUtils_exports, {
+  colorHarmonies: () => colorHarmonies,
+  colorToCSS: () => colorToCSS,
+  harveyHue: () => harveyHue,
   uniqueRandomHues: () => uniqueRandomHues
 });
 function harveyHue(h) {
@@ -28,43 +123,6 @@ function harveyHue(h) {
   const i = Math.floor(h * 6);
   const cases = [c, 1 / 3 - b, 1 / 3 + c, 2 / 3 - b, 2 / 3 + c, 1 - b];
   return cases[i % 6];
-}
-function generateColorRamp({
-  total = 9,
-  hStart = Math.random() * 360,
-  hStartCenter = 0.5,
-  hEasing = (x) => x,
-  hCycles = 1,
-  sRange = [0.4, 0.35],
-  sEasing = (x) => Math.pow(x, 2),
-  lRange = [Math.random() * 0.1, 0.9],
-  lEasing = (x) => Math.pow(x, 1.5),
-  adjustmentsFn = ([h, s, l]) => [h, s, l],
-  hueList
-} = {}) {
-  const lDiff = lRange[1] - lRange[0];
-  const sDiff = sRange[1] - sRange[0];
-  const length = hueList && hueList.length > 0 ? hueList.length : total;
-  return Array.from({ length }, (_, i) => {
-    const relI = i / (length - 1);
-    const fraction = 1 / length;
-    const hue = hueList ? hueList[i] : (360 + hStart + (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % 360;
-    const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
-    const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
-    return adjustmentsFn([hue, saturation, lightness]);
-  });
-}
-function shuffleArray(array, rndFn = Math.random) {
-  let currentIndex = array.length, randomIndex;
-  while (currentIndex != 0) {
-    randomIndex = Math.floor(rndFn() * currentIndex);
-    currentIndex--;
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex]
-    ];
-  }
-  return array;
 }
 var colorHarmonies = {
   complementary: (h) => [(h + 360) % 360, (h + 540) % 360],
@@ -125,31 +183,61 @@ var colorModsCSS = {
   hsl: (color) => [color[0], color[1] * 100 + "%", color[2] * 100 + "%"]
 };
 var colorToCSS = (color, mode = "oklch") => `${mode}(${colorModsCSS[mode](color).join(" ")})`;
-var lerp = (amt, from, to) => from + amt * (to - from);
-var scaleSpreadArray = (valuesToFill, targetSize, fillFunction = lerp) => {
-  if (!valuesToFill || valuesToFill.length < 2) {
-    throw new Error("valuesToFill array must have at least two values.");
-  }
-  if (targetSize < valuesToFill.length) {
-    throw new Error("Target size must be greater than or equal to the valuesToFill array length.");
-  }
-  const valuesToAdd = targetSize - valuesToFill.length;
-  const chunkArray = valuesToFill.map((value) => [value]);
-  for (let i = 0; i < valuesToAdd; i++) {
-    chunkArray[i % (valuesToFill.length - 1)].push(null);
-  }
-  for (let i = 0; i < chunkArray.length - 1; i++) {
-    const currentChunk = chunkArray[i];
-    const nextChunk = chunkArray[i + 1];
-    const currentValue = currentChunk[0];
-    const nextValue = nextChunk[0];
-    for (let j = 1; j < currentChunk.length; j++) {
-      const percent = j / currentChunk.length;
-      currentChunk[j] = fillFunction(percent, currentValue, nextValue);
-    }
-  }
-  return chunkArray.flat();
+
+// src/core.ts
+function generateColorRamp({
+  total = 9,
+  hStart = Math.random() * 360,
+  hStartCenter = 0.5,
+  hEasing = (x) => x,
+  hCycles = 1,
+  sRange = [0.4, 0.35],
+  sEasing = (x) => Math.pow(x, 2),
+  lRange = [Math.random() * 0.1, 0.9],
+  lEasing = (x) => Math.pow(x, 1.5),
+  adjustmentsFn = ([h, s, l]) => [h, s, l],
+  hueList
+} = {}) {
+  const lDiff = lRange[1] - lRange[0];
+  const sDiff = sRange[1] - sRange[0];
+  const length = hueList && hueList.length > 0 ? hueList.length : total;
+  return Array.from({ length }, (_, i) => {
+    const relI = i / (length - 1);
+    const fraction = 1 / length;
+    const hue = hueList ? hueList[i] : (360 + hStart + (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % 360;
+    const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
+    const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
+    return adjustmentsFn([hue, saturation, lightness]);
+  });
+}
+var generateColorRampWithCurve = ({
+  total = 9,
+  hStart = Math.random() * 360,
+  hStartCenter = 0.5,
+  hCycles = 1,
+  sRange = [0.4, 0.35],
+  lRange = [Math.random() * 0.1, 0.9],
+  hueList,
+  curveMethod = "lam\xE9",
+  curveAccent = 0.5,
+  adjustmentsFn = ([h, s, l]) => [h, s, l]
+} = {}) => {
+  const { sEasing, lEasing } = makeCurveEasings(curveMethod, curveAccent);
+  return generateColorRamp({
+    total,
+    hStart,
+    hStartCenter,
+    hCycles,
+    sRange,
+    lRange,
+    sEasing,
+    lEasing,
+    adjustmentsFn,
+    hueList
+  });
 };
+
+// src/index.ts
 var generateColorRampParams = {
   total: {
     default: 5,
@@ -182,5 +270,13 @@ var generateColorRampParams = {
   maxSaturation: {
     default: Math.random() < 0.5 ? 0.35 : 0.9 + Math.random() * 0.1,
     props: { min: 0, max: 1, step: 1e-3 }
+  },
+  curveMethod: {
+    default: "lam\xE9",
+    props: { options: ["lam\xE9", "sine", "power", "linear"] }
+  },
+  curveAccent: {
+    default: 0.5,
+    props: { min: 0, max: 5, step: 0.01 }
   }
 };
