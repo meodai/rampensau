@@ -1142,19 +1142,30 @@
         <div data-names></div>
       </aside>
     </article>
-    <script src="https://cdn.jsdelivr.net/npm/culori@3.1.1/bundled/culori.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/culori@4.0.1/bundled/culori.umd.js"></script>
 
     <script type="module">
       import {
         generateColorRamp,
+        generateColorRampWithCurve,
         generateColorRampParams,
-        uniqueRandomHues,
-        colorHarmonies,
-        scaleSpreadArray,
-        colorToCSS,
-        harveyHue,
+
+        colorUtils,
+        utils
       } from "./index.mjs";
 
+      const {
+        uniqueRandomHues,
+        colorHarmonies,
+        colorToCSS,
+        harveyHue
+      } = colorUtils;
+
+      const {
+        scaleSpreadArray,
+        shuffleArray,
+      } = utils;
+      
       import { rybHsl2rgb } from "https://esm.sh/rybitten/";
 
       console.clear();
@@ -1280,15 +1291,6 @@
           lEasing: easingFunctions['easeInOutSine'],
           adjustmentsFn: adjustmentFunctions['none'],
         }, ...overwrites};
-      };
-
-      const shuffleArray = (array) => {
-        let arr = [...array];
-        for (let i = arr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
       };
 
       const palette = (colors, method) => {
@@ -1553,6 +1555,28 @@
           },
         },
         ...generateColorRampParams,
+        easingMode: {
+          default: 'Individual Axis',
+          props: {
+            options: ['Individual Axis', 'S/L Curve']
+          },
+        },
+        curveMethod: {
+          default: 'lamé',
+          props: {
+            options: ['lamé', 'arc', 'pow', 'powX', 'powY']
+          },
+        },
+        curveAccent: {
+          default: 0,
+          props: {
+            min: -.05,
+            max: 1,
+            step: 0.01,
+          },
+        },
+
+
         hEasing: {
           default: 'linear',
           props: {
@@ -1799,13 +1823,27 @@
           });
         }
 
+        if (PARAMS.easingMode === 'S/L Curve') {
+          document.querySelector('.pane__section--seasing').classList.add('pane__section--hidden');
+          document.querySelector('.pane__section--leasing').classList.add('pane__section--hidden');
+          document.querySelector('.pane__section--curvemethod').classList.remove('pane__section--hidden');
+          document.querySelector('.pane__section--curveaccent').classList.remove('pane__section--hidden');
+        } else {
+          document.querySelector('.pane__section--seasing').classList.remove('pane__section--hidden');
+          document.querySelector('.pane__section--leasing').classList.remove('pane__section--hidden');
+          document.querySelector('.pane__section--curvemethod').classList.add('pane__section--hidden');
+          document.querySelector('.pane__section--curveaccent').classList.add('pane__section--hidden');
+        }
+
         if (hueList && hueList.length > PARAMS.total) {
           hueList = hueList.slice(0, PARAMS.total);
         } else if (hueList && hueList.length < PARAMS.total) {
           hueList = scaleSpreadArray(hueList, PARAMS.total);
         }
 
-        colors = generateColorRamp({
+        const generatorFn = PARAMS.easingMode === 'S/L Curve' ? generateColorRampWithCurve : generateColorRamp;
+
+        colors = generatorFn({
           total: PARAMS.total,
           hStart: PARAMS.hStart,
           hCycles: PARAMS.hCycles,
@@ -1815,6 +1853,10 @@
           sEasing: typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing,
           lRange: [PARAMS.minLight, PARAMS.maxLight],
           lEasing: typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing,
+          
+          curveMethod: PARAMS.curveMethod,
+          curveAccent: PARAMS.curveAccent,
+          
           hueList: hueList,
           adjustmentsFn: adjustmentFunctions[PARAMS.adjustmentsFn],
         });
@@ -1857,14 +1899,22 @@
         }
         document.querySelector(
           "[data-code]"
-        ).innerHTML = `generateColorRamp({
+        ).innerHTML = `${
+        PARAMS.easingMode === 'S/L Curve' ? 'generateColorRampWithCurve' : 'generateColorRamp'
+        }({
   ${hueParams}
   sRange: <i>[${PARAMS.minSaturation.toFixed(3)}, ${PARAMS.maxSaturation.toFixed(3)}]</i>,
-  sEasing: 
-    <i>${typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing}</i>,
   lRange: <i>[${PARAMS.minLight.toFixed(3)}, ${PARAMS.maxLight.toFixed(3)}]</i>,
+  ${
+    PARAMS.easingMode === 'S/L Curve'
+      ? `curveMethod: <i>${PARAMS.curveMethod}</i>,
+  curveAccent: <i>${PARAMS.curveAccent.toFixed(3)}</i>,` 
+      : `
+  sEasing:
+    <i>${typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing}</i>,
   lEasing: 
-    <i>${typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing}</i>,
+    <i>${typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing}</i>,`
+  }
 });
 `;
 
@@ -1941,7 +1991,7 @@
               }">
             <div data-copy title="Click to copy">${Math.floor(
               hsl[0]
-            )}° ${Math.floor(hsl[1] * 100)}% ${Math.floor(hsl[2] * 100)}%</div>
+            )}&deg; ${Math.floor(hsl[1] * 100)}% ${Math.floor(hsl[2] * 100)}%</div>
           </li>`;
             } else {
               return `
