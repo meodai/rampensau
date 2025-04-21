@@ -4,7 +4,7 @@
  * @param {function} rndFn - The random function to use.
  * @returns {Array} - The shuffled array.
  */
-export declare function shuffleArray<T>(array: T[], rndFn?: () => number): T[];
+export declare function shuffleArray<T>(array: readonly T[], rndFn?: () => number): T[];
 declare type FillFunction<T> = T extends number ? (amt: number, from: T, to: T) => T : (amt: number, from: T | null, to: T | null) => T;
 /**
  * Linearly interpolates between two values.
