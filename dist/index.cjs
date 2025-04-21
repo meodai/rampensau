@@ -111,6 +111,7 @@ __export(colorUtils_exports, {
   colorHarmonies: () => colorHarmonies,
   colorToCSS: () => colorToCSS,
   harveyHue: () => harveyHue,
+  hsv2hsl: () => hsv2hsl,
   uniqueRandomHues: () => uniqueRandomHues
 });
 function harveyHue(h) {
@@ -177,12 +178,25 @@ function uniqueRandomHues({
   }
   return randomizedHues;
 }
+var hsv2hsl = ([h, s, v]) => {
+  const l = v - v * s / 2;
+  const m = Math.min(l, 1 - l);
+  const s_hsl = m === 0 ? 0 : (v - l) / m;
+  return [h, s_hsl, l];
+};
 var colorModsCSS = {
   oklch: (color) => [color[2] * 100 + "%", color[1] * 100 + "%", color[0]],
   lch: (color) => [color[2] * 100 + "%", color[1] * 100 + "%", color[0]],
-  hsl: (color) => [color[0], color[1] * 100 + "%", color[2] * 100 + "%"]
+  hsl: (color) => [color[0], color[1] * 100 + "%", color[2] * 100 + "%"],
+  hsv: (color) => {
+    const [h, s, l] = hsv2hsl(color);
+    return [h, s * 100 + "%", l * 100 + "%"];
+  }
 };
-var colorToCSS = (color, mode = "oklch") => `${mode}(${colorModsCSS[mode](color).join(" ")})`;
+var colorToCSS = (color, mode = "oklch") => {
+  const cssMode = mode === "hsv" ? "hsl" : mode;
+  return `${cssMode}(${colorModsCSS[mode](color).join(" ")})`;
+};
 
 // src/core.ts
 function generateColorRamp({

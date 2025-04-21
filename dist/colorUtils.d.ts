@@ -35,14 +35,18 @@ export declare function uniqueRandomHues({ startHue, total, minHueDiffAngle, rnd
     minHueDiffAngle?: number | undefined;
     rndFn?: (() => number) | undefined;
 }): number[];
-export declare type colorToCSSxLCHMode = "oklch" | "lch" | "hsl";
 /**
- * Converts Hxx (Hue, Chroma, Lightness) values to a CSS `oklch()` color function string.
- *
- * @param {Object} hxx - An object with hue, chroma, and lightness properties.
- * @param {number} hxx.hue - The hue value.
- * @param {number} hxx.chroma - The chroma value.
- * @param {number} hxx.lightness - The lightness value.
- * @returns {string} - The CSS color function string in the format `oklch(lightness% chroma hue)`.
+ * Converts a color from HSV to HSL.
+ * @param {Array} hsv - The HSV color values.
+ * @returns {Array} - The HSL color values.
  */
-export declare const colorToCSS: (color: [number, number, number], mode?: colorToCSSxLCHMode) => string;
+export declare const hsv2hsl: ([h, s, v]: [number, number, number]) => [number, number, number];
+export declare type colorToCSSMode = "oklch" | "lch" | "hsl" | "hsv";
+/**
+ * Converts color values to a CSS color function string.
+ *
+ * @param {Vector3} color - Array of three color values based on the color mode.
+ * @param {colorToCSSMode} mode - The color mode to use (oklch, lch, hsl, or hsv).
+ * @returns {string} - The CSS color function string in the appropriate format.
+ */
+export declare const colorToCSS: (color: [number, number, number], mode?: colorToCSSMode) => string;

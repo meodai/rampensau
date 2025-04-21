@@ -112,25 +112,43 @@ export function uniqueRandomHues({
 }
 
 /**
+ * Converts a color from HSV to HSL.
+ * @param {Array} hsv - The HSV color values.
+ * @returns {Array} - The HSL color values.
+ */
+export const hsv2hsl = ([h, s, v]: Vector3): Vector3 => {
+  const l = v - (v * s) / 2;
+  const m = Math.min(l, 1 - l);
+  const s_hsl = m === 0 ? 0 : (v - l) / m;
+  return [h, s_hsl, l];
+};
+
+/**
  * functions to convert from the ramp's colors values to CSS color functions.
  */
 const colorModsCSS = {
   oklch: (color) => [color[2] * 100 + "%", color[1] * 100 + "%", color[0]],
   lch: (color) => [color[2] * 100 + "%", color[1] * 100 + "%", color[0]],
   hsl: (color) => [color[0], color[1] * 100 + "%", color[2] * 100 + "%"],
+  hsv: (color) => {
+    const [h, s, l] = hsv2hsl(color);
+    return [h, s * 100 + "%", l * 100 + "%"];
+  },
 };
 
-export type colorToCSSxLCHMode = "oklch" | "lch" | "hsl";
+export type colorToCSSMode = "oklch" | "lch" | "hsl" | "hsv";
+
 /**
- * Converts Hxx (Hue, Chroma, Lightness) values to a CSS `oklch()` color function string.
+ * Converts color values to a CSS color function string.
  *
- * @param {Object} hxx - An object with hue, chroma, and lightness properties.
- * @param {number} hxx.hue - The hue value.
- * @param {number} hxx.chroma - The chroma value.
- * @param {number} hxx.lightness - The lightness value.
- * @returns {string} - The CSS color function string in the format `oklch(lightness% chroma hue)`.
+ * @param {Vector3} color - Array of three color values based on the color mode.
+ * @param {colorToCSSMode} mode - The color mode to use (oklch, lch, hsl, or hsv).
+ * @returns {string} - The CSS color function string in the appropriate format.
  */
 export const colorToCSS = (
   color: Vector3,
-  mode: colorToCSSxLCHMode = "oklch"
-): string => `${mode}(${colorModsCSS[mode](color).join(" ")})`;
+  mode: colorToCSSMode = "oklch"
+): string => {
+  const cssMode = mode === "hsv" ? "hsl" : mode; // Use HSL for HSV input
+  return `${cssMode}(${colorModsCSS[mode](color).join(" ")})`;
+};
