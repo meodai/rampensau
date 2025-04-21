@@ -293,7 +293,10 @@ Linearly interpolates between two values.
 
 ### scaleSpreadArray(valuesToFill, targetSize, fillFunction)
 
-Scales and spreads an array to the target size using interpolation.
+Scales and spreads an array to the target size using interpolation. 
+In the context of RampenSau, this is used to create a smooth transition between colors.
+Let's say you have an array of 3 colors and you want to create a ramp of 10 colors.
+You can use this function to fill the gaps between the colors and create a smooth transition.
 
 - `valuesToFill` array     → Initial array of values
 - `targetSize` int         → Desired size of the resulting array
@@ -312,6 +315,10 @@ Generates saturation and lightness easing functions based on a curve method.
 
 - `curveMethod` string or function → The curve method to use
 - `curveAccent` float              → The accent of the curve
+
+## About the Name
+
+For non-German speakers, "Rampe" in German means both a ramp (or gradient) and a theatrical stage. A "RampenSau" (literally "stage-sow") is a German expression for someone who thrives in the spotlight - a natural performer. The name playfully combines this concept with the library's purpose of creating color ramps and gradients.
 
 ## License
 
