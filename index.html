@@ -141,6 +141,19 @@
         /*margin-bottom: 2.5rem;*/
       }
 
+      .rnd-settings--main {
+        background: var(--dark);
+        color: var(--light);
+        border-color: var(--light);
+        display: none;
+      }
+
+      @media (max-width: 500px) {
+        .rnd-settings--main {
+          display: block;
+        }
+      }
+
       .rnd-settings:hover {
         background: var(--highlight);
         color: var(--dark);
@@ -387,7 +400,7 @@
         font-size: inherit;
         color: inherit;
       }
-      .main button {
+      .main button:not(.rnd-settings) {
         cursor: pointer;
         font-weight: bold;
         display: inline;
@@ -1072,6 +1085,7 @@
             <div data-colors></div>
             <figcaption>Full Color Ramp</figcaption>
           </figure>
+          <button class="rnd-settings rnd-settings--main" data-randomize>Randomize Settings</button>
         </aside>
 
         <aside class="section section--vertical">
@@ -1651,7 +1665,7 @@
       const $pal = document.querySelector("[data-palette]");
       const $ramp = document.querySelector("[data-ramp]");
       const $rndsamples = document.querySelector("[data-rndsamples]");
-      const $rnd = document.querySelector("[data-randomize]");
+      const $rnd = document.querySelectorAll("[data-randomize]");
 
       const np = (huelist = null) => {
         $rndsamples.innerHTML = '';
@@ -1674,7 +1688,17 @@
       let timers = [];
 
 
-      $rnd.addEventListener('click', newPalette)
+      $rnd.forEach($b => {
+        $b.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (timers.length) {
+            timers.forEach(t => clearTimeout(t));
+            timers = [];
+          }
+          newPalette();
+        });
+      });
+
 
       let colors = [];
 
