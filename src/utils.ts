@@ -4,7 +4,8 @@
  * @param {function} rndFn - The random function to use.
  * @returns {Array} - The shuffled array.
  */
-export function shuffleArray<T>(array: T[], rndFn = Math.random): T[] {
+
+export function shuffleArray<T>(array: readonly T[], rndFn = Math.random): T[] {
   // Create a copy of the input array
   const copy = [...array];
 
