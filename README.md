@@ -331,7 +331,7 @@ Generates saturation and lightness easing functions based on a curve method.
 
 ## About the Name
 
-For non-German speakers, "Rampe" in German means both a ramp (or gradient) and a theatrical stage. A "RampenSau" (literally "stage-sow") is a German expression for someone who thrives in the spotlight - a natural performer. The name playfully combines this concept with the library's purpose of creating color ramps and gradients.
+For non-German speakers, "Rampe" in German means both a ramp (or gradient) and a theatrical stage. A "RampenSau" (literally "stage-sow/pig") is a German expression for someone who thrives in the spotlight - a natural performer. The name playfully combines this concept with the library's purpose of creating color ramps and gradients.
 
 ## License
 
