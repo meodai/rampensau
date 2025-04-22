@@ -336,3 +336,4 @@ For non-German speakers, "Rampe" in German means both a ramp (or gradient) and a
 ## License
 
 Rampensau is distributed under the [MIT License](./LICENSE).
+Feel free to use it in your projects, but please give credit where it's due. If you find this library useful, consider starring the repository on GitHub or sharing it with your friends and colleagues.
