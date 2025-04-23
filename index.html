@@ -517,7 +517,7 @@
         margin-top: 0;
         line-height: 0.85;
         margin-left: -0.045em;
-        /*margin-bottom: var(--tss);*/
+        margin-bottom: 2rem;
         text-shadow: var(--tsss);
         transition: text-shadow 300ms cubic-bezier(.7, .3, 0 ,1);
       }
@@ -529,7 +529,7 @@
       h2,
       h3,
       [data-names] strong {
-        margin: 0 0 0.75rem;
+        margin: 0 0 2rem;
         font-size: calc(1.5rem + 2vw);
         font-weight: 800;
         letter-spacing: -0.02em;
@@ -587,8 +587,13 @@
         font-weight: bold;
         display: inline;
         text-decoration: underline;
-        text-decoration-style: dotted;
+        margin: 0 0.2em;
       }
+
+      .main button:not(.rnd-settings):hover {
+        text-decoration-color: var(--highlight);
+      }
+
       [data-colors] {
         position: relative;
         display: flex;
@@ -825,8 +830,8 @@
       }
       p {
         margin-top: 1em;
-        max-width: 22rem;
-        font-size: 0.8em;
+        max-width: 42ch;
+        font-size: .9em;
         letter-spacing: 0.002em;
         line-height: 1.45;
         font-weight: 400;
