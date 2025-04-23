@@ -92,7 +92,7 @@ describe('pointOnCurve', () => {
   it('should return points for "arc" curve', () => {
     const poc = pointOnCurve('arc', 0.1);
     const point = poc(0.2);
-     expect(point.x).toBeGreaterThanOrEqual(0);
+    expect(point.x).toBeGreaterThanOrEqual(0);
     expect(point.x).toBeLessThanOrEqual(1);
     expect(point.y).toBeGreaterThanOrEqual(0);
     expect(point.y).toBeLessThanOrEqual(1);
