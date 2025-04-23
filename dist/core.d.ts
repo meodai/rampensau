@@ -20,7 +20,7 @@ export declare type lightnessArguments = {
 };
 declare type BaseGenerateColorRampArgument = {
     total?: number;
-    adjustmentsFn?: (hsl: Vector3) => Vector3;
+    adjustmentsFn?: (hsl: Vector3, i?: number) => Vector3;
 } & hueArguments & saturationArguments & lightnessArguments;
 export declare type GenerateColorRampArgument = BaseGenerateColorRampArgument & {
     hueList?: never;

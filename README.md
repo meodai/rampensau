@@ -80,6 +80,8 @@ const hslColorValues = generateColorRamp({
   // lightness
   lRange: [Math.random() * 0.1, 0.9],  // lightness range
   lEasing: (x, fr) => Math.pow(x, 1.5), // lightness easing function
+
+  adjustmentsFn: (color, i) => color; // function to adjust the color after generation
 }); // => [[0…360,0…1,0…1], …]
 ```
 
@@ -155,6 +157,21 @@ The function takes an input value `x` and returns a value between 0 and 1:
 - `sEasing` function(x)     → Saturation easing function
 - `lEasing` function(x)     → Lightness easing function
 
+##### Adjustment Function
+
+- `adjustmentsFn` function(color, i) → Function to adjust the color after generation. The function takes the generated color and its index as arguments. You can use this function to apply any adjustments you want to the generated colors.
+
+**Example:**
+
+```js
+const hslColorValues = generateColorRamp({
+  adjustmentsFn: ([h, s, l], i) => {
+    // Adjust the color to be more saturated
+    return [h, s, .2 + l * .8];
+  }
+});
+```
+
 ### generateColorRampWithCurve(Options{})
 
 **generateColorRampWithCurve** is a convenience function that uses pre-defined curve methods for easing functions. It accepts all the same options as `generateColorRamp` plus two additional options:
@@ -175,7 +192,7 @@ const hslColorValues = generateColorRampWithCurve({
   curveMethod: 'lamé',
   curveAccent: 0.5,
   sRange: [0.4, 0.8],
-  lRange: [0.2, 0.8]
+  lRange: [0.2, 0.8],
 }); // => [[0…360,0…1,0…1], …]
 ```
 

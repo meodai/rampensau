@@ -25,7 +25,7 @@ export type lightnessArguments = {
 
 type BaseGenerateColorRampArgument = {
   total?: number;
-  adjustmentsFn?: (hsl: Vector3) => Vector3;
+  adjustmentsFn?: (hsl: Vector3, i?: number) => Vector3;
 } & hueArguments &
   saturationArguments &
   lightnessArguments;
@@ -82,7 +82,7 @@ export function generateColorRamp({
     const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
     const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
 
-    return adjustmentsFn([hue, saturation, lightness]) as Vector3; // Ensure the array is of type Vector3
+    return adjustmentsFn([hue, saturation, lightness], i) as Vector3; // Ensure the array is of type Vector3
   });
 }
 
