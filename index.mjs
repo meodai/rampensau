@@ -1,7 +1,5 @@
 var __defProp = Object.defineProperty;
-var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
 var __export = (target, all) => {
-  __markAsModule(target);
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
 };
@@ -34,12 +32,16 @@ var scaleSpreadArray = (valuesToFill, targetSize, fillFunction = lerp) => {
     throw new Error("valuesToFill array must have at least two values.");
   }
   if (targetSize < valuesToFill.length) {
-    throw new Error("Target size must be greater than or equal to the valuesToFill array length.");
+    throw new Error(
+      "Target size must be greater than or equal to the valuesToFill array length."
+    );
   }
   const valuesToAdd = targetSize - valuesToFill.length;
   const chunkArray = valuesToFill.map((value) => [value]);
   for (let i = 0; i < valuesToAdd; i++) {
-    chunkArray[i % (valuesToFill.length - 1)].push(null);
+    chunkArray[i % (valuesToFill.length - 1)].push(
+      null
+    );
   }
   for (let i = 0; i < chunkArray.length - 1; i++) {
     const currentChunk = chunkArray[i];
@@ -83,7 +85,9 @@ var pointOnCurve = (curveMethod, curveAccent) => {
       x = xFunc;
       y = yFunc;
     } else {
-      throw new Error(`pointOnCurve() curveAccent parameter is expected to be "lam\xE9" | "arc" | "pow" | "powY" | "powX" or a function but \`${curveMethod}\` given.`);
+      throw new Error(
+        `pointOnCurve() curveAccent parameter is expected to be "lam\xE9" | "arc" | "pow" | "powY" | "powX" or a function but \`${curveMethod}\` given.`
+      );
     }
     return { x, y };
   };
@@ -106,8 +110,7 @@ __export(colorUtils_exports, {
   uniqueRandomHues: () => uniqueRandomHues
 });
 function harveyHue(h) {
-  if (h === 1 || h === 0)
-    return h;
+  if (h === 1 || h === 0) return h;
   h = 1 + h % 1;
   const seg = 1 / 6;
   const a = h % seg / seg * Math.PI / 2;
@@ -160,9 +163,12 @@ function uniqueRandomHues({
 } = {}) {
   minHueDiffAngle = Math.min(minHueDiffAngle, 360 / total);
   const baseHue = startHue || rndFn() * 360;
-  const huesToPickFrom = Array.from({
-    length: Math.round(360 / minHueDiffAngle)
-  }, (_, i) => (baseHue + i * minHueDiffAngle) % 360);
+  const huesToPickFrom = Array.from(
+    {
+      length: Math.round(360 / minHueDiffAngle)
+    },
+    (_, i) => (baseHue + i * minHueDiffAngle) % 360
+  );
   let randomizedHues = shuffleArray(huesToPickFrom, rndFn);
   if (randomizedHues.length > total) {
     randomizedHues = randomizedHues.slice(0, total);
@@ -209,7 +215,10 @@ function generateColorRamp({
   return Array.from({ length }, (_, i) => {
     const relI = i / (length - 1);
     const fraction = 1 / length;
-    const hue = hueList ? hueList[i] : (360 + hStart + (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % 360;
+    const hue = hueList ? hueList[i] : (360 + // Ensure the hue is always positive
+    hStart + // Add the starting hue
+    (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % // Calculate the hue based on the easing function
+    360;
     const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
     const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
     return transformFn([hue, saturation, lightness], i);
