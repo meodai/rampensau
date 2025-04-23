@@ -620,7 +620,7 @@
         opacity: 1;
         z-index: 1;
         filter: blur(10vmin);
-        transform: scale(0.9);
+        transform: scale(0.9) translateX(-50%);
         transition: opacity 200ms linear;
         transition-delay: 500ms;
         will-change: opacity;
@@ -782,19 +782,16 @@
         display: block;
         width: 100%;
         height: 1.2em;
-        margin-bottom: 0.25rem;
 
         box-shadow: 0 0 0 2px var(--dark);
       }
-      .swatch::after {
-        position: absolute;
-        display: block;
-        content: "";
-        top: 2px;
-        right: 2px;
-        width: 2px;
-        height: calc(1.2em - 4px);
-        background: var(--coltext);
+
+
+      .swatch div {
+        transform: translateY(-100%);
+        color: var(--coltext);
+        margin-left: .2em;
+        
       }
 
       .color-info {
