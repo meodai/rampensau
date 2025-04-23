@@ -223,7 +223,7 @@ var rampensau = (() => {
       const hue = hueList ? hueList[i] : (360 + hStart + (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % 360;
       const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
       const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
-      return adjustmentsFn([hue, saturation, lightness]);
+      return adjustmentsFn([hue, saturation, lightness], i);
     });
   }
   var generateColorRampWithCurve = ({
