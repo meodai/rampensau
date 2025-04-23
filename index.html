@@ -127,7 +127,7 @@
       .rnd-settings {
         display: block;
         margin-bottom: 1rem;
-        padding: 0.5rem 1rem;
+        padding: 0.8rem 1rem 0.65rem;
         color: var(--highlight);
         border: 2px solid currentColor;
         display: block;
@@ -183,6 +183,9 @@
       .tabs__contents {
         border: 2px solid var(--light);
         overflow: hidden;
+        background: var(--dark);
+        z-index: 1;
+        position: relative;
       }
 
       .tabs__slider {
@@ -227,7 +230,7 @@
 
       .tabs__control {
         border: 2px solid var(--light);
-        padding: 0.5rem 1rem 0.5rem 0.5rem;
+        padding: .8rem .5rem;
 
         font-size: 0.8rem;
         font-weight: 800;
@@ -235,17 +238,20 @@
 
         display: flex;
         align-items: center;
+        justify-content: center;
+        flex-grow: 1;
 
         cursor: pointer;
       }
 
-      .tabs__control:hover {
+      .tabs__control:hover,
+      .tabs__control--active  {
         background: var(--light);
         color: var(--dark);
+
       }
 
       .tabs__control--active {
-        color: var(--highlight);
         z-index: 1;
       }
 
@@ -258,6 +264,13 @@
         height: 1.25em;
         aspect-ratio: 1;
         margin-right: 0.5em;
+      }
+
+      .tabs__label {
+        display: inline-block;
+        font-weight: 800;
+        line-height: 1;
+        margin-top: 0.1em;
       }
 
       .icon::before {
@@ -827,7 +840,7 @@
         font-size: 0.8rem;
         font-weight: 800;
         line-height: 1;
-        margin-bottom: 0.8em;
+        margin-bottom: 0.3em;
       }
 
       .pane {
@@ -854,6 +867,7 @@
       .pane__inputs {
         display: flex;
         touch-action: manipulation;
+        gap: calc(var(--size-gutter) * .5);
       }
       .pane__input--number {
         flex-grow: 1;
