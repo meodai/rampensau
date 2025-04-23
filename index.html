@@ -1782,8 +1782,7 @@
       }
 
       const defaultParams = {
-        ...generateColorRampParams,
-         hueGenerator: {
+        hueGenerator: {
           default: 'Default',
           props: {
             options: ['Default', 'Unique Random', 'Color Harmony']
@@ -1803,6 +1802,7 @@
             step: 1,
           },
         },
+        ...generateColorRampParams,
         easingMode: {
           default: 'Individual Axis',
           props: {
