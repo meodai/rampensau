@@ -46,7 +46,7 @@
         background: var(--dark);
         color: var(--dark);
 
-        --sidebarwidth: 20rem;
+        --sidebarwidth: max(22rem, 20vw);
       }
 
       a, [data-code] i {
@@ -102,27 +102,22 @@
         top: auto;
       }
 
-      .fncall {
-        position: sticky;
-        bottom: 0;
-        padding: 1rem 2rem 1rem;
-        margin: 1rem -2rem 0;
-        background: var(--dark);
-        box-shadow: 0 0 5rem var(--dark);
-      }
-
       .code-title {
         margin-top: 0;
       }
 
       .settings {
         position: absolute;
-        padding: 3.8rem 2rem 0;
+        padding: 2rem 2rem 0;
         background: var(--dark);
         color: var(--light);
         inset: 0;
         overflow-y: auto;
         box-sizing: border-box;
+
+        /* style scrollbar */
+        scrollbar-color: var(--light) var(--dark);
+        scrollbar-width: thin;
 
 
         overscroll-behavior: contain;
@@ -162,47 +157,213 @@
 
       .projectlink {
         display: inline-block;
-        color: var(--highlight);
+        color: var(--dark);
         margin-top: .75em;
         font-size: 0.8em;
         position: relative;
         z-index: 10;
+        text-decoration: none;
       }
 
       .projectlink::after {
         content: '↗';
+        display: inline-block;
+        margin-left: 0.5em;
+        font-size: 0.8em;
       }
 
       figcaption {
         display: none;
       }
 
-      [data-viz] {
-        position: relative;
+      .tabs {
         width: 100%;
+      }
+
+      .tabs__contents {
+        border: 2px solid var(--light);
+        overflow: hidden;
+      }
+
+      .tabs__slider {
+        display: flex;
+        gap: 0;
+        width: calc(var(--tabs-length, 1) * 100%);
+        transform: translateX(calc(var(--active-tab, 0) * calc(-100% / var(--tabs-length, 1))));
+        transition: transform 300ms cubic-bezier(.7, .3, 0 ,1);
+      }
+
+      .tabs__content {
+        flex: 0 0 calc(100% / var(--tabs-length, 1));
+        width: calc(100% / var(--tabs-length, 1));
+        box-sizing: border-box;
+        padding: .5rem;
+        pointer-events: none;
+        transform: scale(0.8);
+        opacity: 0;
+
+        transition: transform 300ms cubic-bezier(.7, .3, 0 ,1) 50ms,
+                    opacity 300ms cubic-bezier(.7, .3, 0 ,1) 50ms;
+
+        will-change: transform, opacity;
+
+        position: relative;
+      }
+
+      .tabs__content--active {
+        pointer-events: auto;
+        
+        transform: scale(1);
+        opacity: 1;
+
+        transition: transform 300ms cubic-bezier(.7, .3, 0 ,1) 100ms,
+                    opacity 300ms cubic-bezier(.7, .3, 0 ,1) 100ms;
+      }
+
+      .tabs__controls {
+        display: flex;
+        margin-top: -2px;
+      }
+
+      .tabs__control {
+        border: 2px solid var(--light);
+        padding: 0.5rem 1rem 0.5rem 0.5rem;
+
+        font-size: 0.8rem;
+        font-weight: 800;
+        line-height: 1;
+
+        display: flex;
+        align-items: center;
+
+        cursor: pointer;
+      }
+
+      .tabs__control:hover {
+        background: var(--light);
+        color: var(--dark);
+      }
+
+      .tabs__control--active {
+        color: var(--highlight);
+        z-index: 1;
+      }
+
+      .tabs__control + .tabs__control {
+        margin-left: -2px;
+      }
+
+      .tabs__icon {
+        display: inline-block;
+        height: 1.25em;
         aspect-ratio: 1;
-        perspective: 300px;
-        margin-top: -1.5rem;
-        margin-bottom: -3rem;
+        margin-right: 0.5em;
+      }
+
+      .icon::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+      }
+
+      .icon {
+        position:relative;
+      }
+
+
+      .icon--hue::before {
+        border-radius: 50%;
+        box-shadow: inset 0 0 0 1.5px currentColor;
+      }
+
+      .icon--sl::before {
+        box-shadow: inset 0 0 0 1.5px currentColor;
+      }
+
+      .icon--fncall::before {
+        content: "{}";
+        font-weight: 100;
+        font-size: 1.25em;
+        line-height: 1;
+      }
+
+      .disc--mini {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: calc(100% + 3px);
+        width: 1px;
+        
+        transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg));
+      }
+
+      .disc--mini::before {
+        position: absolute;
+        content: '';
+        top: 0;
+        left: 50%;
+        width: 100%;
+        height: 1px;
+        background: var(--light);
+      }
+
+      .disc--mini-sl {
+        left: calc(4px + var(--c-s) * calc(100% - 8px));
+        top: calc(4px + (1 - var(--c-l)) * calc(100% - 8px));
+        
+        position: absolute;
+        width: 1.5px;
+        height: 1.5px;
+        transform: translate(-50%, -50%);
+      }
+
+      .disc--mini-sl::before {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+
+      }
+
+      .settings__top {
+        margin-bottom: 2rem;
+        background: var(--dark);
+        padding: 2rem;
+        margin: -2rem -2rem 0;
+
+        position: sticky;
+        top: -2rem;
+        z-index: 1;
+      }
+
+      @media (max-width: 500px) {
+        .settings__top {
+          padding-top: 4rem
+        }
+      }
+
+      .h-viz {
+        position: relative;
+        aspect-ratio: 1;
+        perspective: 400px;
         will-change: perspective;
         transition: perspective 300ms cubic-bezier(.7, .3, 0 ,1);
       }
 
-      [data-viz]:hover {
+      .h-viz:hover {
         perspective: 1000px;
       }
 
-      [data-viz] .disc {
+      .h-viz .disc {
         position: absolute;
-        bottom: 20px;
+        bottom: 50%;
         left: 50%;
         width: 7rem;
         height: 7rem;
-        transform: translate(-50%, 0) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(calc(sin(.1 + var(--c-i2) * 1.5))) scale(1.5);
+        transform: translate(-50%, 100%) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(calc(sin(.1 + var(--c-i2) * 1.5))) scale(1.5);
         transition: calc(300ms - 50ms + var(--c-i2) * 200ms) transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
       }
 
-      [data-viz] .disc::before {
+      .h-viz .disc::before {
         content: "";
         position: absolute;
         top: 0;
@@ -224,7 +385,7 @@
         opacity: 0.55;
       }
 
-      [data-viz] .disc::after {
+      .h-viz .disc::after {
         content: '';
         position: absolute;
         top: 50%;
@@ -235,20 +396,19 @@
         transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.3rem) scale(calc(3 - var(--c-i2) * 4.5));
         transform-origin: 50% 50%;
         box-shadow: 0 0 0 1px var(--dark),
-                    0 0 0 3px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
+                    0 0 0 2px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
         background: hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
         transition: calc(300ms - 50ms + var(--c-i2) * 200ms) transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
         transition-duration: calc(100ms + var(--c-i2) * 200ms);
       }
 
-      [data-viz]:hover .disc {
-        transform: translate(-50%, 0) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(1);
+      .h-viz:hover .disc {
+        transform: translate(-50%, 100%) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(1);
       }
-      [data-viz]:hover .disc::after {
+      .h-viz:hover .disc::after {
         transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.3rem) scale(1);
       }
-      [data-viz]:hover .disc::before {
-        
+      .h-viz:hover .disc::before {
         mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
         -webkit-mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
       }
@@ -256,9 +416,6 @@
       .sl-viz {
         position: relative;
         aspect-ratio: 1;
-        margin-top: 1rem;
-        
-        box-shadow: inset 0 0 0 2px var(--light);
       }
 
 
@@ -270,11 +427,7 @@
 
       .sl-viz .disc--sl::after {
         content: '';
-        
         position: absolute;
-        /*
-        background: conic-gradient( hsl(360, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(315, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(270, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(225, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(180, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(135, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(90, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(45, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)), hsl(0, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)));
-        */
         inset: 0;
       }
 
@@ -290,7 +443,7 @@
         border-radius: 50%;
         
         box-shadow: 0 0 0 1px var(--light),
-                    0 0 0 3px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
+                    0 0 0 2px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
         background: hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
         transform: translate(-50%, -50%);
       } 
@@ -338,8 +491,12 @@
         padding: 0 0.75ex 0.2ex;
       }
 
+      .intro {
+        margin-bottom: 4rem;
+      }
+
       h1 {
-        font-size: calc(.64rem + 3vw);
+        font-size: calc(.64rem + 5vw);
         font-weight: 900;
         letter-spacing: -0.025em;
         margin-top: 0;
@@ -378,10 +535,20 @@
         max-width: 100%;
         overflow: hidden;
       }
+
+      .fncall {
+        position: absolute;
+        inset: 0;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
       
       .code-sample {
         display: block;
-        margin-top: 1em;
+        max-width: 100%;
       }
 
       a {
@@ -876,8 +1043,8 @@
 
       .ellogo {
         display: block;
-        width: 55%;
-        margin: 30% auto;
+        width: 40%;
+        margin: 4rem 0 2rem;
       }
 
       [data-rndsamples] {
@@ -1017,34 +1184,49 @@
           <i class="line"></i>
         </button>
         <section class="settings">
-          <aside>
-            <h1>Rampen<br/>Sau</h1>
-            <p>
-              RampenSau is a lightweight, dependency-free and blazingly fast color generation 
-              library. It makes use of hue cycling and easing functions to generate pleasing color ramps.
-            </p>
-            <a class="projectlink" href="https://github.com/meodai/rampensau">Github</a>
-          </aside>
-          <aside>
-            <div class="settings__inner">
-              <div data-viz></div>
+          <div class="settings__top">
+            <div class="tabs">
+              <div class="tabs__contents" data-tabswrap>
+                <div class="tabs__slider">
+                  <div class="tabs__content" data-tab="viz-h">
+                    <figure data-viz class="h-viz"></figure>
+                  </div>
+                  <div class="tabs__content" data-tab="viz-sl">
+                    <figure data-slviz class="sl-viz"></figure>
+                  </div>
+                  <div class="tabs__content" data-tab="fncall">
+                    <aside class="fncall" aria-label="Function call">
+                      <code class="code-sample">
+                        <pre data-code></pre>
+                      </code>
+                    </aside>
+                  </div>
+                </div>
+              </div>
+              <div class="tabs__controls">
+                <button class="tabs__control tabs__control--active" data-tabtarget="viz-h">
+                  <i data-icon="hue" class="tabs__icon icon icon--hue"></i>
+                  <span class="tabs__label"><span>Hue</span></span>
+                </button>
+                <button class="tabs__control" data-tabtarget="viz-sl">
+                  <i data-icon="sl" class="tabs__icon icon icon--sl"></i>
+                  <span class="tabs__label"><span title="Saturation &amp; Lightness">S/L</span></span>
+                </button>
+                <button class="tabs__control" data-tabtarget="fncall">
+                  <i data-icon="fncall" class="tabs__icon icon icon--fncall"></i>
+                  <span class="tabs__label"><span>Function</span></span>
+                </button>
+              </div>
             </div>
+            <div class="vizes">
+            </div>
+          </div>
+          <aside>
             <h3>Settings</h3>
             <button class="rnd-settings" data-randomize>Randomize Settings</button>
             <div class="settings__inner">
               <div data-pane></div>
             </div>
-          </aside>
-          <aside>
-            <div data-slviz class="sl-viz">
-
-            </div>
-          </aside>
-          <aside class="fncall">
-            <h3 class="code-title">Function Call</h3>
-            <code class="code-sample">
-              <pre data-code></pre>
-            </code>
           </aside>
           <footer>
             <a href="https://www.elastiq.ch/" hreflang="en" class="ellogo"><svg xmlns="http://www.w3.org/2000/svg"
@@ -1066,6 +1248,14 @@
       </div>
       <section class="main">
         <aside class="section section--vertical section--first">
+          <aside class="intro">
+            <h1>RampenSau</h1>
+            <p>
+              RampenSau is a lightweight, dependency-free and blazingly fast color generation
+              library. It makes use of hue cycling and easing functions to generate pleasing color ramps.
+            </p>
+            <a class="projectlink" href="https://github.com/meodai/rampensau">Github</a>
+          </aside>
           <div class="section__text">
             <h2>Generating a Color-Ramp</h2>
             <p>
@@ -1785,6 +1975,8 @@
 
       const $viz = document.querySelector("[data-viz]");
       const $slViz = document.querySelector("[data-slviz]");
+      const $vizMini = document.querySelector("[data-icon='hue']");
+      const $vizMiniSl = document.querySelector("[data-icon='sl']");
 
       function createDisc(color, i) {
         const $disc = document.createElement("div");
@@ -1799,15 +1991,28 @@
         return $disc;
       }
 
+
       function viz (colors) {
         $viz.innerHTML = '';
         $slViz.innerHTML = '';
+        $vizMini.innerHTML = '';
+        $vizMiniSl.innerHTML = '';
         
         colors.forEach((color, i) => {
           $viz.appendChild(createDisc(color, i/colors.length));
+
           const $slDisc = createDisc(color, i / colors.length);
           $slDisc.classList.add('disc--sl');
           $slViz.appendChild($slDisc);
+        
+          const $miniDisc = createDisc(color, i/colors.length);
+          $miniDisc.classList.add('disc--mini');
+          $vizMini.appendChild($miniDisc);
+
+          const $miniDiscSl = createDisc(color, i/colors.length);
+          $miniDiscSl.classList.add('disc--mini');
+          $miniDiscSl.classList.add('disc--mini-sl');
+          $vizMiniSl.appendChild($miniDiscSl);
         })
       }
 
@@ -2126,6 +2331,47 @@
 
       newPalette();
       bam();
+
+      // tabs logic
+      const $tabs = document.querySelectorAll("[data-tab]");
+      const $tabTriggers = document.querySelectorAll("[data-tabtarget]");
+      const $tabsWrap = document.querySelector("[data-tabswrap]");
+      
+      let activeTabIndex = 0;
+
+      $tabsWrap.style.setProperty('--tabs-length', $tabs.length);
+
+      function activateTab($tab) {
+        $tabs.forEach($t => {
+          $t.classList.remove('tabs__content--active');
+          $t.setAttribute('aria-hidden', true);
+        });
+        $tabTriggers.forEach($trigger => {
+          $trigger.setAttribute('aria-selected', false);
+          $trigger.classList.remove('tabs__control--active');
+        });
+
+        const $trigger = document.querySelector(`[data-tabtarget="${$tab.dataset.tab}"]`);
+        $trigger.setAttribute('aria-selected', true);
+        $trigger.classList.add('tabs__control--active');
+
+        $tab.classList.add('tabs__content--active');
+        $tab.setAttribute('aria-hidden', false);
+        activeTabIndex = [...$tabs].indexOf($tab);
+        $tabsWrap.style.setProperty('--active-tab', activeTabIndex);
+      }
+
+      activateTab($tabs[activeTabIndex]);
+
+      $tabTriggers.forEach($trigger => {
+        $trigger.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = $trigger.dataset.tabtarget;
+          const $target = document.querySelector(`[data-tab="${target}"]`);
+          activateTab($target);
+        });
+      });
+
     </script>
   </body>
 </html>
