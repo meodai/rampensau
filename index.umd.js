@@ -222,7 +222,7 @@ var rampensau = (() => {
     sEasing = (x) => Math.pow(x, 2),
     lRange = [Math.random() * 0.1, 0.9],
     lEasing = (x) => Math.pow(x, 1.5),
-    adjustmentsFn = ([h, s, l]) => [h, s, l],
+    transformFn = ([h, s, l]) => [h, s, l],
     hueList
   } = {}) {
     const lDiff = lRange[1] - lRange[0];
@@ -234,7 +234,7 @@ var rampensau = (() => {
       const hue = hueList ? hueList[i] : (360 + hStart + (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % 360;
       const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
       const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
-      return adjustmentsFn([hue, saturation, lightness], i);
+      return transformFn([hue, saturation, lightness], i);
     });
   }
   var generateColorRampWithCurve = ({
@@ -247,7 +247,7 @@ var rampensau = (() => {
     hueList,
     curveMethod = "lam\xE9",
     curveAccent = 0.5,
-    adjustmentsFn = ([h, s, l]) => [h, s, l]
+    transformFn = ([h, s, l]) => [h, s, l]
   } = {}) => {
     const { sEasing, lEasing } = makeCurveEasings(curveMethod, curveAccent);
     return generateColorRamp({
@@ -259,7 +259,7 @@ var rampensau = (() => {
       lRange,
       sEasing,
       lEasing,
-      adjustmentsFn,
+      transformFn,
       hueList
     });
   };
