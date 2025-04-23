@@ -587,6 +587,7 @@
         transition: box-shadow 300ms cubic-bezier(.7, .3, 0 ,1);
         transition-delay: 300ms;
         background: var(--dark);
+        overflow: hidden;
       }
       [data-colors]::after {
         content: '';
@@ -838,6 +839,8 @@
         color: var(--light);
         --size-gutter: 1rem;
         --color-inverted: var(--light);
+
+        margin-top: calc(var(--size-gutter) * 2);
       }
       .pane__section {
         display: block;
@@ -1222,8 +1225,8 @@
             <div class="vizes">
             </div>
           </div>
-          <aside>
-            <h3>Settings</h3>
+          <aside aria-label="settings" class="settings__inner">
+            <!--h3>Settings</h3-->
             <button class="rnd-settings" data-randomize>Randomize Settings</button>
             <div class="settings__inner">
               <div data-pane></div>
@@ -1740,7 +1743,8 @@
       const PARAMS = {};
 
       const defaultParams = {
-        hueGenerator: {
+        ...generateColorRampParams,
+         hueGenerator: {
           default: 'Default',
           props: {
             options: ['Default', 'Unique Random', 'Color Harmony']
@@ -1760,7 +1764,6 @@
             step: 1,
           },
         },
-        ...generateColorRampParams,
         easingMode: {
           default: 'Individual Axis',
           props: {
