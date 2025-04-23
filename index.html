@@ -277,6 +277,9 @@
         font-weight: 800;
         line-height: 1;
         margin-top: 0.1em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .icon::before {
@@ -356,7 +359,7 @@
 
       @media (max-width: 500px) {
         .settings__top {
-          padding-top: 4rem
+          padding-top: 1.5rem;
         }
       }
 
@@ -1142,7 +1145,7 @@
           display: block;
         }
         .sidebar-open .sidebar__button {
-          transform: translate(-100%, 1em);
+          transform: translate(calc(-100% - .8rem), 1em);
           --line-color: var(--light);
           z-index: 3;
         }
