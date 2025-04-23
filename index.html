@@ -1855,7 +1855,7 @@
         pane.addInput(PARAMS, key, param.props);
       });
 
-      PARAMS['Color Mode'] = 'hsl';
+      PARAMS['Color Mode'] = Math.random() < .9 ? 'hsl' : 'RYBItten';
 
       pane.addInput(PARAMS, 'Color Mode', {
         options:
