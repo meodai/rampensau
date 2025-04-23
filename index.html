@@ -1512,22 +1512,23 @@
         const lPow = .1 + Math.random() * .9;
         const cPow = .2 + Math.random() * .2;
 
+        const lRange = [
+          Math.pow(.05 + Math.random() * .2, lPow),
+          Math.pow(1 - Math.random() * .15, lPow)
+        ];
+
         return {...{
           total: 5 + Math.floor(Math.random() * 5),
           hStart: Math.random() * 360,
           hStartCenter: .5,
           hEasing: easingFunctions['linear'],
           hCycles: Math.random() * 1.25,
-
           sRange: [
             Math.pow(0.005 + Math.random() * .25, cPow),
             Math.pow(1 - Math.random(), cPow)
           ],
           sEasing: easingFunctions['easeInOutCubic'],
-          lRange: [
-            Math.pow(.05 + Math.random() * .2, lPow),
-            Math.pow(1 - Math.random() * .15, lPow)
-          ],
+          lRange,
           lEasing: easingFunctions['easeInOutSine'],
           adjustmentsFn: adjustmentFunctions['none'],
         }, ...overwrites};
@@ -1773,6 +1774,13 @@
 
       const PARAMS = {};
 
+      let darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+      if (darkMode) {
+        generateColorRampParams.maxLight.default = Math.random() * 0.2;
+        generateColorRampParams.minLight.default = 0.89 + Math.random() * 0.11;
+      }
+
       const defaultParams = {
         ...generateColorRampParams,
          hueGenerator: {
@@ -1815,8 +1823,6 @@
             step: 0.01,
           },
         },
-
-
         hEasing: {
           default: 'linear',
           props: {
