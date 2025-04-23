@@ -1531,7 +1531,7 @@
           sEasing: easingFunctions['easeInOutCubic'],
           lRange,
           lEasing: easingFunctions['easeInOutSine'],
-          adjustmentsFn: adjustmentFunctions['none'],
+          transformFn: adjustmentFunctions['none'],
         }, ...overwrites};
       };
 
@@ -1842,7 +1842,7 @@
             options: easingFunctionsKeys
           },
         },
-        adjustmentsFn: {
+        transformFn: {
           default: 'none',
           props: {
             options: adjustmentFunctionsKeys
@@ -1868,7 +1868,7 @@
           hueList,
           sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
           lRange: [PARAMS.minLight, PARAMS.maxLight],
-          adjustmentsFn: adjustmentFunctions[PARAMS.adjustmentsFn],
+          transformFn: adjustmentFunctions[PARAMS.transformFn],
         }));
 
         colors = hslToColorObj(colors)
@@ -2131,7 +2131,7 @@
           curveAccent: PARAMS.curveAccent,
           
           hueList: hueList,
-          adjustmentsFn: adjustmentFunctions[PARAMS.adjustmentsFn],
+          transformFn: adjustmentFunctions[PARAMS.transformFn],
         });
 
         document.documentElement.style.setProperty('--total', colors.length);
@@ -2434,7 +2434,7 @@
             sEasing: typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing,
             lRange: [PARAMS.minLight, PARAMS.maxLight],
             lEasing: typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing,
-            adjustmentsFn: adjustmentFunctions[PARAMS.adjustmentsFn],
+            transformFn: adjustmentFunctions[PARAMS.transformFn],
           });
 
           bam();
@@ -2471,7 +2471,7 @@
           sEasing: typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing,
           lRange: [PARAMS.minLight, PARAMS.maxLight],
           lEasing: typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing,
-          adjustmentsFn: adjustmentFunctions[PARAMS.adjustmentsFn],
+          transformFn: adjustmentFunctions[PARAMS.transformFn],
         });
         bam();
         startSreensaver();

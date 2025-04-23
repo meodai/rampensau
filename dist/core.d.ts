@@ -20,7 +20,7 @@ export declare type lightnessArguments = {
 };
 declare type BaseGenerateColorRampArgument = {
     total?: number;
-    adjustmentsFn?: (hsl: Vector3, i?: number) => Vector3;
+    transformFn?: (hsl: Vector3, i?: number) => Vector3 | string;
 } & hueArguments & saturationArguments & lightnessArguments;
 export declare type GenerateColorRampArgument = BaseGenerateColorRampArgument & {
     hueList?: never;
@@ -31,8 +31,8 @@ export declare type GenerateColorRampArgumentFixedHues = BaseGenerateColorRampAr
  * @param {GenerateColorRampArgument} args - The arguments to generate the ramp.
  * @returns {Array<number>} - The color ramp.
  */
-export declare function generateColorRamp({ total, hStart, hStartCenter, hEasing, hCycles, sRange, sEasing, lRange, lEasing, adjustmentsFn, hueList, }?: GenerateColorRampArgument | GenerateColorRampArgumentFixedHues): Vector3[];
-export declare const generateColorRampWithCurve: ({ total, hStart, hStartCenter, hCycles, sRange, lRange, hueList, curveMethod, curveAccent, adjustmentsFn, }?: (GenerateColorRampArgument | GenerateColorRampArgumentFixedHues) & {
+export declare function generateColorRamp({ total, hStart, hStartCenter, hEasing, hCycles, sRange, sEasing, lRange, lEasing, transformFn, hueList, }?: GenerateColorRampArgument | GenerateColorRampArgumentFixedHues): Vector3[];
+export declare const generateColorRampWithCurve: ({ total, hStart, hStartCenter, hCycles, sRange, lRange, hueList, curveMethod, curveAccent, transformFn, }?: (GenerateColorRampArgument | GenerateColorRampArgumentFixedHues) & {
     curveMethod?: CurveMethod | undefined;
     curveAccent?: number | undefined;
 }) => Vector3[];

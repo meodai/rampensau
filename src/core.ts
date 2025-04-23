@@ -25,7 +25,7 @@ export type lightnessArguments = {
 
 type BaseGenerateColorRampArgument = {
   total?: number;
-  adjustmentsFn?: (hsl: Vector3, i?: number) => Vector3;
+  transformFn?: (hsl: Vector3, i?: number) => Vector3 | string;
 } & hueArguments &
   saturationArguments &
   lightnessArguments;
@@ -55,7 +55,7 @@ export function generateColorRamp({
   lRange = [Math.random() * 0.1, 0.9],
   lEasing = (x) => Math.pow(x, 1.5),
 
-  adjustmentsFn = ([h, s, l]) => [h, s, l],
+  transformFn = ([h, s, l]) => [h, s, l],
 
   hueList,
 }:
@@ -82,7 +82,7 @@ export function generateColorRamp({
     const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
     const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
 
-    return adjustmentsFn([hue, saturation, lightness], i) as Vector3; // Ensure the array is of type Vector3
+    return transformFn([hue, saturation, lightness], i) as Vector3; // Ensure the array is of type Vector3
   });
 }
 
@@ -96,7 +96,7 @@ export const generateColorRampWithCurve = ({
   hueList,
   curveMethod = "lamé",
   curveAccent = 0.5,
-  adjustmentsFn = ([h, s, l]) => [h, s, l],
+  transformFn = ([h, s, l]) => [h, s, l],
 }: (GenerateColorRampArgument | GenerateColorRampArgumentFixedHues) & {
   curveMethod?: CurveMethod;
   curveAccent?: number;
@@ -112,7 +112,7 @@ export const generateColorRampWithCurve = ({
     lRange,
     sEasing,
     lEasing,
-    adjustmentsFn,
+    transformFn,
     hueList,
   });
 };

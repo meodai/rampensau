@@ -81,7 +81,7 @@ const hslColorValues = generateColorRamp({
   lRange: [Math.random() * 0.1, 0.9],  // lightness range
   lEasing: (x, fr) => Math.pow(x, 1.5), // lightness easing function
 
-  adjustmentsFn: (color, i) => color; // function to adjust the color after generation
+  transformFn: (color, i) => color; // function to adjust/convert the color after generation
 }); // => [[0…360,0…1,0…1], …]
 ```
 
@@ -157,20 +157,30 @@ The function takes an input value `x` and returns a value between 0 and 1:
 - `sEasing` function(x)     → Saturation easing function
 - `lEasing` function(x)     → Lightness easing function
 
-##### Adjustment Function
+##### Transform Function
 
-- `adjustmentsFn` function(color, i) → Function to adjust the color after generation. The function takes the generated color and its index as arguments. You can use this function to apply any adjustments you want to the generated colors.
+- `transformFn` function(color, i) → Function to adjust/transform or convert the color after generation. The function takes the generated color and its index as arguments. You can use this function to apply any adjustments you want to the generated colors.
 
 **Example:**
 
 ```js
 const hslColorValues = generateColorRamp({
-  adjustmentsFn: ([h, s, l], i) => {
+  transformFn: ([h, s, l], i) => {
     // Adjust the color to be more saturated
     return [h, s, .2 + l * .8];
   }
 });
 ```
+
+It could also be used to get a CSS String instead of the array. Just use the `colorToCSS` function from the color utility functions:
+
+```js
+const hslColorValues = generateColorRamp({
+  transformFn: ([h, s, l]) => colorToCSS(color, 'oklch')
+});
+```
+
+**TypeScript Node** `transformFn` is typed as `(color: number[], i: number) => number[] | string`. If you need to return anything else, you can use a type assertion to cast the return value to whatever you need.
 
 ### generateColorRampWithCurve(Options{})
 
