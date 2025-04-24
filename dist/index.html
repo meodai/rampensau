@@ -892,10 +892,10 @@
       .pane__input--number {
         flex-grow: 1;
       }
-      .pane .pane__input--number + input[type="number"] {
+      .pane .pane__input--number + input[type="text"] {
         display: block;
-        flex-basis: 4rem;
-        width: 4rem;
+        flex-basis: 2.5rem;
+        width: 2.5rem;
       }
       .pane__desc {
         margin: 1em 0 3em;
@@ -918,7 +918,7 @@
       .pane select option {
         color: var(--dark);
       }
-      .pane input[type="number"],
+      .pane input[type="text"],
       .pane select[type="number"] {
         color: var(--color-inverted);
         background: none;
@@ -1588,6 +1588,11 @@
         );
       };
 
+
+      const roundTo = (num, dec = 2) => {
+        return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
+      };
+
       class Pane {
         constructor(
           $dom, 
@@ -1602,7 +1607,7 @@
           this.$el.classList.add(nameSpace);
           this.$el.addEventListener(
             "input",
-            (e) => this._onChange(e),
+            this._onChange.bind(this),
             {
               captures: true,
               passive: true,
@@ -1642,7 +1647,7 @@
 
             if ("siblingid" in $target.dataset) {
               document.getElementById($target.dataset.siblingid).value =
-                $target.value;
+                roundTo($target.value, 2);
             }
 
             this._callCallbacks(ref);
@@ -1670,6 +1675,9 @@
             Array.from($input.querySelectorAll('option')).forEach($input => 
               $input.selected = $input.value === (value || ref[key])
             );
+          } else if ($input.matches('[inputmode="numeric"]')) {
+              $input.value = value || roundTo(ref[key], 2);
+
           } else {
             $input.value = value || ref[key];
           }
@@ -1712,7 +1720,11 @@
             $in = document.createElement("input");
 
             $i.setAttribute("type", "range");
-            $in.setAttribute("type", "number");
+            $in.setAttribute("type", "text");
+            $in.setAttribute("inputmode", "numeric");
+            $in.setAttribute("pattern", "[0-9]*");
+            
+            // type="text" inputmode="numeric" pattern="[0-9]*"
 
             if (options.hasOwnProperty("min")) {
               $i.setAttribute("min", options.min);
@@ -1764,7 +1776,7 @@
           if ($in) {
             $in.dataset.key = key;
             $in.dataset.type = type;
-            $in.value = reference[key];
+            $in.value = roundTo(reference[key], 2);
             $in.id = `${this.nameSpace}--${key}--value`;
             $i.classList.add(
               `${this.nameSpace}__input`,
