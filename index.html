@@ -133,7 +133,7 @@
         scroll-behavior: smooth;
       }
 
-      .rnd-settings {
+      .button {
         display: block;
         margin-bottom: 1rem;
         padding: 0.8rem 1rem 0.65rem;
@@ -145,7 +145,7 @@
         /*margin-bottom: 2.5rem;*/
       }
 
-      .rnd-settings--main {
+      .button--main {
         background: var(--dark);
         color: var(--light);
         border-color: var(--light);
@@ -153,12 +153,12 @@
       }
 
       @media (max-width: 500px) {
-        .rnd-settings--main {
+        .button--main {
           display: block;
         }
       }
 
-      .rnd-settings:hover {
+      .button:hover {
         background: var(--highlight);
         color: var(--dark);
         border-color: var(--highlight);
@@ -595,7 +595,7 @@
         font-size: inherit;
         color: inherit;
       }
-      .main button:not(.rnd-settings) {
+      .main button:not(.button) {
         cursor: pointer;
         font-weight: bold;
         display: inline;
@@ -603,7 +603,7 @@
         margin: 0 0.2em;
       }
 
-      .main button:not(.rnd-settings):hover {
+      .main button:not(.button):hover {
         text-decoration-color: var(--highlight);
       }
 
@@ -1073,6 +1073,11 @@
         color: var(--light);
       }
 
+      .color-names__copy {
+        margin-top: 2rem;
+        width: max-content;
+      }
+
       .color-names h2 {
         color: var(--light);
       }
@@ -1264,7 +1269,7 @@
           </div>
           <aside aria-label="settings" class="settings__inner">
             <!--h3>Settings</h3-->
-            <button class="rnd-settings" data-randomize>Randomize Settings</button>
+            <button class="button" data-randomize>Randomize Settings</button>
             <div class="settings__inner">
               <div data-pane></div>
             </div>
@@ -1317,7 +1322,7 @@
             <div data-colors></div>
             <figcaption>Full Color Ramp</figcaption>
           </figure>
-          <button class="rnd-settings rnd-settings--main" data-randomize>Randomize Settings</button>
+          <button class="button button--main" data-randomize>Randomize Settings</button>
         </aside>
 
         <aside class="section section--vertical">
@@ -1386,6 +1391,7 @@
       <aside class="color-names">
         <h2>Color Properties</h2>
         <div data-names></div>
+        <button class="button color-names__copy" data-copy data-copycolors>Copy Palette to Clipboard</button>
         
         <h3>Don't use these colors</h3>
         <article class="section__text">
@@ -2332,6 +2338,7 @@
 
       let timer;
       const $names = document.querySelector("[data-names]");
+      const $copyButton = document.querySelector("[data-copycolors]");
 
       function names(colors) {
         $names.innerHTML = `<strong style="--col: #fff">…</strong>`;
@@ -2350,6 +2357,13 @@
               )}</ol>`;
             });
         }, 1000);
+
+        $copyButton.setAttribute(
+          "data-copy",
+          colors.map((c) => c.hex).join(", ")
+        );
+
+
       }
 
       $pal.addEventListener("pointerdown", (e) => {
@@ -2376,12 +2390,19 @@
         document.querySelector("body").addEventListener("click", (e) => {
           const $el = e.target;
           if ($el.matches("[data-copy]")) {
-            const text = $el.innerText;
+            let oldText = $el.innerText;
+            let text;
+            // check if data copy has a value
+            if (!$el.dataset.copy) {
+              text = $el.innerText;
+            } else {
+              text = $el.dataset.copy;
+            }
 
             navigator.clipboard.writeText(text).then(() => {
               $el.innerText = "copied!";
               setTimeout(() => {
-                $el.innerText = text;
+                $el.innerText = oldText;
               }, 500);
             });
           }
