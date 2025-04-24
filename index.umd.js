@@ -168,7 +168,8 @@ var rampensau = (() => {
       (h + 540) % 360,
       (h + 630) % 360
     ],
-    monochromatic: (h) => [(h + 360) % 360],
+    monochromatic: (h) => [(h + 360) % 360, (h + 360) % 360],
+    // Two identical hues since RampenSau needs a min of 2 colors
     doubleComplementary: (h) => [
       (h + 360) % 360,
       (h + 540) % 360,
