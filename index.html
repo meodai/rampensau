@@ -1646,8 +1646,25 @@
             }
 
             if ("siblingid" in $target.dataset) {
-              document.getElementById($target.dataset.siblingid).value =
-                roundTo($target.value, 2);
+              if (Number($target.value) && $target.value !== "") {
+                // validate that the values is within the min and max range of the input if present
+                const $sibling = document.getElementById(
+                  $target.dataset.siblingid
+                );
+
+                if ($sibling) {
+                  const min = $sibling.getAttribute("min");
+                  const max = $sibling.getAttribute("max");
+                  
+                  if (min && Number($sibling.value) < Number(min)) {
+                    $sibling.value = min;
+                  } else if (max && Number($sibling.value) > Number(max)) {
+                    $sibling.value = max;
+                  } else {
+                    $sibling.value = roundTo($target.value, 2);
+                  }
+                }
+              }
             }
 
             this._callCallbacks(ref);
@@ -1677,7 +1694,6 @@
             );
           } else if ($input.matches('[inputmode="numeric"]')) {
               $input.value = value || roundTo(ref[key], 2);
-
           } else {
             $input.value = value || ref[key];
           }
