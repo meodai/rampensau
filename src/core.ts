@@ -1,4 +1,4 @@
-import { makeCurveEasings } from "./utils.js";
+import { makeCurveEasings } from "./utils";
 
 import type { Vector2, Vector3 } from "./colorUtils";
 import type { CurveMethod } from "./utils";
