@@ -556,6 +556,12 @@
         margin-bottom: 1rem;
       }
 
+      h2 span {
+        font-size: 0.9rem;
+        line-height: 1.2;
+        font-weight: 400;
+      }
+
       h3 {
         margin-top: 1.5em;
         font-size: calc(0.5rem + 1vw);
@@ -1076,6 +1082,10 @@
         color: var(--light);
       }
 
+      .color-names .section__text {
+        margin-top: 4rem;
+      }
+
       .color-names__copy {
         margin-top: 2rem;
         width: max-content;
@@ -1392,19 +1402,17 @@
         </p>
       </section>
       <aside class="color-names">
-        <h2>Color Properties</h2>
+        <h2>For Curious Minds <span>and Desperate Deadlines</span></h2>
         <div data-names></div>
         <button class="button color-names__copy" data-copy data-copycolors>Copy Palette to Clipboard</button>
-        
-        <article class="section__text">
-          <h3>For Curious Minds and Desperate Deadlines</h3>
+        <div class="section__text">
           <p>I got requests to export palettes—so here you go. Still, I’d gently suggest looking into integrating the
             library or <a href="https://meodai.github.io/poline/">something similar</a> into your workflow.</p>
           <p>A palette can be more than just colors—it can be a living system. One that responds to different data, brands,
             themes, or even future you, exploring new directions without starting from scratch.</p>
           <p>Thinking in systems doesn’t limit creativity—it gives it room to grow. There’s a quiet kind of magic in flexible
             tools.</p>
-        </article>
+        </div>
       </aside>
     </article>
     <script src="https://cdn.jsdelivr.net/npm/culori@4.0.1/bundled/culori.umd.js"></script>
