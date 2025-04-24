@@ -1246,7 +1246,7 @@
                   <div class="tabs__content" data-tab="fncall">
                     <aside class="fncall" aria-label="Function call">
                       <code class="code-sample">
-                        <pre data-code></pre>
+                        <pre data-code data-copy></pre>
                       </code>
                     </aside>
                   </div>
@@ -2222,26 +2222,28 @@
   })</i>,`
           }
         }
-        document.querySelector(
-          "[data-code]"
-        ).innerHTML = `${
-        PARAMS.easingMode === 'S/L Curve' ? 'generateColorRampWithCurve' : 'generateColorRamp'
-        }({
+        const codeString = `${PARAMS.easingMode === 'S/L Curve' ? 'generateColorRampWithCurve' : 'generateColorRamp'
+          }({
   ${hueParams}
   sRange: <i>[${PARAMS.minSaturation.toFixed(3)}, ${PARAMS.maxSaturation.toFixed(3)}]</i>,
   lRange: <i>[${PARAMS.minLight.toFixed(3)}, ${PARAMS.maxLight.toFixed(3)}]</i>,
-  ${
-    PARAMS.easingMode === 'S/L Curve'
-      ? `curveMethod: <i>${PARAMS.curveMethod}</i>,
-  curveAccent: <i>${PARAMS.curveAccent.toFixed(3)}</i>,` 
-      : `
+  ${PARAMS.easingMode === 'S/L Curve'
+            ? `curveMethod: <i>${PARAMS.curveMethod}</i>,
+  curveAccent: <i>${PARAMS.curveAccent.toFixed(3)}</i>,`
+            : `
   sEasing:
     <i>${typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing}</i>,
   lEasing: 
     <i>${typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing}</i>,`
-  }
+          }
 });
-`;
+`
+        const $code = document.querySelector(
+          "[data-code]"
+        );
+
+        $code.innerHTML = codeString;
+        $code.dataset.copy = codeString.replace(/<i>/g, '').replace(/<\/i>/g, '');
 
         document.documentElement.style.setProperty(
           "--gradient",
