@@ -19,6 +19,7 @@
   },
   "scripts": {
     "build": "npm run lint && tsc --build && node ./build.js",
+    "dev": "tsc --build --watch",
     "test": "vitest",
     "lint": "eslint . --ext .ts && npx prettier --check ./src/",
     "prettier": "npx prettier --write ./src/"
