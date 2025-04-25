@@ -4,12 +4,24 @@ export type Vector2 = [number, number];
 export type Vector3 = [...Vector2, number];
 
 /**
+ * Converts a color from HSL to HSV.
+ * @param {Array} hsl - The HSL color values.
+ * @returns {Array} - The HSV color values.
+ */
+export function normalizeHue(h: number): number {
+  return ((h % 360) + 360) % 360;
+}
+
+/**
  * Get a more evenly distributed spectrum without the over abundance of green and ultramarine
  * https://twitter.com/harvey_rayner/status/1748159440010809665
- * @param h
+ * @param h - The hue value to be converted 0-360
  * @returns h
  */
 export function harveyHue(h: number): number {
+  // modified this part to make it more usable with rampenSau
+  h = normalizeHue(h) / 360; // this ensures the value stays within the 0-360 range and normalizes it to 0-1
+
   if (h === 1 || h === 0) return h;
   h = 1 + (h % 1);
 
@@ -19,7 +31,7 @@ export function harveyHue(h: number): number {
   const i = Math.floor(h * 6);
   const cases = [c, 1 / 3 - b, 1 / 3 + c, 2 / 3 - b, 2 / 3 + c, 1 - b];
 
-  return cases[i % 6] as number;
+  return (cases[i % 6] as number) * 360;
 }
 
 export type colorHarmony =
@@ -42,39 +54,43 @@ export type colorHarmonyFn = (h: number) => number[];
 export const colorHarmonies: {
   [key in colorHarmony]: colorHarmonyFn;
 } = {
-  complementary: (h) => [(h + 360) % 360, (h + 540) % 360],
+  complementary: (h) => [normalizeHue(h), normalizeHue(h + 180)],
   splitComplementary: (h) => [
-    (h + 360) % 360,
-    (h + 510) % 360,
-    (h + 570) % 360,
+    normalizeHue(h),
+    normalizeHue(h + 150),
+    normalizeHue(h - 150),
   ],
-  triadic: (h) => [(h + 360) % 360, (h + 480) % 360, (h + 600) % 360],
+  triadic: (h) => [
+    normalizeHue(h),
+    normalizeHue(h + 120),
+    normalizeHue(h + 240),
+  ],
   tetradic: (h) => [
-    (h + 360) % 360,
-    (h + 450) % 360,
-    (h + 540) % 360,
-    (h + 630) % 360,
+    normalizeHue(h),
+    normalizeHue(h + 90),
+    normalizeHue(h + 180),
+    normalizeHue(h + 270),
   ],
-  monochromatic: (h) => [(h + 360) % 360, (h + 360) % 360], // Two identical hues since RampenSau needs a min of 2 colors
+  monochromatic: (h) => [normalizeHue(h), normalizeHue(h)], // min 2 for RampenSau
   doubleComplementary: (h) => [
-    (h + 360) % 360,
-    (h + 540) % 360,
-    (h + 390) % 360,
-    (h + 630) % 360,
+    normalizeHue(h),
+    normalizeHue(h + 180),
+    normalizeHue(h + 30),
+    normalizeHue(h + 210),
   ],
   compound: (h) => [
-    (h + 360) % 360,
-    (h + 540) % 360,
-    (h + 420) % 360,
-    (h + 600) % 360,
+    normalizeHue(h),
+    normalizeHue(h + 180),
+    normalizeHue(h + 60),
+    normalizeHue(h + 240),
   ],
   analogous: (h) => [
-    (h + 360) % 360,
-    (h + 390) % 360,
-    (h + 420) % 360,
-    (h + 450) % 360,
-    (h + 480) % 360,
-    (h + 510) % 360,
+    normalizeHue(h),
+    normalizeHue(h + 30),
+    normalizeHue(h + 60),
+    normalizeHue(h + 90),
+    normalizeHue(h + 120),
+    normalizeHue(h + 150),
   ],
 };
 

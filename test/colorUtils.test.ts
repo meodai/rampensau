@@ -3,13 +3,24 @@ import { harveyHue, colorHarmonies, uniqueRandomHues, hsv2hsl, colorToCSS } from
 import type { Vector3 } from '../src/colorUtils';
 
 describe('harveyHue', () => {
-  it('should return value between 0 and 1', () => {
-    expect(harveyHue(0.5)).toBeGreaterThanOrEqual(0);
-    expect(harveyHue(0.5)).toBeLessThanOrEqual(1);
-    expect(harveyHue(0)).toBe(0);
-    expect(harveyHue(1)).toBe(1);
+  it('should return a value between 0 and 360', () => {
+    expect(harveyHue(0)).toBeGreaterThanOrEqual(0);
+    expect(harveyHue(0)).toBeLessThanOrEqual(360);
+    expect(harveyHue(360)).toBeGreaterThanOrEqual(0);
+    expect(harveyHue(360)).toBeLessThanOrEqual(360);
   });
-  // Add more specific value tests if the exact mapping is known/important
+
+  it('should normalize input hue to the 0-360 range', () => {
+    expect(harveyHue(-360)).toBeGreaterThanOrEqual(0);
+    expect(harveyHue(-360)).toBeLessThanOrEqual(360);
+    expect(harveyHue(720)).toBeGreaterThanOrEqual(0);
+    expect(harveyHue(720)).toBeLessThanOrEqual(360);
+  });
+
+  it('should handle edge cases correctly', () => {
+    expect(harveyHue(0)).toBe(0);
+    expect(harveyHue(360)).toBe(0); // 360 is normalized to 0
+  });
 });
 
 describe('colorHarmonies', () => {
@@ -30,7 +41,7 @@ describe('colorHarmonies', () => {
     expect(harmony[2]).toBe((baseHue + 240) % 360);
   });
 
-  // Add tests for other harmonies (splitComplementary, tetradic, etc.)
+  // TODO: Add tests for other harmonies (splitComplementary, tetradic, etc.)
 });
 
 describe('uniqueRandomHues', () => {

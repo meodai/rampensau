@@ -276,9 +276,9 @@ console.log(
 
 ### harveyHue(h)
 
-Transforms a hue to create a more evenly distributed spectrum without the over-abundance of green and ultramarine in the standard HSL color wheel.
+Transforms a hue to create a more evenly distributed spectrum without the over-abundance of green and ultramarine in the standard HSL/HSV color wheel. Originally written by [@harvey](https://twitter.com/harvey_rayner/status/1748159440010809665) and adapted for use in RampenSau.
 
-- `h` float 0…1 → Hue value to transform, normalized to 0-1 range.
+- `h` float 0…360 → Hue value to transform, normalized to 0-360 range.
 
 **Example**:
 

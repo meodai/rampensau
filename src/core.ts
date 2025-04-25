@@ -1,4 +1,5 @@
 import { makeCurveEasings } from "./utils";
+import { normalizeHue } from "./colorUtils";
 
 import type { Vector2, Vector3 } from "./colorUtils";
 import type { CurveMethod } from "./utils";
@@ -74,10 +75,10 @@ export function generateColorRamp({
 
     const hue = hueList
       ? (hueList[i] as number)
-      : (((360 + // Ensure the hue is always positive
+      : normalizeHue(
           hStart + // Add the starting hue
-          (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % // Calculate the hue based on the easing function
-          360) as number); // Ensure the hue is always positive and within the range of 0-360
+            (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles) // Calculate the hue based on the easing function
+        ); // Ensure the hue is always positive and within the range of 0-360
 
     const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
     const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
