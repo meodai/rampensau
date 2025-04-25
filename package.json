@@ -1,6 +1,6 @@
 {
   "name": "rampensau",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Color ramp generator using curves within the HSL color model",
   "type": "module",
   "main": "./dist/index.cjs",
