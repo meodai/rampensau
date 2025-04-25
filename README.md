@@ -13,6 +13,8 @@ Perfect for generating color palettes for data visualizations, visual design, ge
   Interactive Documentation with example function calls
 - [1000 Generative Samples](https://codepen.io/meodai/pen/ExQWwar?editors=0010)
   Simple example generating a 1000 palettes using similar settings in with lch
+- [p5.js Exaomple](https://editor.p5js.org/meodai/sketches/dzEX_4wTN)
+  Simple 3d example using p5.js's `color()` function
 - [Mini HDR Posters](https://codepen.io/meodai/pen/zYeXEyw)
   Generative posters using lCH (p3+ gamut)
 - [Color Ratios](https://codepen.io/meodai/full/vYbwbym)
