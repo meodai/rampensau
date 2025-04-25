@@ -1,6 +1,29 @@
 import { describe, it, expect } from 'vitest';
-import { harveyHue, colorHarmonies, uniqueRandomHues, hsv2hsl, colorToCSS } from '../src/colorUtils';
+import { normalizeHue, harveyHue, colorHarmonies, uniqueRandomHues, hsv2hsl, colorToCSS } from '../src/colorUtils';
 import type { Vector3 } from '../src/colorUtils';
+
+describe('normalizeHue', () => {
+  it('should normalize positive hues within the 0-360 range', () => {
+    expect(normalizeHue(0)).toBe(0);
+    expect(normalizeHue(360)).toBe(0); // 360 is normalized to 0
+    expect(normalizeHue(720)).toBe(0); // 720 is normalized to 0
+    expect(normalizeHue(450)).toBe(90); // 450 is normalized to 90
+  });
+
+  it('should normalize negative hues within the 0-360 range', () => {
+    expect(normalizeHue(-360)).toBe(0); // -360 is normalized to 0
+    expect(normalizeHue(-90)).toBe(270); // -90 is normalized to 270
+    expect(normalizeHue(-450)).toBe(270); // -450 is normalized to 270
+  });
+
+  it('should handle edge cases correctly', () => {
+    expect(normalizeHue(0)).toBe(0);
+    expect(normalizeHue(-0)).toBe(0); // Negative zero should also normalize to 0
+    expect(normalizeHue(360)).toBe(0); // 360 is normalized to 0
+    expect(normalizeHue(-360)).toBe(0); // -360 is normalized to 0
+  });
+});
+
 
 describe('harveyHue', () => {
   it('should return a value between 0 and 360', () => {
