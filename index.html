@@ -1508,7 +1508,7 @@
 
       const adjustmentFunctions = {
         none: (hsl) => hsl,
-        harveyHue: ([h,s,l]) => [harveyHue(h/360) * 360, s, l],
+        harveyHue: ([h,s,l]) => [harveyHue(h), s, l],
         muted: ([h,s,l]) => [h, s * .5, l],
         pastel: ([h,s,l]) => [h, s, .2 + l * .8],
         pseudoPrint: ([h,s,l]) => {

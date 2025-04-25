@@ -142,9 +142,14 @@ var rampensau = (() => {
     colorToCSS: () => colorToCSS,
     harveyHue: () => harveyHue,
     hsv2hsl: () => hsv2hsl,
+    normalizeHue: () => normalizeHue,
     uniqueRandomHues: () => uniqueRandomHues
   });
+  function normalizeHue(h) {
+    return (h % 360 + 360) % 360;
+  }
   function harveyHue(h) {
+    h = normalizeHue(h) / 360;
     if (h === 1 || h === 0) return h;
     h = 1 + h % 1;
     const seg = 1 / 6;
@@ -152,43 +157,47 @@ var rampensau = (() => {
     const [b, c] = [seg * Math.cos(a), seg * Math.sin(a)];
     const i = Math.floor(h * 6);
     const cases = [c, 1 / 3 - b, 1 / 3 + c, 2 / 3 - b, 2 / 3 + c, 1 - b];
-    return cases[i % 6];
+    return cases[i % 6] * 360;
   }
   var colorHarmonies = {
-    complementary: (h) => [(h + 360) % 360, (h + 540) % 360],
+    complementary: (h) => [normalizeHue(h), normalizeHue(h + 180)],
     splitComplementary: (h) => [
-      (h + 360) % 360,
-      (h + 510) % 360,
-      (h + 570) % 360
+      normalizeHue(h),
+      normalizeHue(h + 150),
+      normalizeHue(h - 150)
     ],
-    triadic: (h) => [(h + 360) % 360, (h + 480) % 360, (h + 600) % 360],
+    triadic: (h) => [
+      normalizeHue(h),
+      normalizeHue(h + 120),
+      normalizeHue(h + 240)
+    ],
     tetradic: (h) => [
-      (h + 360) % 360,
-      (h + 450) % 360,
-      (h + 540) % 360,
-      (h + 630) % 360
+      normalizeHue(h),
+      normalizeHue(h + 90),
+      normalizeHue(h + 180),
+      normalizeHue(h + 270)
     ],
-    monochromatic: (h) => [(h + 360) % 360, (h + 360) % 360],
-    // Two identical hues since RampenSau needs a min of 2 colors
+    monochromatic: (h) => [normalizeHue(h), normalizeHue(h)],
+    // min 2 for RampenSau
     doubleComplementary: (h) => [
-      (h + 360) % 360,
-      (h + 540) % 360,
-      (h + 390) % 360,
-      (h + 630) % 360
+      normalizeHue(h),
+      normalizeHue(h + 180),
+      normalizeHue(h + 30),
+      normalizeHue(h + 210)
     ],
     compound: (h) => [
-      (h + 360) % 360,
-      (h + 540) % 360,
-      (h + 420) % 360,
-      (h + 600) % 360
+      normalizeHue(h),
+      normalizeHue(h + 180),
+      normalizeHue(h + 60),
+      normalizeHue(h + 240)
     ],
     analogous: (h) => [
-      (h + 360) % 360,
-      (h + 390) % 360,
-      (h + 420) % 360,
-      (h + 450) % 360,
-      (h + 480) % 360,
-      (h + 510) % 360
+      normalizeHue(h),
+      normalizeHue(h + 30),
+      normalizeHue(h + 60),
+      normalizeHue(h + 90),
+      normalizeHue(h + 120),
+      normalizeHue(h + 150)
     ]
   };
   function uniqueRandomHues({
@@ -251,10 +260,11 @@ var rampensau = (() => {
     return Array.from({ length }, (_, i) => {
       const relI = i / (length - 1);
       const fraction = 1 / length;
-      const hue = hueList ? hueList[i] : (360 + // Ensure the hue is always positive
-      hStart + // Add the starting hue
-      (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)) % // Calculate the hue based on the easing function
-      360;
+      const hue = hueList ? hueList[i] : normalizeHue(
+        hStart + // Add the starting hue
+        (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles)
+        // Calculate the hue based on the easing function
+      );
       const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
       const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
       return transformFn([hue, saturation, lightness], i);

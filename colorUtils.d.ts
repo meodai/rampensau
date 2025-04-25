@@ -1,9 +1,15 @@
 export declare type Vector2 = [number, number];
 export declare type Vector3 = [...Vector2, number];
 /**
+ * Converts a color from HSL to HSV.
+ * @param {Array} hsl - The HSL color values.
+ * @returns {Array} - The HSV color values.
+ */
+export declare function normalizeHue(h: number): number;
+/**
  * Get a more evenly distributed spectrum without the over abundance of green and ultramarine
  * https://twitter.com/harvey_rayner/status/1748159440010809665
- * @param h
+ * @param h - The hue value to be converted 0-360
  * @returns h
  */
 export declare function harveyHue(h: number): number;
