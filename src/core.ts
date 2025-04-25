@@ -78,7 +78,7 @@ export function generateColorRamp({
       : normalizeHue(
           hStart + // Add the starting hue
             (1 - hEasing(relI, fraction) - hStartCenter) * (360 * hCycles) // Calculate the hue based on the easing function
-        ); // Ensure the hue is always positive and within the range of 0-360
+        );
 
     const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
     const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
