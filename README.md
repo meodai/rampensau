@@ -12,15 +12,15 @@ Perfect for generating color palettes for data visualizations, visual design, ge
 - [Official Docs & Demo](https://meodai.github.io/rampensau/)
   Interactive Documentation with example function calls
 - [1000 Generative Samples](https://codepen.io/meodai/pen/ExQWwar?editors=0010)
-  Simple example generating a 1000 palettes using similar settings in with lch
+  Generating a 1000 palettes using similar settings in with lch
 - [p5.js Exaomple](https://editor.p5js.org/meodai/sketches/dzEX_4wTN)
-  Simple 3d example using p5.js's `color()` function
+  3d example using p5.js's `color()` function
+- [Syntax Highlighting](https://meodai.github.io/rampensau/highlighter.html)
+  Generative syntax highlighting themes using RampenSau
 - [Mini HDR Posters](https://codepen.io/meodai/pen/zYeXEyw)
   Generative posters using lCH (p3+ gamut)
 - [Color Ratios](https://codepen.io/meodai/full/vYbwbym)
-  Simple generative rectangles
-- [Two Random Color Ramps](https://codepen.io/meodai/pen/yLvgxQK?editors=0010)
-  Simple set of ramps with random easing
+  Generative rectangles
 - [Farbvelo Color Generator](https://farbvelo.elastiq.ch/).
   Project this code is based on
 
