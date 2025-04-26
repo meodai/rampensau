@@ -13,6 +13,9 @@
       color: #f8f8f2;
       min-height: 100vh;
     }
+    h1 {
+      text-align: center;
+    }
     #syntax-container {
       transition: background-color 0.3s ease;
     }
@@ -28,6 +31,7 @@
       border: none;
       border-radius: 0.25rem;
       cursor: pointer;
+      font-weight: 600;
     }
     button:hover {
       opacity: .9;
@@ -284,7 +288,7 @@
 
       applyContainerStyles(container) {
         container.style.background = this.colors[2];
-        container.style.color = this.colors[this.colors.length - 1] || '#f8f8f2';
+        container.style.color = this.colors[this.colors.length - 1];
         return container;
       }
 
@@ -298,9 +302,13 @@
         // Create and style wrapper
         const wrapper = document.createElement('div');
         wrapper.className = 'wrapper';
-        wrapper.style.color = this.colors[this.colors.length - 1] || '#f8f8f2';
+        wrapper.style.color = this.colors[this.colors.length - 1];
         
+        const title = document.createElement('h1');
+        title.textContent = 'RampenSau Syntax Highlighter';
+        title.style.color = 'currentColor';
         // Add button and code blocks
+        wrapper.appendChild(title);
         wrapper.appendChild(this.createShuffleButton());
         wrapper.appendChild(this.createCodeBlocks());
         
