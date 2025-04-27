@@ -1220,24 +1220,24 @@
 
   <body>
     <article class="app">
-      <div class="sidebar" id="sidebar">
-        <button class="sidebar__button" aria-expanded="true" aria-controls="sidebar" aria-label="toggle sidebar">
+      <div class="sidebar" id="sidebar" role="complementary" aria-label="Settings Sidebar">
+        <button class="sidebar__button" aria-expanded="true" aria-controls="sidebar" aria-label="Toggle sidebar" tabindex="0">
           <i class="line"></i>
           <i class="line"></i>
           <i class="line"></i>
         </button>
-        <section class="settings">
+        <section class="settings" aria-label="Color Ramp Settings">
           <div class="settings__top">
-            <div class="tabs">
+            <div class="tabs" role="tablist" aria-label="Visualization Tabs">
               <div class="tabs__contents" data-tabswrap>
                 <div class="tabs__slider">
-                  <div class="tabs__content" data-tab="viz-h">
+                  <div class="tabs__content" data-tab="viz-h" role="tabpanel" aria-labelledby="tab-viz-h">
                     <figure data-viz class="h-viz"></figure>
                   </div>
-                  <div class="tabs__content" data-tab="viz-sl">
+                  <div class="tabs__content" data-tab="viz-sl" role="tabpanel" aria-labelledby="tab-viz-sl">
                     <figure data-slviz class="sl-viz"></figure>
                   </div>
-                  <div class="tabs__content" data-tab="fncall">
+                  <div class="tabs__content" data-tab="fncall" role="tabpanel" aria-labelledby="tab-fncall">
                     <aside class="fncall" aria-label="Function call">
                       <code class="code-sample">
                         <pre data-code data-copy></pre>
@@ -1247,15 +1247,15 @@
                 </div>
               </div>
               <div class="tabs__controls">
-                <button class="tabs__control tabs__control--active" data-tabtarget="viz-h">
+                <button class="tabs__control tabs__control--active" data-tabtarget="viz-h" id="tab-viz-h" role="tab" aria-selected="true" aria-controls="viz-h" tabindex="0">
                   <i data-icon="hue" class="tabs__icon icon icon--hue"></i>
                   <span class="tabs__label"><span>Hue</span></span>
                 </button>
-                <button class="tabs__control" data-tabtarget="viz-sl">
+                <button class="tabs__control" data-tabtarget="viz-sl" id="tab-viz-sl" role="tab" aria-selected="false" aria-controls="viz-sl" tabindex="-1">
                   <i data-icon="sl" class="tabs__icon icon icon--sl"></i>
                   <span class="tabs__label"><span title="Saturation &amp; Lightness">S/L</span></span>
                 </button>
-                <button class="tabs__control" data-tabtarget="fncall">
+                <button class="tabs__control" data-tabtarget="fncall" id="tab-fncall" role="tab" aria-selected="false" aria-controls="fncall" tabindex="-1">
                   <i data-icon="fncall" class="tabs__icon icon icon--fncall"></i>
                   <span class="tabs__label"><span>Function</span></span>
                 </button>
