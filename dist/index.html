@@ -1613,12 +1613,13 @@
         this.timer;
       }
 
-      _callCallbacks(ref) {
+      _callCallbacks(ref, key) { // Added key parameter
         if (this.events.hasOwnProperty("change")) {
           clearTimeout(this.timer);
           this.events["change"].forEach((fn) => {
             this.timer = setTimeout(() => {
-              fn.apply(ref || []);
+              // Pass both ref and key to the callback function
+              fn.call(ref || this, { reference: ref, key: key });
             }, this.throttleTimer);
           });
         }
@@ -1659,7 +1660,8 @@
             }
           }
 
-          this._callCallbacks(ref);
+          // Pass the key to the callbacks
+          this._callCallbacks(ref, key);
         }
       }
 
@@ -2102,7 +2104,35 @@
       })
     }
 
-    function bam(e) { 
+    function bam(eventData) { // Accept eventData object
+      const changedKey = eventData ? eventData.key : null; // Extract the key
+
+      // --- TAB SWITCHING LOGIC MOVED HERE ---
+      if (changedKey) {
+        const activeTabButton = document.querySelector('.tabs__control--active');
+        // Check if the 'fncall' tab is currently active
+        if (!activeTabButton || activeTabButton.dataset.tabtarget !== 'fncall') {
+          const slKeys = ['minLight', 'maxLight', 'minSaturation', 'maxSaturation', 'sEasing', 'lEasing', 'curveAccent', 'curveMethod'];
+          const hKeys = ['hueGenerator', 'hStart', 'hCycles', 'hStartCenter', 'hMinDiffAngle', 'colorHarmony'];
+
+          let targetTabId = null;
+          if (slKeys.includes(changedKey)) {
+            targetTabId = 'viz-sl';
+          } else if (hKeys.includes(changedKey)) {
+            targetTabId = 'viz-h';
+          }
+
+          if (targetTabId) {
+            const tabButton = document.querySelector(`.tabs__control[data-tabtarget="${targetTabId}"]`);
+            // Check if the tab isn't already active before clicking to avoid unnecessary actions
+            if (tabButton && !tabButton.classList.contains('tabs__control--active')) {
+              tabButton.click(); // Consider calling activateTab directly if possible
+            }
+          }
+        }
+      }
+      // --- END TAB SWITCHING LOGIC ---
+
       document.querySelector('.pane__section--hstart').classList.remove('pane__section--hidden');
       document.querySelector('.pane__section--hstartcenter').classList.remove('pane__section--hidden');
       document.querySelector('.pane__section--hcycles').classList.remove('pane__section--hidden');
