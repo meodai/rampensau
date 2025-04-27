@@ -144,7 +144,6 @@
         display: block;
         width: 100%;
         font-weight: 900;
-        /*margin-bottom: 2.5rem;*/
       }
 
       .button--main {
@@ -658,21 +657,6 @@
         transition: transform 460ms cubic-bezier(.7, .3, 0 ,1);
         transition-delay: calc(100ms + var(--i) * 200ms);
       }
-      /*
-      [data-colors]:hover {
-        overflow: visible;
-        box-shadow: 0 0 0 0 var(--dark);
-        transition-delay: 0ms;
-      }
-      [data-colors]:hover::after {
-        opacity: 0;
-        transition-delay: 0ms;
-      }
-      [data-colors]:hover i {
-        mix-blend-mode: multiply;
-        transform: rotate( calc(var(--rnd) * 5deg) ) translateX(calc(var(--rnd) * 5%)) translateY(calc(var(--rnd2) * 40%)) scale(1.05);
-      }
-      */
       [data-colors] span {
         position: absolute;
         left: 1em;
@@ -1281,7 +1265,7 @@
             </div>
           </div>
           <aside aria-label="settings" class="settings__inner">
-            <!--h3>Settings</h3-->
+            <!-- h3>Settings</h3 -->
             <button class="button" data-randomize>Randomize Settings</button>
             <div class="settings__inner">
               <div data-pane></div>
@@ -2490,75 +2474,6 @@
           activateTab($target);
         });
       });
-
-      /*
-      // screensaver
-      let screenTimer = null;
-      let hBeforeScreenSaver = PARAMS.hStart;
-      let screenSaver = false;
-
-      function animationLoop() {
-        if (screenSaver) {
-          PARAMS.hStart += .5;
-
-          colors = generateColorRamp({
-            total: PARAMS.total,
-            hStart: PARAMS.hStart,
-            hCycles: PARAMS.hCycles,
-            hStartCenter: PARAMS.hStartCenter,
-            hEasing: typeof PARAMS.hEasing === 'string' ? easingFunctions[PARAMS.hEasing] : PARAMS.hEasing,
-            sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
-            sEasing: typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing,
-            lRange: [PARAMS.minLight, PARAMS.maxLight],
-            lEasing: typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing,
-            transformFn: adjustmentFunctions[PARAMS.transformFn],
-          });
-
-          bam();
-        }
-        
-        requestAnimationFrame(animationLoop);
-      }
-
-      function startSreensaver() {
-        if (screenTimer) {
-          clearTimeout(screenTimer);
-        }
-        screenTimer = setTimeout(() => {
-          hBeforeScreenSaver = PARAMS.hStart;
-          screenSaver = true;
-        }, 500);
-      }
-
-      function stopScreensaver() {
-        if (screenTimer) {
-          clearTimeout(screenTimer);
-        } else {
-          return;
-        }
-        screenSaver = false;
-        PARAMS.hStart = hBeforeScreenSaver;
-        colors = generateColorRamp({
-          total: PARAMS.total,
-          hStart: PARAMS.hStart,
-          hCycles: PARAMS.hCycles,
-          hStartCenter: PARAMS.hStartCenter,
-          hEasing: typeof PARAMS.hEasing === 'string' ? easingFunctions[PARAMS.hEasing] : PARAMS.hEasing,
-          sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
-          sEasing: typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing,
-          lRange: [PARAMS.minLight, PARAMS.maxLight],
-          lEasing: typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing,
-          transformFn: adjustmentFunctions[PARAMS.transformFn],
-        });
-        bam();
-        startSreensaver();
-      }
-
-      startSreensaver();
-      animationLoop();
-
-      document.addEventListener("mousemove", stopScreensaver);
-      */
     </script>
   </body>
 </html>
