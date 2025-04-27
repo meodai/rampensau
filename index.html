@@ -1,2479 +1,2479 @@
 <!DOCTYPE html>
 
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <!-- Primary Meta Tags -->
-    <title>RampenSau — Color ramp generator using curves within the HSL color model</title>
-    <meta name="title" content="RampenSau — Color ramp generator using curves within the HSL color model">
-    <meta name="description" content="RampenSau is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSL color model. This page serves as preview for the variety of options the function takes.">
-    <meta name="keywords" content="color, colour, generative, generative-art, generative-design, palette, colorpalette">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://meodai.github.io/rampensau/">
-    <meta property="og:title" content="RampenSau — Color ramp generator using curves within the HSL color model">
-    <meta property="og:description" content="RampenSau is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSL color model. This page serves as preview for the variety of options the function takes.">
-    <meta property="og:image" content="https://meodai.github.io/rampensau/socialfb.png">
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://meodai.github.io/rampensau/">
-    <meta property="twitter:title" content="RampenSau — Color ramp generator using curves within the HSL color model">
-    <meta property="twitter:description" content="RampenSau is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSL color model. This page serves as preview for the variety of options the function takes.rampensau is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSL color model. This page serves as preview for the variety of options the function takes.">
-    <meta property="twitter:image" content="https://meodai.github.io/rampensau/socialfb.png">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="icon" type="image/png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
-    />
-    <style>
-      :root {
-        font-family: 'Bricolage Grotesque', sans-serif;
-        --light: var(--clast);
-        --dark: var(--c0);
-        --highlight: var(--csecondlast);
-        
-        background: var(--dark);
-        color: var(--dark);
-
-        --sidebarwidth: max(22rem, 20vw);
-
-
-        scrollbar-color: var(--dark) var(--light);
-        scrollbar-width: thin;
-      }
-
-      ::selection {
-        background: var(--dark);
-        color: var(--highlight);
-      }
-
-      a, [data-code] i {
-        color: var(--highlight);
-      }
-
-      .ellogo__font {
-        fill: var(--light);
-      }
-
-      .ellogo__logo {
-        stroke: var(--highlight);
-      }
-
-      .sidebar {
-        position: fixed;
-        width: var(--sidebarwidth);
-        order: 1;
-        left: 0;
-        top: 0;
-        bottom: 0;
-
-        z-index: 2;
-
-        border-right: 1px solid var(--light);
-      }
-
-      .sidebar__button {
-        display: none;
-        position: absolute;
-        right: 0;
-        top: 0;
-        transform: translate(calc(100% + 1em), 1em);
-        width: 1.6rem;
-        height: 1.3rem;
-        --line-color: var(--dark);
-      }
-
-      .sidebar__button i {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--line-color);
-      }
-
-      .sidebar__button i:nth-child(2) {
-        top: 50%;
-        transform: translateY(-50%);
-      }
-
-      .sidebar__button i:nth-child(3) {
-        bottom: 0;
-        top: auto;
-      }
-
-      .code-title {
-        margin-top: 0;
-      }
-
-      .settings {
-        position: absolute;
-        padding: 2rem 2rem 0;
-        background: var(--dark);
-        color: var(--light);
-        inset: 0;
-        overflow-y: auto;
-        box-sizing: border-box;
-
-        /* style scrollbar */
-        scrollbar-color: var(--highlight) var(--dark);
-        scrollbar-width: thin;
-
-
-        overscroll-behavior: contain;
-        scroll-behavior: smooth;
-      }
-
-      .button {
-        display: block;
-        margin-bottom: 1rem;
-        padding: 0.8rem 1rem 0.65rem;
-        color: var(--highlight);
-        border: 2px solid currentColor;
-        display: block;
-        width: 100%;
-        font-weight: 900;
-      }
-
-      .button--main {
-        background: var(--dark);
-        color: var(--light);
-        border-color: var(--light);
-        display: none;
-      }
-
-      @media (max-width: 500px) {
-        .button--main {
-          display: block;
-        }
-      }
-
-      .button:hover {
-        background: var(--highlight);
-        color: var(--dark);
-        border-color: var(--highlight);
-      }
-
-      .projectlink {
-        display: inline-block;
-        color: var(--dark);
-        margin-top: .75em;
-        font-size: 0.8em;
-        position: relative;
-        z-index: 10;
-        text-decoration: none;
-      }
-
-      .projectlink::after {
-        content: '↗';
-        display: inline-block;
-        margin-left: 0.5em;
-        font-size: 0.8em;
-      }
-
-      figcaption {
-        display: none;
-      }
-
-      .tabs {
-        width: 100%;
-        background: var(--dark);
-        box-shadow: 0 0 0 2px var(--dark),
-                    0 0 .6rem var(--dark),
-                    0 -2rem 0 2rem var(--dark);
-      }
-
-      .tabs__contents {
-        border: 2px solid var(--light);
-        overflow: hidden;
-        background: var(--dark);
-        z-index: 1;
-        position: relative;
-      }
-
-      .tabs__slider {
-        display: flex;
-        gap: 0;
-        width: calc(var(--tabs-length, 1) * 100%);
-        transform: translateX(calc(var(--active-tab, 0) * calc(-100% / var(--tabs-length, 1))));
-        transition: transform 300ms cubic-bezier(.7, .3, 0 ,1);
-      }
-
-      .tabs__content {
-        flex: 0 0 calc(100% / var(--tabs-length, 1));
-        width: calc(100% / var(--tabs-length, 1));
-        box-sizing: border-box;
-        padding: .5rem;
-        pointer-events: none;
-        transform: scale(0.8);
-        opacity: 0;
-
-        transition: transform 300ms cubic-bezier(.7, .3, 0 ,1) 50ms,
-                    opacity 300ms cubic-bezier(.7, .3, 0 ,1) 50ms;
-
-        will-change: transform, opacity;
-
-        position: relative;
-      }
-
-      .tabs__content--active {
-        pointer-events: auto;
-        
-        transform: scale(1);
-        opacity: 1;
-
-        transition: transform 300ms cubic-bezier(.7, .3, 0 ,1) 100ms,
-                    opacity 300ms cubic-bezier(.7, .3, 0 ,1) 100ms;
-      }
-
-      .tabs__controls {
-        display: flex;
-        margin-top: -2px;
-      }
-
-      .tabs__control {
-        border: 2px solid var(--light);
-        padding: .8rem .5rem;
-
-        font-size: 0.8rem;
-        font-weight: 800;
-        line-height: 1;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-grow: 1;
-
-        cursor: pointer;
-      }
-
-      .tabs__control:hover,
-      .tabs__control--active  {
-        background: var(--light);
-        color: var(--dark);
-
-      }
-
-      .tabs__control--active {
-        z-index: 1;
-      }
-
-      .tabs__control + .tabs__control {
-        margin-left: -2px;
-      }
-
-      .tabs__icon {
-        display: inline-block;
-        height: 1.25em;
-        aspect-ratio: 1;
-        margin-right: 0.5em;
-      }
-
-      .tabs__label {
-        display: inline-block;
-        font-weight: 800;
-        line-height: 1;
-        margin-top: 0.1em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .icon::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-      }
-
-      .icon {
-        position:relative;
-      }
-
-
-      .icon--hue::before {
-        border-radius: 50%;
-        box-shadow: inset 0 0 0 1.5px currentColor;
-      }
-
-      .icon--sl::before {
-        box-shadow: inset 0 0 0 1.5px currentColor;
-      }
-
-      .icon--fncall::before {
-        content: "{}";
-        font-weight: 100;
-        font-size: 1.25em;
-        line-height: 1;
-      }
-
-      .disc--mini {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        height: calc(100% + 3px);
-        width: 1px;
-        
-        transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg));
-      }
-
-      .disc--mini::before {
-        position: absolute;
-        content: '';
-        top: 0;
-        left: 50%;
-        width: 100%;
-        height: 1px;
-        background: var(--light);
-      }
-
-      .disc--mini-sl {
-        left: calc(4px + var(--c-s) * calc(100% - 8px));
-        top: calc(4px + (1 - var(--c-l)) * calc(100% - 8px));
-
-        position: absolute;
-        width: 1.5px;
-        height: 1.5px;
-        transform: translate(-50%, -50%);
-      }
-
-      .disc--mini-sl::before {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-
-      }
-
-      .settings__top {
-        margin-bottom: 2rem;
-        padding: 2rem;
-        padding-top: .5rem;
-        margin: -2rem -2rem 2rem;
-
-        position: sticky;
-        top: 0;
-        z-index: 1;
-      }
-
-      @media (max-width: 500px) {
-        .settings__top {
-          padding-top: 1.5rem;
-        }
-      }
-
-      .h-viz {
-        position: relative;
-        aspect-ratio: 1;
-        perspective: 400px;
-        will-change: perspective;
-        transition: perspective 300ms cubic-bezier(.7, .3, 0 ,1);
-      }
-
-      .h-viz:hover {
-        perspective: 1000px;
-      }
-
-      .h-viz .disc {
-        position: absolute;
-        bottom: 50%;
-        left: 50%;
-        width: 7rem;
-        height: 7rem;
-        transform: translate(-50%, 100%) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(calc(sin(.1 + var(--c-i2) * 1.5))) scale(1.5);
-        transition: calc(300ms - 50ms + var(--c-i2) * 200ms) transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      }
-
-      .h-viz .disc::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background: conic-gradient(
-            hsl(360, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
-            hsl(315, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
-            hsl(270, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
-            hsl(225, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
-            hsl(180, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
-            hsl(135, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
-            hsl(90, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
-            hsl(45, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
-            hsl(0, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)));
-        transform: scaleX(-1); /* lazy flip the gradient */
-        opacity: 0.55;
-      }
-
-      .h-viz .disc::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: .6rem;
-        border-radius: 50%;
-        height: .6rem;
-        transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.3rem) scale(calc(3 - var(--c-i2) * 4.5));
-        transform-origin: 50% 50%;
-        box-shadow: 0 0 0 1px var(--dark),
-                    0 0 0 2px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
-        background: hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
-        transition: calc(300ms - 50ms + var(--c-i2) * 200ms) transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        transition-duration: calc(100ms + var(--c-i2) * 200ms);
-      }
-
-      .h-viz:hover .disc {
-        transform: translate(-50%, 100%) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(1);
-      }
-      .h-viz:hover .disc::after {
-        transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.3rem) scale(1);
-      }
-      .h-viz:hover .disc::before {
-        mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
-        -webkit-mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
-      }
-
-      .sl-viz {
-        position: relative;
-        aspect-ratio: 1;
-      }
-
-
-      .sl-viz .disc--sl {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-      }
-
-      .sl-viz .disc--sl::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-      }
-
-      .sl-viz .disc--sl::before {
-        left: calc(5% + var(--c-s) * 90%);
-        top: calc(5% + (1 - var(--c-l)) * 90%);
-        
-        content: '';
-        position: absolute;
-
-        width: .6rem;
-        aspect-ratio: 1;
-        border-radius: 50%;
-        
-        box-shadow: 0 0 0 1px var(--light),
-                    0 0 0 2px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
-        background: hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
-        transform: translate(-50%, -50%);
-      } 
-
-
-      .main {
-        margin-left: var(--sidebarwidth);
-        background: var(--light);
-        padding: 4rem;
-      }
-
-      .section {
-        display: flex;
-        margin-top: 4rem;
-        max-width: calc(50rem + 12.5vw);
-      }
-      .section--first {
-        margin-top: 0;
-      }
-      .section--vertical {
-        flex-direction: column;
-      }
-      .section__text {
-        flex: 1 0 calc(100% - 25rem - 4rem);
-        order: 1;
-        width: calc(100% - 25rem - 4rem);
-      }
-      .section--vertical .section__text {
-
-        flex: 1 0 calc(100% - 10rem - 4rem);
-        order: 1;
-        width: calc(100% - 10rem - 4rem);
-
-      }
-
-      .section__fig {
-        flex: 1 1 25rem;
-        order: 0;
-        margin-right: 4rem;
-      }
-      .section code {
-        font-family: monospace;
-        background: var(--dark);
-        color: var(--light);
-        padding: 0 0.75ex 0.2ex;
-      }
-
-      .intro {
-        margin-bottom: 4rem;
-      }
-
-      h1 {
-        font-size: calc(.64rem + 5vw);
-        font-weight: 900;
-        letter-spacing: -0.025em;
-        margin-top: 0;
-        line-height: 0.85;
-        margin-left: -0.045em;
-        margin-bottom: 2rem;
-        text-shadow: var(--tsss);
-        transition: text-shadow 300ms cubic-bezier(.7, .3, 0 ,1);
-      }
-
-      h1:hover {
-        text-shadow: var(--ts);
-      }
-
-      h2,
-      h3,
-      [data-names] strong {
-        margin: 0 0 2rem;
-        font-size: calc(1.5rem + 2vw);
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        line-height: 0.9;
-      }
-
-      h2 + p {
-        margin-bottom: 1rem;
-      }
-
-      h2 span {
-        font-size: 0.9rem;
-        line-height: 1.2;
-        font-weight: 400;
-      }
-
-      h3 {
-        margin-top: 1.5em;
-        font-size: calc(0.5rem + 1vw);
-      }
-      pre {
-        font-family: monospace;
-        font-size: 0.75rem;
-        max-width: 100%;
-        overflow: hidden;
-      }
-
-      .fncall {
-        position: absolute;
-        inset: 0;
-        padding: 2rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
+<head>
+  <meta charset="utf-8" />
+  <!-- Primary Meta Tags -->
+  <title>RampenSau — Color ramp generator using curves within the HSL color model</title>
+  <meta name="title" content="RampenSau — Color ramp generator using curves within the HSL color model">
+  <meta name="description" content="RampenSau is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSL color model. This page serves as preview for the variety of options the function takes.">
+  <meta name="keywords" content="color, colour, generative, generative-art, generative-design, palette, colorpalette">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://meodai.github.io/rampensau/">
+  <meta property="og:title" content="RampenSau — Color ramp generator using curves within the HSL color model">
+  <meta property="og:description" content="RampenSau is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSL color model. This page serves as preview for the variety of options the function takes.">
+  <meta property="og:image" content="https://meodai.github.io/rampensau/socialfb.png">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://meodai.github.io/rampensau/">
+  <meta property="twitter:title" content="RampenSau — Color ramp generator using curves within the HSL color model">
+  <meta property="twitter:description" content="RampenSau is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSL color model. This page serves as preview for the variety of options the function takes.rampensau is lightweight, dependency free and fast JavaScript function written in TypeScript. It generates color ramps based on a curve within the HSL color model. This page serves as preview for the variety of options the function takes.">
+  <meta property="twitter:image" content="https://meodai.github.io/rampensau/socialfb.png">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+  />
+  <style>
+    :root {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      --light: var(--clast);
+      --dark: var(--c0);
+      --highlight: var(--csecondlast);
       
-      .code-sample {
-        display: block;
-        max-width: 100%;
-      }
+      background: var(--dark);
+      color: var(--dark);
 
-      a {
-        font-size: 1em;
-        margin-top: 0.4em;
-        font-weight: 700;
-      }
-
-      button {
-        display: block;
-        background: none;
-        padding: 0;
-        border: none;
-        border-radius: 0;
-        font: inherit;
-        font-size: inherit;
-        color: inherit;
-      }
-      .main button:not(.button) {
-        cursor: pointer;
-        font-weight: bold;
-        display: inline;
-        text-decoration: underline;
-        margin: 0 0.2em;
-      }
-
-      .main button:not(.button):hover {
-        text-decoration-color: var(--highlight);
-      }
-
-      [data-colors] {
-        position: relative;
-        display: flex;
-        flex-wrap: wrap;
-        width: 100%;
-        height: calc(100vmin - 8rem);
-        margin-bottom: 4rem;
-        flex-direction: column-reverse;
-        box-shadow: 0 0 0 2px var(--dark);
-        transition: box-shadow 300ms cubic-bezier(.7, .3, 0 ,1);
-        transition-delay: 300ms;
-        background: var(--dark);
-        overflow: hidden;
-      }
-      [data-colors]::after {
-        content: '';
-        position: absolute;
-        inset: -1vmin;
-        background: linear-gradient(0deg, var(--gradient));
-        opacity: 1;
-        z-index: 1;
-        filter: blur(10vmin);
-        transform: scale(0.9) translateX(-50%);
-        transition: opacity 200ms linear;
-        transition-delay: 500ms;
-        will-change: opacity;
-      }
-      [data-colors]:hover::after {
-        opacity: 0;
-        transition-delay: 0ms;
-      }
-
-      [data-colors] i {
-        flex: 1 0 auto;
-        width: 100%;
-        background: var(--color);
-        position: relative;
-
-        font-size: calc(20vmin * 1/var(--total));
-        transition: transform 460ms cubic-bezier(.7, .3, 0 ,1);
-        transition-delay: calc(100ms + var(--i) * 200ms);
-      }
-      [data-colors] span {
-        position: absolute;
-        left: 1em;
-        top: 50%;
-        background: var(--color);
-        width: .8em;
-        height: .8em;
-        border-radius: 50%;
-        transform: translateY(-50%) rotate(calc(var(--h) * 1deg));
-        z-index: 2;
-        box-shadow: 0 0 0 2px var(--c);
-        overflow: hidden;
-        display: none;
-      }
-      [data-colors] span::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        transform-origin: 50% 50%;
-        transform: rotate(calc(var(--h) * -1deg)) translateY(calc(-1 * var(--l) * 100%));
-        background: var(--c);
-        display: none;
-      }
-      [data-colors] span::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 50%;
-        width: 30%;
-        aspect-ratio: 1;
-        background: var(--c);
-        transform: translate(-50%, -50%) rotate(45deg);
-      }
-
-      [data-colors] b {
-        position: absolute;
-        top: 50%;
-        right: 1em;
-        transform: translateY(-50%);
-        color: var(--c);
-        font-weight: 800;
-        filter: hue-rotate(180deg);
-        z-index: 2;
-      }
-
-      [data-palette] {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2px;
-        cursor: pointer;
-      }
-      [data-palette] .palette-sample {
-        --rotation: round(calc(var(--rnd) * 360deg), 90deg);
-      }
-      .palette-sample {
-        position: relative;
-        background: var(--col-0);
-        aspect-ratio: 1;
-        margin: 0;
-        user-select: none;
-        flex: 0 0 calc(100% / var(--x) - 2px);
-      }
-      .palette-sample b {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 50%;
-        height: 50%;
-        transform: translate(-50%, -50%) rotate(var(--rotation));
-        background: var(--col-1);
-        
-      }
-      .palette-sample i {
-        position: absolute;
-        width: 50%;
-        height: 50%;
-        right: 0;
-      }
-      .palette-sample i:first-child {
-        background: var(--col-2);
-      }
-      .palette-sample i:last-child {
-        bottom: 0;
-        background: var(--col-3);
-      }
-
-      figure {
-        margin: 0;
-        padding: 0;
-      }
-      [data-figure] {
-        background-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)),
-          linear-gradient(
-            to left,
-            hsl(var(--deg, 0deg), 100%, 50%),
-            hsl(var(--deg, 0deg), 0%, 100%)
-          );
-      }
-      [data-ramp] {
-        height: 10rem;
-        box-shadow: 0 0 0 2px var(--dark);
-      }
-      [data-list] {
-        margin: 0 0 2rem;
-        display: flex;
-        gap: 4px;
-      }
-
-      .swatch {
-        position: relative;
-        font-size: 0.8rem;
-        line-height: 1.2;
-        padding-bottom: 0.5em;
-      }
+      --sidebarwidth: max(22rem, 20vw);
 
 
-      [data-list] h3 {
-        display: none;
-        margin-top: 0;
-      }
+      scrollbar-color: var(--dark) var(--light);
+      scrollbar-width: thin;
+    }
 
-      .swatch::before {
-        user-select: none;
-        content: "";
-        background: var(--col);
-        display: block;
-        width: 100%;
-        height: 1.2em;
+    ::selection {
+      background: var(--dark);
+      color: var(--highlight);
+    }
 
-        box-shadow: 0 0 0 2px var(--dark);
-      }
+    a, [data-code] i {
+      color: var(--highlight);
+    }
+
+    .ellogo__font {
+      fill: var(--light);
+    }
+
+    .ellogo__logo {
+      stroke: var(--highlight);
+    }
+
+    .sidebar {
+      position: fixed;
+      width: var(--sidebarwidth);
+      order: 1;
+      left: 0;
+      top: 0;
+      bottom: 0;
+
+      z-index: 2;
+
+      border-right: 1px solid var(--light);
+    }
+
+    .sidebar__button {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transform: translate(calc(100% + 1em), 1em);
+      width: 1.6rem;
+      height: 1.3rem;
+      --line-color: var(--dark);
+    }
+
+    .sidebar__button i {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--line-color);
+    }
+
+    .sidebar__button i:nth-child(2) {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .sidebar__button i:nth-child(3) {
+      bottom: 0;
+      top: auto;
+    }
+
+    .code-title {
+      margin-top: 0;
+    }
+
+    .settings {
+      position: absolute;
+      padding: 2rem 2rem 0;
+      background: var(--dark);
+      color: var(--light);
+      inset: 0;
+      overflow-y: auto;
+      box-sizing: border-box;
+
+      /* style scrollbar */
+      scrollbar-color: var(--highlight) var(--dark);
+      scrollbar-width: thin;
 
 
-      .swatch div {
-        transform: translateY(-100%);
-        color: var(--coltext);
-        margin-left: .2em;
-        
-      }
+      overscroll-behavior: contain;
+      scroll-behavior: smooth;
+    }
 
-      .color-info {
-        padding: 0.5rem;
-      }
+    .button {
+      display: block;
+      margin-bottom: 1rem;
+      padding: 0.8rem 1rem 0.65rem;
+      color: var(--highlight);
+      border: 2px solid currentColor;
+      display: block;
+      width: 100%;
+      font-weight: 900;
+    }
 
-      .color-info strong {
-        font-size: 1rem;
-        display: block;
-        margin-bottom: 1ex;
-      }
-      .color-info button {
-        font-size: 0.6rem;
-        margin-top: 0.5em;
+    .button--main {
+      background: var(--dark);
+      color: var(--light);
+      border-color: var(--light);
+      display: none;
+    }
 
-        text-align: left;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        max-width: 100%;
-      }
-      .color-info__contrast {
-        position: absolute;
-        top: 8.7rem;
-        left: 0.5rem;
-        color: var(--colbg);
-        font-size: 0.8em;
-      }
-      .color-info__contrast h5 {
-        display: none;
-      }
-      [data-list] > div {
-        flex: 1;
-      }
-      [data-copy] {
-        cursor: pointer;
-      }
-      p {
-        margin-top: 1em;
-        max-width: 42ch;
-        font-size: .9em;
-        letter-spacing: 0.002em;
-        line-height: 1.45;
-        font-weight: 400;
-      }
-
-      .pane__section,
-      .pane__label {
+    @media (max-width: 500px) {
+      .button--main {
         display: block;
       }
+    }
 
-      .pane__label {
-        font-size: 0.8rem;
-        font-weight: 800;
-        line-height: 1;
-        margin-bottom: 0.3em;
-      }
+    .button:hover {
+      background: var(--highlight);
+      color: var(--dark);
+      border-color: var(--highlight);
+    }
 
-      .pane {
-        box-sizing: border-box;
-        background: var(--color-bg);
-        display: block;
-        cursor: default;
-        background: var(--dark);
-        color: var(--light);
-        --size-gutter: 1rem;
-        --color-inverted: var(--light);
+    .projectlink {
+      display: inline-block;
+      color: var(--dark);
+      margin-top: .75em;
+      font-size: 0.8em;
+      position: relative;
+      z-index: 10;
+      text-decoration: none;
+    }
 
-        margin-top: calc(var(--size-gutter) * 2);
+    .projectlink::after {
+      content: '↗';
+      display: inline-block;
+      margin-left: 0.5em;
+      font-size: 0.8em;
+    }
+
+    figcaption {
+      display: none;
+    }
+
+    .tabs {
+      width: 100%;
+      background: var(--dark);
+      box-shadow: 0 0 0 2px var(--dark),
+                  0 0 .6rem var(--dark),
+                  0 -2rem 0 2rem var(--dark);
+    }
+
+    .tabs__contents {
+      border: 2px solid var(--light);
+      overflow: hidden;
+      background: var(--dark);
+      z-index: 1;
+      position: relative;
+    }
+
+    .tabs__slider {
+      display: flex;
+      gap: 0;
+      width: calc(var(--tabs-length, 1) * 100%);
+      transform: translateX(calc(var(--active-tab, 0) * calc(-100% / var(--tabs-length, 1))));
+      transition: transform 300ms cubic-bezier(.7, .3, 0 ,1);
+    }
+
+    .tabs__content {
+      flex: 0 0 calc(100% / var(--tabs-length, 1));
+      width: calc(100% / var(--tabs-length, 1));
+      box-sizing: border-box;
+      padding: .5rem;
+      pointer-events: none;
+      transform: scale(0.8);
+      opacity: 0;
+
+      transition: transform 300ms cubic-bezier(.7, .3, 0 ,1) 50ms,
+                  opacity 300ms cubic-bezier(.7, .3, 0 ,1) 50ms;
+
+      will-change: transform, opacity;
+
+      position: relative;
+    }
+
+    .tabs__content--active {
+      pointer-events: auto;
+      
+      transform: scale(1);
+      opacity: 1;
+
+      transition: transform 300ms cubic-bezier(.7, .3, 0 ,1) 100ms,
+                  opacity 300ms cubic-bezier(.7, .3, 0 ,1) 100ms;
+    }
+
+    .tabs__controls {
+      display: flex;
+      margin-top: -2px;
+    }
+
+    .tabs__control {
+      border: 2px solid var(--light);
+      padding: .8rem .5rem;
+
+      font-size: 0.8rem;
+      font-weight: 800;
+      line-height: 1;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
+
+      cursor: pointer;
+    }
+
+    .tabs__control:hover,
+    .tabs__control--active  {
+      background: var(--light);
+      color: var(--dark);
+
+    }
+
+    .tabs__control--active {
+      z-index: 1;
+    }
+
+    .tabs__control + .tabs__control {
+      margin-left: -2px;
+    }
+
+    .tabs__icon {
+      display: inline-block;
+      height: 1.25em;
+      aspect-ratio: 1;
+      margin-right: 0.5em;
+    }
+
+    .tabs__label {
+      display: inline-block;
+      font-weight: 800;
+      line-height: 1;
+      margin-top: 0.1em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .icon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+
+    .icon {
+      position:relative;
+    }
+
+
+    .icon--hue::before {
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 1.5px currentColor;
+    }
+
+    .icon--sl::before {
+      box-shadow: inset 0 0 0 1.5px currentColor;
+    }
+
+    .icon--fncall::before {
+      content: "{}";
+      font-weight: 100;
+      font-size: 1.25em;
+      line-height: 1;
+    }
+
+    .disc--mini {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: calc(100% + 3px);
+      width: 1px;
+      
+      transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg));
+    }
+
+    .disc--mini::before {
+      position: absolute;
+      content: '';
+      top: 0;
+      left: 50%;
+      width: 100%;
+      height: 1px;
+      background: var(--light);
+    }
+
+    .disc--mini-sl {
+      left: calc(4px + var(--c-s) * calc(100% - 8px));
+      top: calc(4px + (1 - var(--c-l)) * calc(100% - 8px));
+
+      position: absolute;
+      width: 1.5px;
+      height: 1.5px;
+      transform: translate(-50%, -50%);
+    }
+
+    .disc--mini-sl::before {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+
+    }
+
+    .settings__top {
+      margin-bottom: 2rem;
+      padding: 2rem;
+      padding-top: .5rem;
+      margin: -2rem -2rem 2rem;
+
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    @media (max-width: 500px) {
+      .settings__top {
+        padding-top: 1.5rem;
       }
-      .pane__section {
-        display: block;
-      }
-      .pane__section + .pane__section {
-        margin-top: calc(var(--size-gutter) * 2);
-      }
-      .pane__section--hidden {
-        display: none;
-      }
-      .pane__inputs {
-        display: flex;
-        touch-action: manipulation;
-        gap: calc(var(--size-gutter) * .5);
-      }
-      .pane__input--number {
-        flex-grow: 1;
-      }
-      .pane .pane__input--number + input[type="text"] {
-        display: block;
-        flex-basis: 3.3rem;
-        width: 3.3rem;
-      }
-      .pane__desc {
-        margin: 1em 0 3em;
-        font-size: 0.6em;
-      }
-      .pane select {
-        font-size: 0.8em;
-        border-radius: 2rem;
-        padding: 0.2rem;
-      }
-      .pane input,
-      .pane select {
-        display: block;
-        box-sizing: border-box;
-        touch-action: manipulation;
-        font-family: "Space Mono", monospace;
-        border: none;
-        width: auto;
-      }
-      .pane select option {
-        color: var(--dark);
-      }
-      .pane input[type="text"],
-      .pane select[type="number"] {
-        color: var(--color-inverted);
-        background: none;
-        border: none;
-        text-align: right;
-        font-size: 0.8em;
-        flex: 0 0 3rem;
-        width: 3rem;
-      }
-      .pane input {
-        background-color: transparent;
-        accent-color: var(--highlight);
-      }
-      .pane input[type="range"] {
-        -webkit-appearance: none;
-      }
-      .pane input[type="range"] {
-        margin: 0;
-        padding-top: 0.7em;
-        margin-top: -0.7em;
-      }
-      .pane input[type="range"]:focus {
-        outline: none;
-      }
-      .pane input[type="range"]:hover::-webkit-slider-thumb {
-        background-color: var(--color-inverted);
-        clip-path: polygon(100% 0%, 0% 0%, 50% 100%, 50% 100%);
-      }
-      .pane input[type="range"]::-webkit-slider-runnable-track {
-        width: 100%;
-        height: 1rem;
-        background: transparent;
-        color: var(--dark);
-        border-radius: 0;
-        border: solid var(--light);
-        border-width: 0 0 2px;
-      }
-      .pane input[type="range"]::-webkit-slider-thumb {
-        border: 2px solid transparent;
-        height: 0.75rem;
-        width: 0.5rem;
-        border-radius: 0;
-        background: var(--light);
-        -webkit-appearance: none;
-        margin-top: 0.25rem;
-        transition: 150ms background-color, 200ms clip-path,
-          200ms -webkit-clip-path;
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-      }
-      .pane input[type="range"]::-moz-range-track {
-        width: 100%;
-        height: 1rem;
-        background: transparent;
-        color: var(--dark);
-        border-radius: 0;
-        border: solid var(--light);
-        border-width: 0 0 2px;
-      }
-      .pane input[type="range"]::-moz-range-thumb {
-        border: 2px solid transparent;
-        height: 0.75rem;
-        width: 0.5rem;
-        border-radius: 0;
-        background: var(--light);
-        -webkit-appearance: none;
-        margin-top: 0.25rem;
-        transition: 150ms background-color, 200ms clip-path,
-          200ms -webkit-clip-path;
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-      }
-      .pane input[type="range"]::-ms-track {
-        width: 100%;
-        height: 1rem;
-        background: transparent;
-        color: var(--dark);
-        border-radius: 0;
-        border: solid var(--light);
-        border-width: 0 0 2px;
-      }
-      .pane input[type="range"]::-ms-fill-lower {
-        background: var(--light);
-        border: none;
-        border-radius: 100%;
-      }
-      .pane input[type="range"]::-ms-fill-upper {
-        background: var(--light);
-        border-radius: 100%;
-        box-shadow: none;
-      }
-      .pane input[type="range"]::-ms-thumb {
-        border: 2px solid transparent;
-        height: 0.75rem;
-        width: 0.5rem;
-        border-radius: 0;
-        background: var(--light);
-        -webkit-appearance: none;
-        margin-top: 0.25rem;
-        transition: 150ms background-color, 200ms clip-path,
-          200ms -webkit-clip-path;
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-      }
-      .pane select {
-        color: var(--light);
-        width: 100%;
-        box-sizing: border-box;
-        -webkit-appearance: none;
-        border: 0;
-        box-shadow: 0 2px 0 0 var(--light);
-        border-radius: 0;
-        padding: 0.25rem 1rem 0.25rem 0rem;
-        background-color: transparent;
-        background-size: 1.25em 1.25em;
-        background-image: conic-gradient(
-          var(--light) 5%,
-          transparent 0 95%,
-          var(--light) 0
+    }
+
+    .h-viz {
+      position: relative;
+      aspect-ratio: 1;
+      perspective: 400px;
+      will-change: perspective;
+      transition: perspective 300ms cubic-bezier(.7, .3, 0 ,1);
+    }
+
+    .h-viz:hover {
+      perspective: 1000px;
+    }
+
+    .h-viz .disc {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      width: 7rem;
+      height: 7rem;
+      transform: translate(-50%, 100%) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(calc(sin(.1 + var(--c-i2) * 1.5))) scale(1.5);
+      transition: calc(300ms - 50ms + var(--c-i2) * 200ms) transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .h-viz .disc::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: conic-gradient(
+          hsl(360, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+          hsl(315, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+          hsl(270, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+          hsl(225, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+          hsl(180, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+          hsl(135, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+          hsl(90, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+          hsl(45, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)),
+          hsl(0, calc(var(--c-s) * 100%), calc(var(--c-l) * 100%)));
+      transform: scaleX(-1); /* lazy flip the gradient */
+      opacity: 0.55;
+    }
+
+    .h-viz .disc::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: .6rem;
+      border-radius: 50%;
+      height: .6rem;
+      transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.3rem) scale(calc(3 - var(--c-i2) * 4.5));
+      transform-origin: 50% 50%;
+      box-shadow: 0 0 0 1px var(--dark),
+                  0 0 0 2px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
+      background: hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
+      transition: calc(300ms - 50ms + var(--c-i2) * 200ms) transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition-duration: calc(100ms + var(--c-i2) * 200ms);
+    }
+
+    .h-viz:hover .disc {
+      transform: translate(-50%, 100%) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(1);
+    }
+    .h-viz:hover .disc::after {
+      transform: translate(-50%, -50%) rotate(calc(var(--c-h) * 1deg)) translateY(-3.3rem) scale(1);
+    }
+    .h-viz:hover .disc::before {
+      mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
+      -webkit-mask-image: radial-gradient(circle farthest-side at center, transparent 90%, white 70%);
+    }
+
+    .sl-viz {
+      position: relative;
+      aspect-ratio: 1;
+    }
+
+
+    .sl-viz .disc--sl {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    .sl-viz .disc--sl::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+
+    .sl-viz .disc--sl::before {
+      left: calc(5% + var(--c-s) * 90%);
+      top: calc(5% + (1 - var(--c-l)) * 90%);
+      
+      content: '';
+      position: absolute;
+
+      width: .6rem;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      
+      box-shadow: 0 0 0 1px var(--light),
+                  0 0 0 2px hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
+      background: hsl(var(--c-h), calc(var(--c-s) * 100%), calc(var(--c-l) * 100%));
+      transform: translate(-50%, -50%);
+    } 
+
+
+    .main {
+      margin-left: var(--sidebarwidth);
+      background: var(--light);
+      padding: 4rem;
+    }
+
+    .section {
+      display: flex;
+      margin-top: 4rem;
+      max-width: calc(50rem + 12.5vw);
+    }
+    .section--first {
+      margin-top: 0;
+    }
+    .section--vertical {
+      flex-direction: column;
+    }
+    .section__text {
+      flex: 1 0 calc(100% - 25rem - 4rem);
+      order: 1;
+      width: calc(100% - 25rem - 4rem);
+    }
+    .section--vertical .section__text {
+
+      flex: 1 0 calc(100% - 10rem - 4rem);
+      order: 1;
+      width: calc(100% - 10rem - 4rem);
+
+    }
+
+    .section__fig {
+      flex: 1 1 25rem;
+      order: 0;
+      margin-right: 4rem;
+    }
+    .section code {
+      font-family: monospace;
+      background: var(--dark);
+      color: var(--light);
+      padding: 0 0.75ex 0.2ex;
+    }
+
+    .intro {
+      margin-bottom: 4rem;
+    }
+
+    h1 {
+      font-size: calc(.64rem + 5vw);
+      font-weight: 900;
+      letter-spacing: -0.025em;
+      margin-top: 0;
+      line-height: 0.85;
+      margin-left: -0.045em;
+      margin-bottom: 2rem;
+      text-shadow: var(--tsss);
+      transition: text-shadow 300ms cubic-bezier(.7, .3, 0 ,1);
+    }
+
+    h1:hover {
+      text-shadow: var(--ts);
+    }
+
+    h2,
+    h3,
+    [data-names] strong {
+      margin: 0 0 2rem;
+      font-size: calc(1.5rem + 2vw);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 0.9;
+    }
+
+    h2 + p {
+      margin-bottom: 1rem;
+    }
+
+    h2 span {
+      font-size: 0.9rem;
+      line-height: 1.2;
+      font-weight: 400;
+    }
+
+    h3 {
+      margin-top: 1.5em;
+      font-size: calc(0.5rem + 1vw);
+    }
+    pre {
+      font-family: monospace;
+      font-size: 0.75rem;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .fncall {
+      position: absolute;
+      inset: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .code-sample {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      font-size: 1em;
+      margin-top: 0.4em;
+      font-weight: 700;
+    }
+
+    button {
+      display: block;
+      background: none;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      font: inherit;
+      font-size: inherit;
+      color: inherit;
+    }
+    .main button:not(.button) {
+      cursor: pointer;
+      font-weight: bold;
+      display: inline;
+      text-decoration: underline;
+      margin: 0 0.2em;
+    }
+
+    .main button:not(.button):hover {
+      text-decoration-color: var(--highlight);
+    }
+
+    [data-colors] {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      height: calc(100vmin - 8rem);
+      margin-bottom: 4rem;
+      flex-direction: column-reverse;
+      box-shadow: 0 0 0 2px var(--dark);
+      transition: box-shadow 300ms cubic-bezier(.7, .3, 0 ,1);
+      transition-delay: 300ms;
+      background: var(--dark);
+      overflow: hidden;
+    }
+    [data-colors]::after {
+      content: '';
+      position: absolute;
+      inset: -1vmin;
+      background: linear-gradient(0deg, var(--gradient));
+      opacity: 1;
+      z-index: 1;
+      filter: blur(10vmin);
+      transform: scale(0.9) translateX(-50%);
+      transition: opacity 200ms linear;
+      transition-delay: 500ms;
+      will-change: opacity;
+    }
+    [data-colors]:hover::after {
+      opacity: 0;
+      transition-delay: 0ms;
+    }
+
+    [data-colors] i {
+      flex: 1 0 auto;
+      width: 100%;
+      background: var(--color);
+      position: relative;
+
+      font-size: calc(20vmin * 1/var(--total));
+      transition: transform 460ms cubic-bezier(.7, .3, 0 ,1);
+      transition-delay: calc(100ms + var(--i) * 200ms);
+    }
+    [data-colors] span {
+      position: absolute;
+      left: 1em;
+      top: 50%;
+      background: var(--color);
+      width: .8em;
+      height: .8em;
+      border-radius: 50%;
+      transform: translateY(-50%) rotate(calc(var(--h) * 1deg));
+      z-index: 2;
+      box-shadow: 0 0 0 2px var(--c);
+      overflow: hidden;
+      display: none;
+    }
+    [data-colors] span::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 50%;
+      transform: rotate(calc(var(--h) * -1deg)) translateY(calc(-1 * var(--l) * 100%));
+      background: var(--c);
+      display: none;
+    }
+    [data-colors] span::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 30%;
+      aspect-ratio: 1;
+      background: var(--c);
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    [data-colors] b {
+      position: absolute;
+      top: 50%;
+      right: 1em;
+      transform: translateY(-50%);
+      color: var(--c);
+      font-weight: 800;
+      filter: hue-rotate(180deg);
+      z-index: 2;
+    }
+
+    [data-palette] {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      cursor: pointer;
+    }
+    [data-palette] .palette-sample {
+      --rotation: round(calc(var(--rnd) * 360deg), 90deg);
+    }
+    .palette-sample {
+      position: relative;
+      background: var(--col-0);
+      aspect-ratio: 1;
+      margin: 0;
+      user-select: none;
+      flex: 0 0 calc(100% / var(--x) - 2px);
+    }
+    .palette-sample b {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 50%;
+      height: 50%;
+      transform: translate(-50%, -50%) rotate(var(--rotation));
+      background: var(--col-1);
+      
+    }
+    .palette-sample i {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      right: 0;
+    }
+    .palette-sample i:first-child {
+      background: var(--col-2);
+    }
+    .palette-sample i:last-child {
+      bottom: 0;
+      background: var(--col-3);
+    }
+
+    figure {
+      margin: 0;
+      padding: 0;
+    }
+    [data-figure] {
+      background-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)),
+        linear-gradient(
+          to left,
+          hsl(var(--deg, 0deg), 100%, 50%),
+          hsl(var(--deg, 0deg), 0%, 100%)
         );
-        background-repeat: no-repeat;
-        background-position: right 0% top 120%;
-      }
-      .pane select:focus {
-        outline: none;
-        background-color: transparent;
-      }
+    }
+    [data-ramp] {
+      height: 10rem;
+      box-shadow: 0 0 0 2px var(--dark);
+    }
+    [data-list] {
+      margin: 0 0 2rem;
+      display: flex;
+      gap: 4px;
+    }
 
-      svg:not(:root) {
-        overflow: visible;
-      }
-      [data-names] ol {
+    .swatch {
+      position: relative;
+      font-size: 0.8rem;
+      line-height: 1.2;
+      padding-bottom: 0.5em;
+    }
+
+
+    [data-list] h3 {
+      display: none;
+      margin-top: 0;
+    }
+
+    .swatch::before {
+      user-select: none;
+      content: "";
+      background: var(--col);
+      display: block;
+      width: 100%;
+      height: 1.2em;
+
+      box-shadow: 0 0 0 2px var(--dark);
+    }
+
+
+    .swatch div {
+      transform: translateY(-100%);
+      color: var(--coltext);
+      margin-left: .2em;
+      
+    }
+
+    .color-info {
+      padding: 0.5rem;
+    }
+
+    .color-info strong {
+      font-size: 1rem;
+      display: block;
+      margin-bottom: 1ex;
+    }
+    .color-info button {
+      font-size: 0.6rem;
+      margin-top: 0.5em;
+
+      text-align: left;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+    .color-info__contrast {
+      position: absolute;
+      top: 8.7rem;
+      left: 0.5rem;
+      color: var(--colbg);
+      font-size: 0.8em;
+    }
+    .color-info__contrast h5 {
+      display: none;
+    }
+    [data-list] > div {
+      flex: 1;
+    }
+    [data-copy] {
+      cursor: pointer;
+    }
+    p {
+      margin-top: 1em;
+      max-width: 42ch;
+      font-size: .9em;
+      letter-spacing: 0.002em;
+      line-height: 1.45;
+      font-weight: 400;
+    }
+
+    .pane__section,
+    .pane__label {
+      display: block;
+    }
+
+    .pane__label {
+      font-size: 0.8rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.3em;
+    }
+
+    .pane {
+      box-sizing: border-box;
+      background: var(--color-bg);
+      display: block;
+      cursor: default;
+      background: var(--dark);
+      color: var(--light);
+      --size-gutter: 1rem;
+      --color-inverted: var(--light);
+
+      margin-top: calc(var(--size-gutter) * 2);
+    }
+    .pane__section {
+      display: block;
+    }
+    .pane__section + .pane__section {
+      margin-top: calc(var(--size-gutter) * 2);
+    }
+    .pane__section--hidden {
+      display: none;
+    }
+    .pane__inputs {
+      display: flex;
+      touch-action: manipulation;
+      gap: calc(var(--size-gutter) * .5);
+    }
+    .pane__input--number {
+      flex-grow: 1;
+    }
+    .pane .pane__input--number + input[type="text"] {
+      display: block;
+      flex-basis: 3.3rem;
+      width: 3.3rem;
+    }
+    .pane__desc {
+      margin: 1em 0 3em;
+      font-size: 0.6em;
+    }
+    .pane select {
+      font-size: 0.8em;
+      border-radius: 2rem;
+      padding: 0.2rem;
+    }
+    .pane input,
+    .pane select {
+      display: block;
+      box-sizing: border-box;
+      touch-action: manipulation;
+      font-family: "Space Mono", monospace;
+      border: none;
+      width: auto;
+    }
+    .pane select option {
+      color: var(--dark);
+    }
+    .pane input[type="text"],
+    .pane select[type="number"] {
+      color: var(--color-inverted);
+      background: none;
+      border: none;
+      text-align: right;
+      font-size: 0.8em;
+      flex: 0 0 3rem;
+      width: 3rem;
+    }
+    .pane input {
+      background-color: transparent;
+      accent-color: var(--highlight);
+    }
+    .pane input[type="range"] {
+      -webkit-appearance: none;
+    }
+    .pane input[type="range"] {
+      margin: 0;
+      padding-top: 0.7em;
+      margin-top: -0.7em;
+    }
+    .pane input[type="range"]:focus {
+      outline: none;
+    }
+    .pane input[type="range"]:hover::-webkit-slider-thumb {
+      background-color: var(--color-inverted);
+      clip-path: polygon(100% 0%, 0% 0%, 50% 100%, 50% 100%);
+    }
+    .pane input[type="range"]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 1rem;
+      background: transparent;
+      color: var(--dark);
+      border-radius: 0;
+      border: solid var(--light);
+      border-width: 0 0 2px;
+    }
+    .pane input[type="range"]::-webkit-slider-thumb {
+      border: 2px solid transparent;
+      height: 0.75rem;
+      width: 0.5rem;
+      border-radius: 0;
+      background: var(--light);
+      -webkit-appearance: none;
+      margin-top: 0.25rem;
+      transition: 150ms background-color, 200ms clip-path,
+        200ms -webkit-clip-path;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    }
+    .pane input[type="range"]::-moz-range-track {
+      width: 100%;
+      height: 1rem;
+      background: transparent;
+      color: var(--dark);
+      border-radius: 0;
+      border: solid var(--light);
+      border-width: 0 0 2px;
+    }
+    .pane input[type="range"]::-moz-range-thumb {
+      border: 2px solid transparent;
+      height: 0.75rem;
+      width: 0.5rem;
+      border-radius: 0;
+      background: var(--light);
+      -webkit-appearance: none;
+      margin-top: 0.25rem;
+      transition: 150ms background-color, 200ms clip-path,
+        200ms -webkit-clip-path;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    }
+    .pane input[type="range"]::-ms-track {
+      width: 100%;
+      height: 1rem;
+      background: transparent;
+      color: var(--dark);
+      border-radius: 0;
+      border: solid var(--light);
+      border-width: 0 0 2px;
+    }
+    .pane input[type="range"]::-ms-fill-lower {
+      background: var(--light);
+      border: none;
+      border-radius: 100%;
+    }
+    .pane input[type="range"]::-ms-fill-upper {
+      background: var(--light);
+      border-radius: 100%;
+      box-shadow: none;
+    }
+    .pane input[type="range"]::-ms-thumb {
+      border: 2px solid transparent;
+      height: 0.75rem;
+      width: 0.5rem;
+      border-radius: 0;
+      background: var(--light);
+      -webkit-appearance: none;
+      margin-top: 0.25rem;
+      transition: 150ms background-color, 200ms clip-path,
+        200ms -webkit-clip-path;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    }
+    .pane select {
+      color: var(--light);
+      width: 100%;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      border: 0;
+      box-shadow: 0 2px 0 0 var(--light);
+      border-radius: 0;
+      padding: 0.25rem 1rem 0.25rem 0rem;
+      background-color: transparent;
+      background-size: 1.25em 1.25em;
+      background-image: conic-gradient(
+        var(--light) 5%,
+        transparent 0 95%,
+        var(--light) 0
+      );
+      background-repeat: no-repeat;
+      background-position: right 0% top 120%;
+    }
+    .pane select:focus {
+      outline: none;
+      background-color: transparent;
+    }
+
+    svg:not(:root) {
+      overflow: visible;
+    }
+    [data-names] ol {
+      display: flex;
+      margin-top: 4rem;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+
+    [data-names] li {
+      position: relative;
+      width: 10rem;
+      background: var(--light);
+      color: var(--dark);
+    }
+
+    [data-names] li::before {
+      content: "";
+      display: block;
+      padding-top: 100%;
+      background: var(--col);
+    }
+
+    .color-names {
+      /*position: relative;
+    z-index: 10;*/
+      padding: 4rem;
+      padding-left: calc(var(--sidebarwidth) + 4rem);
+      color: var(--light);
+    }
+
+    .color-names .section__text {
+      margin-top: 4rem;
+    }
+
+    .color-names__copy {
+      margin-top: 2rem;
+      width: max-content;
+    }
+
+    .color-names h2 {
+      color: var(--light);
+    }
+
+    .color-names h3 {
+      margin-top: 4rem;
+    }
+
+
+    .ellogo {
+      display: block;
+      width: 40%;
+      margin: 4rem 0 2rem;
+    }
+
+    [data-rndsamples] {
         display: flex;
-        margin-top: 4rem;
         flex-wrap: wrap;
         gap: 2px;
-      }
+        min-height: 100vh;
+        margin-bottom: 4rem;
+    }
+    .palette {
+      position: relative;
+      aspect-ratio: 2;
+      flex: 1 1 20%;
+      background: var(--crnd);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .palette::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(90deg, var(--gc));
+      transform: translateY(min(1vw, 4px));
+      border-radius: 0.3rem;
+    }
+    .palette:hover {
+      background: linear-gradient(90deg, var(--gs));
+      /*box-shadow: inset 0 0 0 min(0.3vw, 2px) var(--c4), inset 0 0 0 min(0.5vw, 4px) var(--c0);*/
+    }
+    .palette:hover > * {
+      display: none;
+    }
+    .palette:hover::after {
+      background: var(--c4);
+    }
+    .palette__swatch {
+      width: 16%;
+      aspect-ratio: 1;
+      background: var(--color);
+      border-radius: 50%;
+      margin-left: -8%;
+      position: relative;
+      left: .5vw;
+      /*transform: rotate(-45deg);*/
+      box-shadow: 0 0 0 min(0.2vw, 2px) var(--c0), 
+                  0 0 0 min(0.4vw, 4px) var(--color);
+    }
 
-      [data-names] li {
-        position: relative;
-        width: 10rem;
-        background: var(--light);
-        color: var(--dark);
-      }
-
-      [data-names] li::before {
-        content: "";
-        display: block;
-        padding-top: 100%;
-        background: var(--col);
+    @media (max-width: 500px) {
+      .sidebar {
+        width: 100%;
+        order: 0;
+        z-index: 2;
+        transition: transform 300ms cubic-bezier(.7, .3, 0 ,1);
+        transform: translateX(-100%);
       }
 
       .color-names {
-        /*position: relative;
-      z-index: 10;*/
-        padding: 4rem;
-        padding-left: calc(var(--sidebarwidth) + 4rem);
-        color: var(--light);
+        padding-left: 4rem;
       }
 
-      .color-names .section__text {
-        margin-top: 4rem;
+      .sidebar-open .sidebar {
+        transform: translateX(0%);
       }
-
-      .color-names__copy {
-        margin-top: 2rem;
-        width: max-content;
-      }
-
-      .color-names h2 {
-        color: var(--light);
-      }
-
-      .color-names h3 {
-        margin-top: 4rem;
-      }
-
-
-      .ellogo {
+      .sidebar__button {
         display: block;
-        width: 40%;
-        margin: 4rem 0 2rem;
+      }
+      .sidebar-open .sidebar__button {
+        transform: translate(calc(-100% - .8rem), 1em);
+        --line-color: var(--light);
+        z-index: 3;
+      }
+      .sidebar-open .sidebar__button i {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .sidebar-open .sidebar__button i:nth-child(1) {
+        transform: rotate(45deg);
       }
 
-      [data-rndsamples] {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 2px;
-          min-height: 100vh;
-          margin-bottom: 4rem;
+      .sidebar-open .sidebar__button i:nth-child(3) {
+        transform: rotate(-45deg);
       }
-      .palette {
-        position: relative;
-        aspect-ratio: 2;
-        flex: 1 1 20%;
-        background: var(--crnd);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .palette::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background: linear-gradient(90deg, var(--gc));
-        transform: translateY(min(1vw, 4px));
-        border-radius: 0.3rem;
-      }
-      .palette:hover {
-        background: linear-gradient(90deg, var(--gs));
-        /*box-shadow: inset 0 0 0 min(0.3vw, 2px) var(--c4), inset 0 0 0 min(0.5vw, 4px) var(--c0);*/
-      }
-      .palette:hover > * {
+      .sidebar-open .sidebar__button i:nth-child(2) {
         display: none;
       }
-      .palette:hover::after {
-        background: var(--c4);
+      .main {
+        transform: translateX(0);
+        margin-left: 0;
       }
-      .palette__swatch {
-        width: 16%;
-        aspect-ratio: 1;
-        background: var(--color);
-        border-radius: 50%;
-        margin-left: -8%;
-        position: relative;
-        left: .5vw;
-        /*transform: rotate(-45deg);*/
-        box-shadow: 0 0 0 min(0.2vw, 2px) var(--c0), 
-                    0 0 0 min(0.4vw, 4px) var(--color);
+      .section__fig {
+        margin-right: 0;
+      }
+      .section--vertical .section__text,
+      .section__text {
+        flex: 0 0 100%;
+        order: 1;
+        width: 100%;
       }
 
-      @media (max-width: 500px) {
-        .sidebar {
-          width: 100%;
-          order: 0;
-          z-index: 2;
-          transition: transform 300ms cubic-bezier(.7, .3, 0 ,1);
-          transform: translateX(-100%);
-        }
-
-        .color-names {
-          padding-left: 4rem;
-        }
-
-        .sidebar-open .sidebar {
-          transform: translateX(0%);
-        }
-        .sidebar__button {
-          display: block;
-        }
-        .sidebar-open .sidebar__button {
-          transform: translate(calc(-100% - .8rem), 1em);
-          --line-color: var(--light);
-          z-index: 3;
-        }
-        .sidebar-open .sidebar__button i {
-          top: 50%;
-          transform: translateY(-50%);
-        }
-        .sidebar-open .sidebar__button i:nth-child(1) {
-          transform: rotate(45deg);
-        }
-
-        .sidebar-open .sidebar__button i:nth-child(3) {
-          transform: rotate(-45deg);
-        }
-        .sidebar-open .sidebar__button i:nth-child(2) {
-          display: none;
-        }
-        .main {
-          transform: translateX(0);
-          margin-left: 0;
-        }
-        .section__fig {
-          margin-right: 0;
-        }
-        .section--vertical .section__text,
-        .section__text {
-          flex: 0 0 100%;
-          order: 1;
-          width: 100%;
-        }
-
-        .palette {
-          aspect-ratio: 1.5;
-          flex: 1 1 40%;
-        }
-
-        .section {
-          flex-direction: column;
-        }
-
-        .section h2 {
-          margin-top: 1em;
-        }
-
-        .section__fig {
-          flex: 0 0 100%;
-        }
-
-        [data-names] li {
-          width: 45%;
-        }
-
-        .color-info__contrast {
-          top: 51%;
-        }
+      .palette {
+        aspect-ratio: 1.5;
+        flex: 1 1 40%;
       }
-    </style>
-  </head>
 
-  <body>
-    <article class="app">
-      <div class="sidebar" id="sidebar" role="complementary" aria-label="Settings Sidebar">
-        <button class="sidebar__button" aria-expanded="true" aria-controls="sidebar" aria-label="Toggle sidebar" tabindex="0">
-          <i class="line"></i>
-          <i class="line"></i>
-          <i class="line"></i>
-        </button>
-        <section class="settings" aria-label="Color Ramp Settings">
-          <div class="settings__top">
-            <div class="tabs" role="tablist" aria-label="Visualization Tabs">
-              <div class="tabs__contents" data-tabswrap>
-                <div class="tabs__slider">
-                  <div class="tabs__content" data-tab="viz-h" role="tabpanel" aria-labelledby="tab-viz-h">
-                    <figure data-viz class="h-viz"></figure>
-                  </div>
-                  <div class="tabs__content" data-tab="viz-sl" role="tabpanel" aria-labelledby="tab-viz-sl">
-                    <figure data-slviz class="sl-viz"></figure>
-                  </div>
-                  <div class="tabs__content" data-tab="fncall" role="tabpanel" aria-labelledby="tab-fncall">
-                    <aside class="fncall" aria-label="Function call">
-                      <code class="code-sample">
-                        <pre data-code data-copy></pre>
-                      </code>
-                    </aside>
-                  </div>
+      .section {
+        flex-direction: column;
+      }
+
+      .section h2 {
+        margin-top: 1em;
+      }
+
+      .section__fig {
+        flex: 0 0 100%;
+      }
+
+      [data-names] li {
+        width: 45%;
+      }
+
+      .color-info__contrast {
+        top: 51%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <article class="app">
+    <div class="sidebar" id="sidebar" role="complementary" aria-label="Settings Sidebar">
+      <button class="sidebar__button" aria-expanded="true" aria-controls="sidebar" aria-label="Toggle sidebar" tabindex="0">
+        <i class="line"></i>
+        <i class="line"></i>
+        <i class="line"></i>
+      </button>
+      <section class="settings" aria-label="Color Ramp Settings">
+        <div class="settings__top">
+          <div class="tabs" role="tablist" aria-label="Visualization Tabs">
+            <div class="tabs__contents" data-tabswrap>
+              <div class="tabs__slider">
+                <div class="tabs__content" data-tab="viz-h" role="tabpanel" aria-labelledby="tab-viz-h">
+                  <figure data-viz class="h-viz"></figure>
+                </div>
+                <div class="tabs__content" data-tab="viz-sl" role="tabpanel" aria-labelledby="tab-viz-sl">
+                  <figure data-slviz class="sl-viz"></figure>
+                </div>
+                <div class="tabs__content" data-tab="fncall" role="tabpanel" aria-labelledby="tab-fncall">
+                  <aside class="fncall" aria-label="Function call">
+                    <code class="code-sample">
+                      <pre data-code data-copy></pre>
+                    </code>
+                  </aside>
                 </div>
               </div>
-              <div class="tabs__controls">
-                <button class="tabs__control tabs__control--active" data-tabtarget="viz-h" id="tab-viz-h" role="tab" aria-selected="true" aria-controls="viz-h" tabindex="0">
-                  <i data-icon="hue" class="tabs__icon icon icon--hue"></i>
-                  <span class="tabs__label"><span>Hue</span></span>
-                </button>
-                <button class="tabs__control" data-tabtarget="viz-sl" id="tab-viz-sl" role="tab" aria-selected="false" aria-controls="viz-sl" tabindex="-1">
-                  <i data-icon="sl" class="tabs__icon icon icon--sl"></i>
-                  <span class="tabs__label"><span title="Saturation &amp; Lightness">S/L</span></span>
-                </button>
-                <button class="tabs__control" data-tabtarget="fncall" id="tab-fncall" role="tab" aria-selected="false" aria-controls="fncall" tabindex="-1">
-                  <i data-icon="fncall" class="tabs__icon icon icon--fncall"></i>
-                  <span class="tabs__label"><span>Function</span></span>
-                </button>
-              </div>
             </div>
-            <div class="vizes">
+            <div class="tabs__controls">
+              <button class="tabs__control tabs__control--active" data-tabtarget="viz-h" id="tab-viz-h" role="tab" aria-selected="true" aria-controls="viz-h" tabindex="0">
+                <i data-icon="hue" class="tabs__icon icon icon--hue"></i>
+                <span class="tabs__label"><span>Hue</span></span>
+              </button>
+              <button class="tabs__control" data-tabtarget="viz-sl" id="tab-viz-sl" role="tab" aria-selected="false" aria-controls="viz-sl" tabindex="-1">
+                <i data-icon="sl" class="tabs__icon icon icon--sl"></i>
+                <span class="tabs__label"><span title="Saturation &amp; Lightness">S/L</span></span>
+              </button>
+              <button class="tabs__control" data-tabtarget="fncall" id="tab-fncall" role="tab" aria-selected="false" aria-controls="fncall" tabindex="-1">
+                <i data-icon="fncall" class="tabs__icon icon icon--fncall"></i>
+                <span class="tabs__label"><span>Function</span></span>
+              </button>
             </div>
           </div>
-          <aside aria-label="settings" class="settings__inner">
-            <!-- h3>Settings</h3 -->
-            <button class="button" data-randomize>Randomize Settings</button>
-            <div class="settings__inner">
-              <div data-pane></div>
-            </div>
-          </aside>
-          <footer>
-            <a href="https://www.elastiq.ch/" hreflang="en" class="ellogo"><svg xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 352 185">
-                <g fill="none" fill-rule="evenodd" transform="translate(0 6)">
-                  <path class="ellogo__font" fill-rule="nonzero"
-                    d="M179.54 71.84a9 9 0 00-1.91.21 7.74 7.74 0 00-1.83.64 4 4 0 00-1.4 1.15 2.81 2.81 0 001.49 4.38 29.19 29.19 0 007 1.45 17.65 17.65 0 018.93 3.36 9.22 9.22 0 013.4 7.7c0 4.993-1.743 8.907-5.23 11.74s-8.323 4.25-14.51 4.25a21.41 21.41 0 01-8-1.36 17.6 17.6 0 01-5.53-3.4 14.1 14.1 0 01-3.28-4.51 12.64 12.64 0 01-1.19-4.68l10.55-2.55a7.32 7.32 0 002.38 4.81c1.42 1.333 3.577 2 6.47 2a13.24 13.24 0 005.19-.94 3.34 3.34 0 002.21-3.32 3.24 3.24 0 00-1.7-2.85c-1.133-.707-3.233-1.203-6.3-1.49a17.19 17.19 0 01-9.74-3.49 9.73 9.73 0 01-3.62-7.91 13.4 13.4 0 011.49-6.38 14 14 0 014-4.68 17.87 17.87 0 015.74-2.85 23.84 23.84 0 016.85-1 20.07 20.07 0 017.4 1.19 15 15 0 014.85 3 11.8 11.8 0 012.76 3.87 15.47 15.47 0 011.15 3.87l-10.45 2.72a5.27 5.27 0 00-2.13-3.62 8.32 8.32 0 00-5.04-1.31zm39.25 1.68h-11.91V63.33H221l3.91-18.55h10.72l-3.92 18.55h14.63v10.19h-16.83l-4.8 21.89.85.6 11.4-7.83 5.36 8-12.3 8.34a12 12 0 01-6.89 2.21 10.08 10.08 0 01-3.57-.64 8.74 8.74 0 01-5-4.72 9.22 9.22 0 01-.77-3.83 8 8 0 01.08-1.23c.053-.367.137-.863.25-1.49l4.67-21.3zm63.58 31a11.67 11.67 0 01-3.49 1.7 12.69 12.69 0 01-3.49.51 10.08 10.08 0 01-3.57-.64 9.25 9.25 0 01-3-1.79 8 8 0 01-2-2.81 9.16 9.16 0 01-.72-3.7 12.25 12.25 0 01.34-3l5.1-21.36-.85-.6-11.4 7.83-5.36-8 12.34-8.34a11.68 11.68 0 013.49-1.7 12.68 12.68 0 013.49-.51 10.11 10.11 0 013.57.64 9.28 9.28 0 013 1.79 8 8 0 012 2.81 9.18 9.18 0 01.72 3.7 12.32 12.32 0 01-.34 3l-5.11 21.36.85.6 11.4-7.83 5.36 8-12.33 8.34zm7.4-53.69a8 8 0 01-.64 3.19 7.68 7.68 0 01-1.74 2.55 8.57 8.57 0 01-2.59 1.7 7.82 7.82 0 01-3.11.64 7.72 7.72 0 01-3.15-.64 8.69 8.69 0 01-2.55-1.7 7.67 7.67 0 01-1.74-2.55 8.29 8.29 0 010-6.38 7.71 7.71 0 011.74-2.55 8.73 8.73 0 012.55-1.7 7.7 7.7 0 013.15-.64 7.8 7.8 0 013.11.64 8.61 8.61 0 012.59 1.7 7.72 7.72 0 011.74 2.55 8 8 0 01.64 3.18v.01zm42.8 48.58h-1.53a21.9 21.9 0 01-2.13 2.77 13 13 0 01-2.85 2.34 14.44 14.44 0 01-4 1.62 21.53 21.53 0 01-5.36.6 14 14 0 01-10.17-4.25 14.71 14.71 0 01-3.15-4.94 17.39 17.39 0 01-1.15-6.47 37.71 37.71 0 011.57-10.93 28.53 28.53 0 014.64-9.23 23.16 23.16 0 017.49-6.38 21 21 0 0110.12-2.38c3.46 0 6.057.71 7.79 2.13a10.62 10.62 0 013.53 5.19h1.53l1.28-6.13h10.72l-10.47 48.92.85.6 4.76-3.23 5.36 8-5.7 3.74a11.59 11.59 0 01-3.53 1.7 13.14 13.14 0 01-3.46.44 9.35 9.35 0 01-6.51-2.42 8.55 8.55 0 01-2.68-6.68c.017-.946.13-1.887.34-2.81l2.71-12.2zm-10.38-2.89a12.38 12.38 0 005.62-1.28 14.13 14.13 0 004.42-3.45 15.84 15.84 0 002.89-5 17 17 0 001-5.87 8.39 8.39 0 00-2.34-6.34 9 9 0 00-6.51-2.25 12.31 12.31 0 00-5.66 1.32 14 14 0 00-4.42 3.49 16.25 16.25 0 00-2.85 5 17 17 0 00-1 5.87c0 2.78.78 4.893 2.34 6.34a9.21 9.21 0 006.51 2.17z">
-                  </path>
-                  <path class="ellogo__logo" stroke-linecap="round" stroke-linejoin="round" stroke-width="11.38"
-                    d="M96.45 70.41c25.89-7.67 59 2.55 80.49-31.66 25.23-40.1 60.94-44.68 85.27-31.62 34.2 18.36 31.67 68.27 7.58 90.7-27.42 25.53-29.58 52.91-13.68 67.24 22.95 20.68 47.1-2.67 35.85-19.93-8.94-13.73-31.93-25.89-98.1 6.9-65.32 32.36-129.62 19-133.91-32.42-1.03-12.53 2.88-39.25 36.5-49.21h0z">
-                  </path>
-                  <path class="ellogo__font" fill-rule="nonzero"
-                    d="M.3 104.52l12.41-58.55h35.31v10.72H21.65l-2.94 13.62h23.06v10.72H16.46l-2.89 13.78h25.14v10.71H.3v-1zm77.08 1.69a12.69 12.69 0 01-3.49.51 10.08 10.08 0 01-3.57-.64 9.25 9.25 0 01-3-1.79 8 8 0 01-2-2.81 9.16 9.16 0 01-.72-3.7 12.93 12.93 0 01.34-3l9.27-38.71-.85-.6-11.4 7.83-5.36-8 12.34-8.34a11.68 11.68 0 013.49-1.7 12.67 12.67 0 013.49-.51 10.09 10.09 0 013.57.64 9.26 9.26 0 013 1.79 8.05 8.05 0 012 2.81 9.17 9.17 0 01.72 3.7 14.62 14.62 0 01-.34 3L75.6 95.4l.85.6 11.4-7.83 5.36 8-12.34 8.35a11.68 11.68 0 01-3.49 1.69zm62.88-10.8l.85.6 4.08-2.89 5.36 8-5 3.4a12.39 12.39 0 01-7 2.21 9.85 9.85 0 01-5.79-1.79 7.85 7.85 0 01-3.23-5H128a15.69 15.69 0 01-1.79 2.68 9.7 9.7 0 01-2.5 2.1 14.05 14.05 0 01-3.49 1.45 17.83 17.83 0 01-4.72.55 14.23 14.23 0 01-6.13-1.32 15.05 15.05 0 01-4.89-3.66 17.4 17.4 0 01-3.28-5.49 19.3 19.3 0 01-1.19-6.89 35.69 35.69 0 011.53-10.63 26.73 26.73 0 014.42-8.64 20.46 20.46 0 0116.59-8 12.9 12.9 0 017.4 1.87 9.08 9.08 0 013.66 4.94h1.53l1.19-5.62h10.72l-6.79 32.13zm-20.55 1.11a11.54 11.54 0 009.4-4.51 15.06 15.06 0 002.42-4.81c.574-1.89.86-3.855.85-5.83a9.27 9.27 0 00-2.3-6.51 7.91 7.91 0 00-6.13-2.51 11.68 11.68 0 00-5.45 1.23 12.16 12.16 0 00-4 3.28 14.54 14.54 0 00-2.47 4.81 19.7 19.7 0 00-.85 5.83 10.06 10.06 0 002.08 6.3c1.38 1.813 3.53 2.72 6.45 2.72z">
-                  </path>
-                </g>
-              </svg></a>
-            </footer>
-        </section>
-      </div>
-      <section class="main">
-        <aside class="section section--vertical section--first">
-          <aside class="intro">
-            <h1>RampenSau</h1>
-            <p>
-              RampenSau is a lightweight, dependency-free and blazingly fast color generation
-              library. It makes use of hue cycling and easing functions to generate pleasing color ramps.
-            </p>
-            <a class="projectlink" href="https://github.com/meodai/rampensau">Github</a>
-          </aside>
-          <div class="section__text">
-            <h2>Generating a Color-Ramp</h2>
-            <p>
-              The illustration above shows the full color ramp generated by the
-              function.
-              <code>hStart</code> [<button data-pantrigger="hStart" data-panvalue="0">0° (red)</button>, <button data-pantrigger="hStart" data-panvalue="45">45° (yellow)</button>, <button data-pantrigger="hStart" data-panvalue="90">90° (green)</button>, <button data-pantrigger="hStart" data-panvalue="180">180° (teal)</button> etc.] 
-              sets the starting hue, at the darkest color in generated ramp. 
-            </p>
-            <p>
-              The color set using <code>hStart</code> can be positioned anywhere in the ramp by using <code>hStartCenter</code>. <button data-pantrigger="hStartCenter" data-panvalue="0">0</button> is the start of the ramp, <button data-pantrigger="hStartCenter" data-panvalue="1">1</button> is the end of the ramp. By default <code>hStartCenter</code> is set to <button data-pantrigger="hStartCenter" data-panvalue="0.5">0.5</button> which means the starting hue is in the middle of the ramp.
-            </p>
-            <p>
-              <code>hCycles</code> [<button data-pantrigger="hCycles" data-panvalue="0">0</button>, <button data-pantrigger="hCycles" data-panvalue="0.5">0.5</button>, <button data-pantrigger="hCycles" data-panvalue="1">1</button>, <button data-pantrigger="hCycles" data-panvalue="-0.5">-0.5</button>] 
-              Defines the about of hue variation in the ramp. <code>1</code> is a full cycle around the starting hue, <code>0.5</code> is half a cycle (complementary color), <code>-0.5</code> is half a cycle in the opposite direction.
-            </p>
+          <div class="vizes">
           </div>
-          <figure class="section__fig">
-            <div data-colors></div>
-            <figcaption>Full Color Ramp</figcaption>
-          </figure>
-          <button class="button button--main" data-randomize>Randomize Settings</button>
-        </aside>
-
-        <aside class="section section--vertical">
-          <div class="section__text">
-            <h2>Randomly Generated Samples</h2>
-            <p>
-              All samples use the same <code>maxLight</code>, <code>maxLight</code>,
-              <code>maxSaturation</code> and <code>minSaturation</code> values but 
-              randomizes the other settings.
-            </p>
-          </div>
-          <div class="section__fig">
-            <div data-rndsamples></div>
+        </div>
+        <aside aria-label="settings" class="settings__inner">
+          <!-- h3>Settings</h3 -->
+          <button class="button" data-randomize>Randomize Settings</button>
+          <div class="settings__inner">
+            <div data-pane></div>
           </div>
         </aside>
-
-        <aside class="section">
-          <div class="section__text">
-            <h2>Example Use</h2>
-            <p>click & hold to re-generate</p>
-            <p>
-              Each of those squares shows four random entires from the generated
-              colors. In a single square every color is unique.
-            </p>
-          </div>
-          <div class="section__fig">
-            <div data-palette></div>
-          </div>
-        </aside>
-
-        <aside class="section">
-          <div class="section__text">
-            <h2>Color Ramp</h2>
-            <p>All generated colors shown as a continuous gradient.</p>
-          </div>
-          <div class="section__fig">
-            <div data-ramp></div>
-          </div>
-        </aside>
-
-        <aside class="section">
-          <div class="section__text">
-            <h2>HSL Colors</h2>
-            <p>Full list of the generated colors.</p>
-            <p>
-              We used
-              <a title="culori" href="https://culorijs.org/">a library</a> to
-              convert the the HSL colors into different color models. We
-              deliberately choose to only deliver HSL
-              <code>[0…360, 0…1, 0…1]</code> to keep the function fast and
-              lightweight as possible. There are plenty of awesome color libraries 
-              if you need to have the colors converted to an other color model.
-            </p>
-          </div>
-          <div class="section__fig">
-            <div data-list></div>
-          </div>
-        </aside>
-
-        <p>
-          fork on
-          <a href="https://github.com/meodai/rampensau">github</a> made by
-          <a href="https://www.elastiq.ch/">elastiq</a>.
-        </p>
+        <footer>
+          <a href="https://www.elastiq.ch/" hreflang="en" class="ellogo"><svg xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 352 185">
+              <g fill="none" fill-rule="evenodd" transform="translate(0 6)">
+                <path class="ellogo__font" fill-rule="nonzero"
+                  d="M179.54 71.84a9 9 0 00-1.91.21 7.74 7.74 0 00-1.83.64 4 4 0 00-1.4 1.15 2.81 2.81 0 001.49 4.38 29.19 29.19 0 007 1.45 17.65 17.65 0 018.93 3.36 9.22 9.22 0 013.4 7.7c0 4.993-1.743 8.907-5.23 11.74s-8.323 4.25-14.51 4.25a21.41 21.41 0 01-8-1.36 17.6 17.6 0 01-5.53-3.4 14.1 14.1 0 01-3.28-4.51 12.64 12.64 0 01-1.19-4.68l10.55-2.55a7.32 7.32 0 002.38 4.81c1.42 1.333 3.577 2 6.47 2a13.24 13.24 0 005.19-.94 3.34 3.34 0 002.21-3.32 3.24 3.24 0 00-1.7-2.85c-1.133-.707-3.233-1.203-6.3-1.49a17.19 17.19 0 01-9.74-3.49 9.73 9.73 0 01-3.62-7.91 13.4 13.4 0 011.49-6.38 14 14 0 014-4.68 17.87 17.87 0 015.74-2.85 23.84 23.84 0 016.85-1 20.07 20.07 0 017.4 1.19 15 15 0 014.85 3 11.8 11.8 0 012.76 3.87 15.47 15.47 0 011.15 3.87l-10.45 2.72a5.27 5.27 0 00-2.13-3.62 8.32 8.32 0 00-5.04-1.31zm39.25 1.68h-11.91V63.33H221l3.91-18.55h10.72l-3.92 18.55h14.63v10.19h-16.83l-4.8 21.89.85.6 11.4-7.83 5.36 8-12.3 8.34a12 12 0 01-6.89 2.21 10.08 10.08 0 01-3.57-.64 8.74 8.74 0 01-5-4.72 9.22 9.22 0 01-.77-3.83 8 8 0 01.08-1.23c.053-.367.137-.863.25-1.49l4.67-21.3zm63.58 31a11.67 11.67 0 01-3.49 1.7 12.69 12.69 0 01-3.49.51 10.08 10.08 0 01-3.57-.64 9.25 9.25 0 01-3-1.79 8 8 0 01-2-2.81 9.16 9.16 0 01-.72-3.7 12.25 12.25 0 01.34-3l5.1-21.36-.85-.6-11.4 7.83-5.36-8 12.34-8.34a11.68 11.68 0 013.49-1.7 12.68 12.68 0 013.49-.51 10.11 10.11 0 013.57.64 9.28 9.28 0 013 1.79 8 8 0 012 2.81 9.18 9.18 0 01.72 3.7 12.32 12.32 0 01-.34 3l-5.11 21.36.85.6 11.4-7.83 5.36 8-12.33 8.34zm7.4-53.69a8 8 0 01-.64 3.19 7.68 7.68 0 01-1.74 2.55 8.57 8.57 0 01-2.59 1.7 7.82 7.82 0 01-3.11.64 7.72 7.72 0 01-3.15-.64 8.69 8.69 0 01-2.55-1.7 7.67 7.67 0 01-1.74-2.55 8.29 8.29 0 010-6.38 7.71 7.71 0 011.74-2.55 8.73 8.73 0 012.55-1.7 7.7 7.7 0 013.15-.64 7.8 7.8 0 013.11.64 8.61 8.61 0 012.59 1.7 7.72 7.72 0 011.74 2.55 8 8 0 01.64 3.18v.01zm42.8 48.58h-1.53a21.9 21.9 0 01-2.13 2.77 13 13 0 01-2.85 2.34 14.44 14.44 0 01-4 1.62 21.53 21.53 0 01-5.36.6 14 14 0 01-10.17-4.25 14.71 14.71 0 01-3.15-4.94 17.39 17.39 0 01-1.15-6.47 37.71 37.71 0 011.57-10.93 28.53 28.53 0 014.64-9.23 23.16 23.16 0 017.49-6.38 21 21 0 0110.12-2.38c3.46 0 6.057.71 7.79 2.13a10.62 10.62 0 013.53 5.19h1.53l1.28-6.13h10.72l-10.47 48.92.85.6 4.76-3.23 5.36 8-5.7 3.74a11.59 11.59 0 01-3.53 1.7 13.14 13.14 0 01-3.46.44 9.35 9.35 0 01-6.51-2.42 8.55 8.55 0 01-2.68-6.68c.017-.946.13-1.887.34-2.81l2.71-12.2zm-10.38-2.89a12.38 12.38 0 005.62-1.28 14.13 14.13 0 004.42-3.45 15.84 15.84 0 002.89-5 17 17 0 001-5.87 8.39 8.39 0 00-2.34-6.34 9 9 0 00-6.51-2.25 12.31 12.31 0 00-5.66 1.32 14 14 0 00-4.42 3.49 16.25 16.25 0 00-2.85 5 17 17 0 00-1 5.87c0 2.78.78 4.893 2.34 6.34a9.21 9.21 0 006.51 2.17z">
+                </path>
+                <path class="ellogo__logo" stroke-linecap="round" stroke-linejoin="round" stroke-width="11.38"
+                  d="M96.45 70.41c25.89-7.67 59 2.55 80.49-31.66 25.23-40.1 60.94-44.68 85.27-31.62 34.2 18.36 31.67 68.27 7.58 90.7-27.42 25.53-29.58 52.91-13.68 67.24 22.95 20.68 47.1-2.67 35.85-19.93-8.94-13.73-31.93-25.89-98.1 6.9-65.32 32.36-129.62 19-133.91-32.42-1.03-12.53 2.88-39.25 36.5-49.21h0z">
+                </path>
+                <path class="ellogo__font" fill-rule="nonzero"
+                  d="M.3 104.52l12.41-58.55h35.31v10.72H21.65l-2.94 13.62h23.06v10.72H16.46l-2.89 13.78h25.14v10.71H.3v-1zm77.08 1.69a12.69 12.69 0 01-3.49.51 10.08 10.08 0 01-3.57-.64 9.25 9.25 0 01-3-1.79 8 8 0 01-2-2.81 9.16 9.16 0 01-.72-3.7 12.93 12.93 0 01.34-3l9.27-38.71-.85-.6-11.4 7.83-5.36-8 12.34-8.34a11.68 11.68 0 013.49-1.7 12.67 12.67 0 013.49-.51 10.09 10.09 0 013.57.64 9.26 9.26 0 013 1.79 8.05 8.05 0 012 2.81 9.17 9.17 0 01.72 3.7 14.62 14.62 0 01-.34 3L75.6 95.4l.85.6 11.4-7.83 5.36 8-12.34 8.35a11.68 11.68 0 01-3.49 1.69zm62.88-10.8l.85.6 4.08-2.89 5.36 8-5 3.4a12.39 12.39 0 01-7 2.21 9.85 9.85 0 01-5.79-1.79 7.85 7.85 0 01-3.23-5H128a15.69 15.69 0 01-1.79 2.68 9.7 9.7 0 01-2.5 2.1 14.05 14.05 0 01-3.49 1.45 17.83 17.83 0 01-4.72.55 14.23 14.23 0 01-6.13-1.32 15.05 15.05 0 01-4.89-3.66 17.4 17.4 0 01-3.28-5.49 19.3 19.3 0 01-1.19-6.89 35.69 35.69 0 011.53-10.63 26.73 26.73 0 014.42-8.64 20.46 20.46 0 0116.59-8 12.9 12.9 0 017.4 1.87 9.08 9.08 0 013.66 4.94h1.53l1.19-5.62h10.72l-6.79 32.13zm-20.55 1.11a11.54 11.54 0 009.4-4.51 15.06 15.06 0 002.42-4.81c.574-1.89.86-3.855.85-5.83a9.27 9.27 0 00-2.3-6.51 7.91 7.91 0 00-6.13-2.51 11.68 11.68 0 00-5.45 1.23 12.16 12.16 0 00-4 3.28 14.54 14.54 0 00-2.47 4.81 19.7 19.7 0 00-.85 5.83 10.06 10.06 0 002.08 6.3c1.38 1.813 3.53 2.72 6.45 2.72z">
+                </path>
+              </g>
+            </svg></a>
+          </footer>
       </section>
-      <aside class="color-names">
-        <h2>For Curious Minds <span>and Desperate Deadlines</span></h2>
-        <div data-names></div>
-        <button class="button color-names__copy" data-copy data-copycolors>Copy Palette to Clipboard</button>
+    </div>
+    <section class="main">
+      <aside class="section section--vertical section--first">
+        <aside class="intro">
+          <h1>RampenSau</h1>
+          <p>
+            RampenSau is a lightweight, dependency-free and blazingly fast color generation
+            library. It makes use of hue cycling and easing functions to generate pleasing color ramps.
+          </p>
+          <a class="projectlink" href="https://github.com/meodai/rampensau">Github</a>
+        </aside>
         <div class="section__text">
-          <p>I got requests to export palettes—so here you go. Still, I’d gently suggest looking into integrating the
-            library or <a href="https://meodai.github.io/poline/">something similar</a> into your workflow.</p>
-          <p>A palette can be more than just colors—it can be a living system. One that responds to different data, brands,
-            themes, or even future you, exploring new directions without starting from scratch.</p>
-          <p>Thinking in systems doesn’t limit creativity—it gives it room to grow. There’s a quiet kind of magic in flexible
-            tools.</p>
+          <h2>Generating a Color-Ramp</h2>
+          <p>
+            The illustration above shows the full color ramp generated by the
+            function.
+            <code>hStart</code> [<button data-pantrigger="hStart" data-panvalue="0">0° (red)</button>, <button data-pantrigger="hStart" data-panvalue="45">45° (yellow)</button>, <button data-pantrigger="hStart" data-panvalue="90">90° (green)</button>, <button data-pantrigger="hStart" data-panvalue="180">180° (teal)</button> etc.] 
+            sets the starting hue, at the darkest color in generated ramp. 
+          </p>
+          <p>
+            The color set using <code>hStart</code> can be positioned anywhere in the ramp by using <code>hStartCenter</code>. <button data-pantrigger="hStartCenter" data-panvalue="0">0</button> is the start of the ramp, <button data-pantrigger="hStartCenter" data-panvalue="1">1</button> is the end of the ramp. By default <code>hStartCenter</code> is set to <button data-pantrigger="hStartCenter" data-panvalue="0.5">0.5</button> which means the starting hue is in the middle of the ramp.
+          </p>
+          <p>
+            <code>hCycles</code> [<button data-pantrigger="hCycles" data-panvalue="0">0</button>, <button data-pantrigger="hCycles" data-panvalue="0.5">0.5</button>, <button data-pantrigger="hCycles" data-panvalue="1">1</button>, <button data-pantrigger="hCycles" data-panvalue="-0.5">-0.5</button>] 
+            Defines the about of hue variation in the ramp. <code>1</code> is a full cycle around the starting hue, <code>0.5</code> is half a cycle (complementary color), <code>-0.5</code> is half a cycle in the opposite direction.
+          </p>
+        </div>
+        <figure class="section__fig">
+          <div data-colors></div>
+          <figcaption>Full Color Ramp</figcaption>
+        </figure>
+        <button class="button button--main" data-randomize>Randomize Settings</button>
+      </aside>
+
+      <aside class="section section--vertical">
+        <div class="section__text">
+          <h2>Randomly Generated Samples</h2>
+          <p>
+            All samples use the same <code>maxLight</code>, <code>maxLight</code>,
+            <code>maxSaturation</code> and <code>minSaturation</code> values but 
+            randomizes the other settings.
+          </p>
+        </div>
+        <div class="section__fig">
+          <div data-rndsamples></div>
         </div>
       </aside>
-    </article>
-    <script src="https://cdn.jsdelivr.net/npm/culori@4.0.1/bundled/culori.umd.js"></script>
 
-    <script type="module">
-      import {
-        generateColorRamp,
-        generateColorRampWithCurve,
-        generateColorRampParams,
+      <aside class="section">
+        <div class="section__text">
+          <h2>Example Use</h2>
+          <p>click & hold to re-generate</p>
+          <p>
+            Each of those squares shows four random entires from the generated
+            colors. In a single square every color is unique.
+          </p>
+        </div>
+        <div class="section__fig">
+          <div data-palette></div>
+        </div>
+      </aside>
 
-        colorUtils,
-        utils
-      } from "./index.mjs";
+      <aside class="section">
+        <div class="section__text">
+          <h2>Color Ramp</h2>
+          <p>All generated colors shown as a continuous gradient.</p>
+        </div>
+        <div class="section__fig">
+          <div data-ramp></div>
+        </div>
+      </aside>
 
-      const {
-        uniqueRandomHues,
-        colorHarmonies,
-        colorToCSS,
-        harveyHue
-      } = colorUtils;
+      <aside class="section">
+        <div class="section__text">
+          <h2>HSL Colors</h2>
+          <p>Full list of the generated colors.</p>
+          <p>
+            We used
+            <a title="culori" href="https://culorijs.org/">a library</a> to
+            convert the the HSL colors into different color models. We
+            deliberately choose to only deliver HSL
+            <code>[0…360, 0…1, 0…1]</code> to keep the function fast and
+            lightweight as possible. There are plenty of awesome color libraries 
+            if you need to have the colors converted to an other color model.
+          </p>
+        </div>
+        <div class="section__fig">
+          <div data-list></div>
+        </div>
+      </aside>
 
-      const {
-        scaleSpreadArray,
-        shuffleArray,
-      } = utils;
-      
-      import { rybHsl2rgb } from "https://esm.sh/rybitten/";
+      <p>
+        fork on
+        <a href="https://github.com/meodai/rampensau">github</a> made by
+        <a href="https://www.elastiq.ch/">elastiq</a>.
+      </p>
+    </section>
+    <aside class="color-names">
+      <h2>For Curious Minds <span>and Desperate Deadlines</span></h2>
+      <div data-names></div>
+      <button class="button color-names__copy" data-copy data-copycolors>Copy Palette to Clipboard</button>
+      <div class="section__text">
+        <p>I got requests to export palettes—so here you go. Still, I’d gently suggest looking into integrating the
+          library or <a href="https://meodai.github.io/poline/">something similar</a> into your workflow.</p>
+        <p>A palette can be more than just colors—it can be a living system. One that responds to different data, brands,
+          themes, or even future you, exploring new directions without starting from scratch.</p>
+        <p>Thinking in systems doesn’t limit creativity—it gives it room to grow. There’s a quiet kind of magic in flexible
+          tools.</p>
+      </div>
+    </aside>
+  </article>
+  <script src="https://cdn.jsdelivr.net/npm/culori@4.0.1/bundled/culori.umd.js"></script>
 
-      console.clear();
+  <script type="module">
+    import {
+      generateColorRamp,
+      generateColorRampWithCurve,
+      generateColorRampParams,
 
-      const $favicon = document.querySelector('link[rel="icon"]');
-      const $favCanvas = document.createElement("canvas");
-      const favCtx = $favCanvas.getContext("2d");
+      colorUtils,
+      utils
+    } from "./index.mjs";
 
-      function updateFavicon(colors) {
-        $favCanvas.width = 64;
-        $favCanvas.height = 64;
-        favCtx.clearRect(0, 0, 64, 64);
-        colors.forEach((c, i) => {
-          favCtx.fillStyle = c;
-          favCtx.fillRect(0, i * 64 / colors.length, 64, 64 / colors.length);
-        });
-        // add a border
-        favCtx.strokeStyle = "#000";
-        favCtx.lineWidth = 2;
-        favCtx.strokeRect(2, 2, 60, 60);
-        $favicon.href = $favCanvas.toDataURL();
+    const {
+      uniqueRandomHues,
+      colorHarmonies,
+      colorToCSS,
+      harveyHue
+    } = colorUtils;
 
-      };
+    const {
+      scaleSpreadArray,
+      shuffleArray,
+    } = utils;
+    
+    import { rybHsl2rgb } from "https://esm.sh/rybitten/";
 
-      const easingFunctions = {
-        linear: x => x,
-        easeInSine: x => 1 - Math.cos((x * Math.PI) / 2),
-        easeOutSine: x => Math.sin((x * Math.PI) / 2),
-        easeInOutSine: x => -(Math.cos(Math.PI * x) - 1) / 2,
-        easeInQuad: x => x * x,
-        easeOutQuad: x => 1 - (1 - x) * (1 - x),
-        easeInOutQuad: x => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2),
-        easeInCubic: x => x * x * x,
-        easeOutCubic: x => 1 - Math.pow(1 - x, 3),
-        easeInOutCubic: x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
-        easeInQuart: x => x * x * x * x,
-        easeOutQuart: x => 1 - Math.pow(1 - x, 4),
-        easeInOutQuart: x => (x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2),
-        easeInQuint: x => x * x * x * x * x,
-        easeOutQuint: x => 1 - Math.pow(1 - x, 5),
-        easeInOutQuint: x => (x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2),
-        easeInExpo: x => (x === 0 ? 0 : Math.pow(2, 10 * x - 10)),
-        easeOutExpo: x => (x === 1 ? 1 : 1 - Math.pow(2, -10 * x)),
-        easeInOutExpo: x => {
-          if (x === 0) {
-            return 0;
-          }
-          if (x === 1) {
-            return 1;
-          }
-          if (x < 0.5) {
-            return Math.pow(2, 20 * x - 10) / 2;
-          }
-          return (2 - Math.pow(2, -20 * x + 10)) / 2;
-        },
-        easeInCirc: x => 1 - Math.sqrt(1 - Math.pow(x, 2)),
-        easeOutCirc: x => Math.sqrt(1 - Math.pow(x - 1, 2)),
-        easeInOutCirc: x => {
-          if (x < 0.5) {
-            return (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2;
-          }
-          return (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2;
-        },
-        relativeRandom50: (x, fr) => x + (-fr + Math.random() * fr * 2) * .5,
-        random: x => Math.random(),
-      };
+    console.clear();
 
-      const adjustmentFunctions = {
-        none: (hsl) => hsl,
-        harveyHue: ([h,s,l]) => [harveyHue(h), s, l],
-        muted: ([h,s,l]) => [h, s * .5, l],
-        pastel: ([h,s,l]) => [h, s, .2 + l * .8],
-        pseudoPrint: ([h,s,l]) => {
-          // if light is above .9 make the hue yellowish
-          if (l > .9) {
-            h = 36;
-          }
-          // clamp white to 95
-          l = Math.min(l, .92);
-          // make sure black is never too dark
-          l = Math.max(l, .11);
+    const $favicon = document.querySelector('link[rel="icon"]');
+    const $favCanvas = document.createElement("canvas");
+    const favCtx = $favCanvas.getContext("2d");
 
-          // make sure none of the colors are too saturated
-          s = Math.min(s, .7);
-          // when greenish lower saturation more
-          if (h > 80 && h < 160) {
-            s = Math.min(s, .5);
-          }
+    function updateFavicon(colors) {
+      $favCanvas.width = 64;
+      $favCanvas.height = 64;
+      favCtx.clearRect(0, 0, 64, 64);
+      colors.forEach((c, i) => {
+        favCtx.fillStyle = c;
+        favCtx.fillRect(0, i * 64 / colors.length, 64, 64 / colors.length);
+      });
+      // add a border
+      favCtx.strokeStyle = "#000";
+      favCtx.lineWidth = 2;
+      favCtx.strokeRect(2, 2, 60, 60);
+      $favicon.href = $favCanvas.toDataURL();
 
-          // if light teal make darker
-          if (h > 172 && h < 195) {
-            l *= .8;
-            s += .15;
-          }
+    };
 
-          return [h, s, l];
-        },
-      };
-      
-      const easingFunctionsKeys = Object.keys(easingFunctions);
-      const adjustmentFunctionsKeys = Object.keys(adjustmentFunctions);
+    const easingFunctions = {
+      linear: x => x,
+      easeInSine: x => 1 - Math.cos((x * Math.PI) / 2),
+      easeOutSine: x => Math.sin((x * Math.PI) / 2),
+      easeInOutSine: x => -(Math.cos(Math.PI * x) - 1) / 2,
+      easeInQuad: x => x * x,
+      easeOutQuad: x => 1 - (1 - x) * (1 - x),
+      easeInOutQuad: x => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2),
+      easeInCubic: x => x * x * x,
+      easeOutCubic: x => 1 - Math.pow(1 - x, 3),
+      easeInOutCubic: x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
+      easeInQuart: x => x * x * x * x,
+      easeOutQuart: x => 1 - Math.pow(1 - x, 4),
+      easeInOutQuart: x => (x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2),
+      easeInQuint: x => x * x * x * x * x,
+      easeOutQuint: x => 1 - Math.pow(1 - x, 5),
+      easeInOutQuint: x => (x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2),
+      easeInExpo: x => (x === 0 ? 0 : Math.pow(2, 10 * x - 10)),
+      easeOutExpo: x => (x === 1 ? 1 : 1 - Math.pow(2, -10 * x)),
+      easeInOutExpo: x => {
+        if (x === 0) {
+          return 0;
+        }
+        if (x === 1) {
+          return 1;
+        }
+        if (x < 0.5) {
+          return Math.pow(2, 20 * x - 10) / 2;
+        }
+        return (2 - Math.pow(2, -20 * x + 10)) / 2;
+      },
+      easeInCirc: x => 1 - Math.sqrt(1 - Math.pow(x, 2)),
+      easeOutCirc: x => Math.sqrt(1 - Math.pow(x - 1, 2)),
+      easeInOutCirc: x => {
+        if (x < 0.5) {
+          return (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2;
+        }
+        return (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2;
+      },
+      relativeRandom50: (x, fr) => x + (-fr + Math.random() * fr * 2) * .5,
+      random: x => Math.random(),
+    };
 
-      const newOptions = (overwrites = {}) => {
-        const lPow = .1 + Math.random() * .9;
-        const cPow = .2 + Math.random() * .2;
+    const adjustmentFunctions = {
+      none: (hsl) => hsl,
+      harveyHue: ([h,s,l]) => [harveyHue(h), s, l],
+      muted: ([h,s,l]) => [h, s * .5, l],
+      pastel: ([h,s,l]) => [h, s, .2 + l * .8],
+      pseudoPrint: ([h,s,l]) => {
+        // if light is above .9 make the hue yellowish
+        if (l > .9) {
+          h = 36;
+        }
+        // clamp white to 95
+        l = Math.min(l, .92);
+        // make sure black is never too dark
+        l = Math.max(l, .11);
 
-        const lRange = [
-          Math.pow(.05 + Math.random() * .2, lPow),
-          Math.pow(1 - Math.random() * .15, lPow)
-        ];
+        // make sure none of the colors are too saturated
+        s = Math.min(s, .7);
+        // when greenish lower saturation more
+        if (h > 80 && h < 160) {
+          s = Math.min(s, .5);
+        }
 
-        return {...{
-          total: 5 + Math.floor(Math.random() * 5),
-          hStart: Math.random() * 360,
-          hStartCenter: .5,
-          hEasing: easingFunctions['linear'],
-          hCycles: Math.random() * 1.25,
-          sRange: [
-            Math.pow(0.005 + Math.random() * .25, cPow),
-            Math.pow(1 - Math.random(), cPow)
-          ],
-          sEasing: easingFunctions['easeInOutCubic'],
-          lRange,
-          lEasing: easingFunctions['easeInOutSine'],
-          transformFn: adjustmentFunctions['none'],
-        }, ...overwrites};
-      };
+        // if light teal make darker
+        if (h > 172 && h < 195) {
+          l *= .8;
+          s += .15;
+        }
 
-      const palette = (colors, method) => {
-        let allColors = shuffleArray(colors);
+        return [h, s, l];
+      },
+    };
+    
+    const easingFunctionsKeys = Object.keys(easingFunctions);
+    const adjustmentFunctionsKeys = Object.keys(adjustmentFunctions);
 
-        let localcolors = [...allColors];
-        $pal.innerHTML = "";
+    const newOptions = (overwrites = {}) => {
+      const lPow = .1 + Math.random() * .9;
+      const cPow = .2 + Math.random() * .2;
 
-        $pal.appendChild(paletteDom(localcolors, 1));
+      const lRange = [
+        Math.pow(.05 + Math.random() * .2, lPow),
+        Math.pow(1 - Math.random() * .15, lPow)
+      ];
+
+      return {...{
+        total: 5 + Math.floor(Math.random() * 5),
+        hStart: Math.random() * 360,
+        hStartCenter: .5,
+        hEasing: easingFunctions['linear'],
+        hCycles: Math.random() * 1.25,
+        sRange: [
+          Math.pow(0.005 + Math.random() * .25, cPow),
+          Math.pow(1 - Math.random(), cPow)
+        ],
+        sEasing: easingFunctions['easeInOutCubic'],
+        lRange,
+        lEasing: easingFunctions['easeInOutSine'],
+        transformFn: adjustmentFunctions['none'],
+      }, ...overwrites};
+    };
+
+    const palette = (colors, method) => {
+      let allColors = shuffleArray(colors);
+
+      let localcolors = [...allColors];
+      $pal.innerHTML = "";
+
+      $pal.appendChild(paletteDom(localcolors, 1));
+      localcolors = shuffleArray(localcolors);
+
+      for (let i = 0; i < 2; i++) {
+        $pal.appendChild(paletteDom(localcolors, 2));
         localcolors = shuffleArray(localcolors);
+      }
 
-        for (let i = 0; i < 2; i++) {
-          $pal.appendChild(paletteDom(localcolors, 2));
-          localcolors = shuffleArray(localcolors);
-        }
+      for (let i = 0; i < 4 * 2; i++) {
+        $pal.appendChild(paletteDom(localcolors, 4));
+        localcolors = shuffleArray(localcolors);
+      }
 
-        for (let i = 0; i < 4 * 2; i++) {
-          $pal.appendChild(paletteDom(localcolors, 4));
-          localcolors = shuffleArray(localcolors);
-        }
+      $ramp.style.setProperty(
+        "background",
+        `linear-gradient(90deg, ${colors
+          .map(
+            (c) => c.css
+          )
+          .join(",")})`
+      );
+    };
 
-        $ramp.style.setProperty(
-          "background",
-          `linear-gradient(90deg, ${colors
-            .map(
-              (c) => c.css
-            )
-            .join(",")})`
+
+    const roundTo = (num, dec = 2) => {
+      return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
+    };
+
+    class Pane {
+      constructor(
+        $dom, 
+        nameSpace="pane", 
+        throttleTimer = 50
+      ) {
+        this.watches = new Map();
+        this.nameSpace = nameSpace;
+
+        this.$dom = $dom;
+        this.$el = document.createElement("div");
+        this.$el.classList.add(nameSpace);
+        this.$el.addEventListener(
+          "input",
+          this._onChange.bind(this),
+          {
+            captures: true,
+            passive: true,
+          },
+          true
         );
-      };
 
+        $dom.appendChild(this.$el);
 
-      const roundTo = (num, dec = 2) => {
-        return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
-      };
+        this.events = {};
+        this.timer;
+      }
 
-      class Pane {
-        constructor(
-          $dom, 
-          nameSpace="pane", 
-          throttleTimer = 50
-        ) {
-          this.watches = new Map();
-          this.nameSpace = nameSpace;
-
-          this.$dom = $dom;
-          this.$el = document.createElement("div");
-          this.$el.classList.add(nameSpace);
-          this.$el.addEventListener(
-            "input",
-            this._onChange.bind(this),
-            {
-              captures: true,
-              passive: true,
-            },
-            true
-          );
-
-          $dom.appendChild(this.$el);
-
-          this.events = {};
-          this.timer;
+      _callCallbacks(ref) {
+        if (this.events.hasOwnProperty("change")) {
+          clearTimeout(this.timer);
+          this.events["change"].forEach((fn) => {
+            this.timer = setTimeout(() => {
+              fn.apply(ref || []);
+            }, this.throttleTimer);
+          });
         }
+      }
 
-        _callCallbacks(ref) {
-          if (this.events.hasOwnProperty("change")) {
-            clearTimeout(this.timer);
-            this.events["change"].forEach((fn) => {
-              this.timer = setTimeout(() => {
-                fn.apply(ref || []);
-              }, this.throttleTimer);
-            });
+      _onChange(event) {
+        const $target = event.target;
+
+        if ("key" in $target.dataset) {
+          const key = $target.dataset.key;
+          const ref = this.watches.get(key).reference;
+
+          if ($target.dataset.type === "number") {
+            ref[key] = parseFloat($target.value);
+          } else {
+            ref[key] = $target.value;
           }
-        }
 
-        _onChange(event) {
-          const $target = event.target;
+          if ("siblingid" in $target.dataset) {
+            if (Number($target.value) && $target.value !== "") {
+              // validate that the values is within the min and max range of the input if present
+              const $sibling = document.getElementById(
+                $target.dataset.siblingid
+              );
 
-          if ("key" in $target.dataset) {
-            const key = $target.dataset.key;
-            const ref = this.watches.get(key).reference;
-
-            if ($target.dataset.type === "number") {
-              ref[key] = parseFloat($target.value);
-            } else {
-              ref[key] = $target.value;
-            }
-
-            if ("siblingid" in $target.dataset) {
-              if (Number($target.value) && $target.value !== "") {
-                // validate that the values is within the min and max range of the input if present
-                const $sibling = document.getElementById(
-                  $target.dataset.siblingid
-                );
-
-                if ($sibling) {
-                  const min = $sibling.getAttribute("min");
-                  const max = $sibling.getAttribute("max");
-                  
-                  if (min && Number($sibling.value) < Number(min)) {
-                    $sibling.value = min;
-                  } else if (max && Number($sibling.value) > Number(max)) {
-                    $sibling.value = max;
-                  } else {
-                    $sibling.value = roundTo($target.value, 2);
-                  }
+              if ($sibling) {
+                const min = $sibling.getAttribute("min");
+                const max = $sibling.getAttribute("max");
+                
+                if (min && Number($sibling.value) < Number(min)) {
+                  $sibling.value = min;
+                } else if (max && Number($sibling.value) > Number(max)) {
+                  $sibling.value = max;
+                } else {
+                  $sibling.value = roundTo($target.value, 2);
                 }
               }
             }
-
-            this._callCallbacks(ref);
-          }
-        }
-
-        on(event, fn) {
-          if (!this.events.hasOwnProperty(event)) {
-            this.events[event] = [];
-          }
-          this.events[event].push(fn);
-        }
-
-        addInput(reference, key, options) {
-          const $inputs = this._appendInput(reference, key, options);
-          this.watches.set(key, { reference, $inputs, key });
-        }
-
-        _inputToValue($input, ref ,key, value) {
-          if (!$input) {
-            return;
           }
 
-          if ( $input.matches('select') ) {
-            Array.from($input.querySelectorAll('option')).forEach($input => 
-              $input.selected = $input.value === (value || ref[key])
+          this._callCallbacks(ref);
+        }
+      }
+
+      on(event, fn) {
+        if (!this.events.hasOwnProperty(event)) {
+          this.events[event] = [];
+        }
+        this.events[event].push(fn);
+      }
+
+      addInput(reference, key, options) {
+        const $inputs = this._appendInput(reference, key, options);
+        this.watches.set(key, { reference, $inputs, key });
+      }
+
+      _inputToValue($input, ref ,key, value) {
+        if (!$input) {
+          return;
+        }
+
+        if ( $input.matches('select') ) {
+          Array.from($input.querySelectorAll('option')).forEach($input => 
+            $input.selected = $input.value === (value || ref[key])
+          );
+        } else if ($input.matches('[inputmode="numeric"]')) {
+            $input.value = value || roundTo(ref[key], 2);
+        } else {
+          $input.value = value || ref[key];
+        }
+      }
+
+      updateInputs(key, value) {
+        if (key) {
+          const watcher = this.watches.get(key);
+          watcher.$inputs.forEach($input => 
+            this._inputToValue(
+              $input, 
+              watcher.reference, 
+              watcher.key, 
+              value
+            )
+          );
+        } else {
+          this.watches.forEach(watcher => {
+            watcher.$inputs.forEach($input =>
+              this._inputToValue($input, watcher.reference, watcher.key)
             );
-          } else if ($input.matches('[inputmode="numeric"]')) {
-              $input.value = value || roundTo(ref[key], 2);
-          } else {
-            $input.value = value || ref[key];
-          }
+          });
         }
 
-        updateInputs(key, value) {
-          if (key) {
-            const watcher = this.watches.get(key);
-            watcher.$inputs.forEach($input => 
-              this._inputToValue(
-                $input, 
-                watcher.reference, 
-                watcher.key, 
-                value
-              )
-            );
-          } else {
-            this.watches.forEach(watcher => {
-              watcher.$inputs.forEach($input =>
-                this._inputToValue($input, watcher.reference, watcher.key)
-              );
+
+        this._callCallbacks();
+      }
+
+      _appendInput(reference, key, options) {
+        let type = typeof reference[key];
+
+        const $e = document.createElement("label");
+        const $label = document.createElement("strong");
+        const $section = document.createElement("div");
+
+        let $i, $in;
+
+        if (type === "number") {
+          $i = document.createElement("input");
+          $in = document.createElement("input");
+
+          $i.setAttribute("type", "range");
+          $in.setAttribute("type", "text");
+          $in.setAttribute("inputmode", "numeric");
+          $in.setAttribute("pattern", "[0-9]*");
+          
+          // type="text" inputmode="numeric" pattern="[0-9]*"
+
+          if (options.hasOwnProperty("min")) {
+            $i.setAttribute("min", options.min);
+            $in.setAttribute("min", options.min);
+          }
+          if (options.hasOwnProperty("max")) {
+            $i.setAttribute("max", options.max);
+            $in.setAttribute("max", options.max);
+          }
+          if (options.hasOwnProperty("step")) {
+            $i.setAttribute("step", options.step);
+            $in.setAttribute("step", options.step);
+          }
+        } else if (type === "string") {
+          if (options.hasOwnProperty("options")) {
+            $i = document.createElement("select");
+
+            options.options.forEach((option) => {
+              const $opt = document.createElement("option");
+              $opt.setAttribute("value", option);
+              if (option === reference[key]) {
+                $opt.setAttribute("selected", true);
+              }
+              $opt.innerHTML = option;
+              $i.appendChild($opt);
             });
+            
+          } else {
+            $i = document.createElement("input");
+            $i.setAttribute("type", "text");
           }
-
-
-          this._callCallbacks();
         }
 
-        _appendInput(reference, key, options) {
-          let type = typeof reference[key];
+        $i.dataset.key = key;
+        $i.dataset.type = type;
+        $i.value = reference[key];
+        $i.id = `${this.nameSpace}--${key}`;
+        $i.classList.add(
+          `${this.nameSpace}__input`,
+          `${this.nameSpace}__input--${type}`
+        );
 
-          const $e = document.createElement("label");
-          const $label = document.createElement("strong");
-          const $section = document.createElement("div");
+        $section.appendChild($i);
+        $section.classList.add(
+          `${this.nameSpace}__inputs`,
+          `${this.nameSpace}__inputs--${type}`
+        );
 
-          let $i, $in;
-
-          if (type === "number") {
-            $i = document.createElement("input");
-            $in = document.createElement("input");
-
-            $i.setAttribute("type", "range");
-            $in.setAttribute("type", "text");
-            $in.setAttribute("inputmode", "numeric");
-            $in.setAttribute("pattern", "[0-9]*");
-            
-            // type="text" inputmode="numeric" pattern="[0-9]*"
-
-            if (options.hasOwnProperty("min")) {
-              $i.setAttribute("min", options.min);
-              $in.setAttribute("min", options.min);
-            }
-            if (options.hasOwnProperty("max")) {
-              $i.setAttribute("max", options.max);
-              $in.setAttribute("max", options.max);
-            }
-            if (options.hasOwnProperty("step")) {
-              $i.setAttribute("step", options.step);
-              $in.setAttribute("step", options.step);
-            }
-          } else if (type === "string") {
-            if (options.hasOwnProperty("options")) {
-              $i = document.createElement("select");
-
-              options.options.forEach((option) => {
-                const $opt = document.createElement("option");
-                $opt.setAttribute("value", option);
-                if (option === reference[key]) {
-                  $opt.setAttribute("selected", true);
-                }
-                $opt.innerHTML = option;
-                $i.appendChild($opt);
-              });
-              
-            } else {
-              $i = document.createElement("input");
-              $i.setAttribute("type", "text");
-            }
-          }
-
-          $i.dataset.key = key;
-          $i.dataset.type = type;
-          $i.value = reference[key];
-          $i.id = `${this.nameSpace}--${key}`;
+        if ($in) {
+          $in.dataset.key = key;
+          $in.dataset.type = type;
+          $in.value = roundTo(reference[key], 2);
+          $in.id = `${this.nameSpace}--${key}--value`;
           $i.classList.add(
             `${this.nameSpace}__input`,
             `${this.nameSpace}__input--${type}`
           );
-
-          $section.appendChild($i);
-          $section.classList.add(
-            `${this.nameSpace}__inputs`,
-            `${this.nameSpace}__inputs--${type}`
-          );
-
-          if ($in) {
-            $in.dataset.key = key;
-            $in.dataset.type = type;
-            $in.value = roundTo(reference[key], 2);
-            $in.id = `${this.nameSpace}--${key}--value`;
-            $i.classList.add(
-              `${this.nameSpace}__input`,
-              `${this.nameSpace}__input--${type}`
-            );
-            $in.dataset.siblingid = `${this.nameSpace}--${key}`;
-            $i.dataset.siblingid = `${this.nameSpace}--${key}--value`;
-            $section.appendChild($in);
-          }
-
-          $label.innerHTML = key;
-          $label.classList.add(`${this.nameSpace}__label`);
-
-
-          // make a css compatible version of the key
-          const cssKey = key.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-          $e.classList.add(
-            `${this.nameSpace}__section`, 
-            `${this.nameSpace}__section--${type}`,
-            `${this.nameSpace}__section--${cssKey}`
-          );
-          $e.appendChild($label);
-          $e.append($section);
-
-          this.$el.appendChild($e);
-
-          return [$i, $in];
+          $in.dataset.siblingid = `${this.nameSpace}--${key}`;
+          $i.dataset.siblingid = `${this.nameSpace}--${key}--value`;
+          $section.appendChild($in);
         }
+
+        $label.innerHTML = key;
+        $label.classList.add(`${this.nameSpace}__label`);
+
+
+        // make a css compatible version of the key
+        const cssKey = key.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        $e.classList.add(
+          `${this.nameSpace}__section`, 
+          `${this.nameSpace}__section--${type}`,
+          `${this.nameSpace}__section--${cssKey}`
+        );
+        $e.appendChild($label);
+        $e.append($section);
+
+        this.$el.appendChild($e);
+
+        return [$i, $in];
       }
+    }
 
-      const pane = new Pane(document.querySelector("[data-pane]"));
+    const pane = new Pane(document.querySelector("[data-pane]"));
 
-      const PARAMS = {};
+    const PARAMS = {};
 
-      let darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    let darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-      if (darkMode) {
-        generateColorRampParams.maxLight.default = Math.random() * 0.2;
-        generateColorRampParams.minLight.default = 0.89 + Math.random() * 0.11;
-      }
+    if (darkMode) {
+      generateColorRampParams.maxLight.default = Math.random() * 0.2;
+      generateColorRampParams.minLight.default = 0.89 + Math.random() * 0.11;
+    }
 
-      const defaultParams = {
-        hueGenerator: {
-          default: 'Default',
-          props: {
-            options: ['Default', 'Unique Random', 'Color Harmony']
-          },
+    const defaultParams = {
+      hueGenerator: {
+        default: 'Default',
+        props: {
+          options: ['Default', 'Unique Random', 'Color Harmony']
         },
-        colorHarmony: {
-          default: 'splitComplementary',
-          props: {
-            options: Object.keys(colorHarmonies).reverse()
-          },
+      },
+      colorHarmony: {
+        default: 'splitComplementary',
+        props: {
+          options: Object.keys(colorHarmonies).reverse()
         },
-        hMinDiffAngle: {
-          default: 60,
-          props: {
-            min: 15,
-            max: 180,
-            step: 1,
-          },
+      },
+      hMinDiffAngle: {
+        default: 60,
+        props: {
+          min: 15,
+          max: 180,
+          step: 1,
         },
-        ...generateColorRampParams,
-        easingMode: {
-          default: 'Individual Axis',
-          props: {
-            options: ['Individual Axis', 'S/L Curve']
-          },
+      },
+      ...generateColorRampParams,
+      easingMode: {
+        default: 'Individual Axis',
+        props: {
+          options: ['Individual Axis', 'S/L Curve']
         },
-        curveMethod: {
-          default: 'lamé',
-          props: {
-            options: ['lamé', 'arc', 'pow', 'powX', 'powY']
-          },
+      },
+      curveMethod: {
+        default: 'lamé',
+        props: {
+          options: ['lamé', 'arc', 'pow', 'powX', 'powY']
         },
-        curveAccent: {
-          default: 0,
-          props: {
-            min: -.05,
-            max: 1,
-            step: 0.01,
-          },
+      },
+      curveAccent: {
+        default: 0,
+        props: {
+          min: -.05,
+          max: 1,
+          step: 0.01,
         },
-        hEasing: {
-          default: 'linear',
-          props: {
-            options: easingFunctionsKeys
-          },
+      },
+      hEasing: {
+        default: 'linear',
+        props: {
+          options: easingFunctionsKeys
         },
-        sEasing: {
-          default: 'easeInOutCubic',
-          props: {
-            options: easingFunctionsKeys
-          },
+      },
+      sEasing: {
+        default: 'easeInOutCubic',
+        props: {
+          options: easingFunctionsKeys
         },
-        lEasing: {
-          default: 'easeInOutSine',
-          props: {
-            options: easingFunctionsKeys
-          },
+      },
+      lEasing: {
+        default: 'easeInOutSine',
+        props: {
+          options: easingFunctionsKeys
         },
-        transformFn: {
-          default: 'none',
-          props: {
-            options: adjustmentFunctionsKeys
-          },
+      },
+      transformFn: {
+        default: 'none',
+        props: {
+          options: adjustmentFunctionsKeys
         },
-      };
+      },
+    };
 
-      Object.keys(defaultParams).forEach((key) => {
-        const param = defaultParams[key];
-        PARAMS[key] = param.default;
-        pane.addInput(PARAMS, key, param.props);
+    Object.keys(defaultParams).forEach((key) => {
+      const param = defaultParams[key];
+      PARAMS[key] = param.default;
+      pane.addInput(PARAMS, key, param.props);
+    });
+
+    PARAMS['Color Mode'] = Math.random() < .9 ? 'hsl' : 'RYBItten';
+
+    pane.addInput(PARAMS, 'Color Mode', {
+      options:
+        ['hsl', 'okhsl', 'hsv', 'RYBItten', 'okhsv', 'hsi', 'hwb', 'lch', 'oklch'],
+    });
+
+    const createPalette = (hueList = null) => {
+      let colors = generateColorRamp(newOptions({
+        hueList,
+        sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
+        lRange: [PARAMS.minLight, PARAMS.maxLight],
+        transformFn: adjustmentFunctions[PARAMS.transformFn],
+      }));
+
+      colors = hslToColorObj(colors)
+
+      const cssHSL = colors.map(color => color.css);
+
+      const $w = document.createElement('article');
+      $w.classList.add('palette');
+      $w.style.setProperty('--gc', cssHSL.join());
+      $w.style.setProperty('--gs', cssHSL.map((c, i) => `${c} ${(i / colors.length) * 100}%, ${c} ${(i + 1) / colors.length * 100}%`).join());
+      $w.style.setProperty('--crnd', cssHSL[~~(cssHSL.length * Math.random())]);
+
+
+      cssHSL.forEach((color, i) => {
+        $w.style.setProperty(`--c${i}`, color);
+        const $swatch = document.createElement('div');
+        $swatch.classList.add('palette__swatch');
+        $swatch.style.setProperty('--color', color);
+        $w.appendChild($swatch);
       });
 
-      PARAMS['Color Mode'] = Math.random() < .9 ? 'hsl' : 'RYBItten';
+      return $w;
+    }
 
-      pane.addInput(PARAMS, 'Color Mode', {
-        options:
-          ['hsl', 'okhsl', 'hsv', 'RYBItten', 'okhsv', 'hsi', 'hwb', 'lch', 'oklch'],
+
+
+    const $pal = document.querySelector("[data-palette]");
+    const $ramp = document.querySelector("[data-ramp]");
+    const $rndsamples = document.querySelector("[data-rndsamples]");
+    const $rnd = document.querySelectorAll("[data-randomize]");
+
+    const np = (huelist = null) => {
+      $rndsamples.innerHTML = '';
+      new Array(28).fill(0).forEach(_ => {
+        $rndsamples.appendChild(createPalette(huelist))
+      })
+    }
+
+    np();
+
+    const newPalette = () => {
+      const newParams = newOptions();
+
+      Object.keys(newParams).forEach(key => {
+        PARAMS[key] = newParams[key];
       });
 
-      const createPalette = (hueList = null) => {
-        let colors = generateColorRamp(newOptions({
-          hueList,
-          sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
-          lRange: [PARAMS.minLight, PARAMS.maxLight],
-          transformFn: adjustmentFunctions[PARAMS.transformFn],
-        }));
-
-        colors = hslToColorObj(colors)
-
-        const cssHSL = colors.map(color => color.css);
-
-        const $w = document.createElement('article');
-        $w.classList.add('palette');
-        $w.style.setProperty('--gc', cssHSL.join());
-        $w.style.setProperty('--gs', cssHSL.map((c, i) => `${c} ${(i / colors.length) * 100}%, ${c} ${(i + 1) / colors.length * 100}%`).join());
-        $w.style.setProperty('--crnd', cssHSL[~~(cssHSL.length * Math.random())]);
+      pane.updateInputs();
+    }
+    let timers = [];
 
 
-        cssHSL.forEach((color, i) => {
-          $w.style.setProperty(`--c${i}`, color);
-          const $swatch = document.createElement('div');
-          $swatch.classList.add('palette__swatch');
-          $swatch.style.setProperty('--color', color);
-          $w.appendChild($swatch);
-        });
+    $rnd.forEach($b => {
+      $b.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (timers.length) {
+          timers.forEach(t => clearTimeout(t));
+          timers = [];
+        }
+        newPalette();
+      });
+    });
 
-        return $w;
+
+    let colors = [];
+
+    function paletteDom(colorArr, x = 1) {
+      const $div = document.createElement("div");
+      $div.classList.add("palette-sample");
+      $div.style.setProperty("--x", x);
+      $div.style.setProperty("--rnd", Math.random());
+      $div.innerHTML = "<b><i></i><i></i></b>";
+
+      for (let i = 0; i < 4; i++) {
+        $div.style.setProperty(
+          `--col-${i}`,
+          colorArr[i % (colorArr.length - 1)].css
+        );
       }
 
+      return $div;
+    }
 
-
-      const $pal = document.querySelector("[data-palette]");
-      const $ramp = document.querySelector("[data-ramp]");
-      const $rndsamples = document.querySelector("[data-rndsamples]");
-      const $rnd = document.querySelectorAll("[data-randomize]");
-
-      const np = (huelist = null) => {
-        $rndsamples.innerHTML = '';
-        new Array(28).fill(0).forEach(_ => {
-          $rndsamples.appendChild(createPalette(huelist))
-        })
-      }
-
-      np();
-
-      const newPalette = () => {
-        const newParams = newOptions();
-
-        Object.keys(newParams).forEach(key => {
-          PARAMS[key] = newParams[key];
-        });
-
-        pane.updateInputs();
-      }
-      let timers = [];
-
-
-      $rnd.forEach($b => {
-        $b.addEventListener("click", (e) => {
-          e.preventDefault();
-          if (timers.length) {
-            timers.forEach(t => clearTimeout(t));
-            timers = [];
+    function hslToColorObj(colors) {
+      const colorMode = PARAMS['Color Mode'];
+      // Mutate colors object
+      return colors.map(([h, s, l]) => {
+        const channels = {};
+        let css;
+        if (colorMode === 'hsl' || colorMode === 'okhsl') {
+          channels.h = h;
+          channels.s = s;
+          channels.l = l;
+          if (colorMode === 'hsl') {
+            css = colorToCSS([h, s, l], 'hsl')
           }
-          newPalette();
+        } else if (colorMode === 'hsv' || colorMode === 'okhsv') {
+          channels.h = h;
+          channels.s = s;
+          channels.v = l + (s * Math.min(l, 1 - l)) / 2;
+        } else if (colorMode === 'hsi') {
+          channels.h = h;
+          channels.s = s;
+          channels.i = l * 2;
+        } else if (colorMode === 'hwb') {
+          channels.h = h;
+          channels.w = l;
+          channels.b = s;
+        } else if (colorMode === 'oklch') {
+          channels.l = l;
+          channels.c = s * 0.4;
+          channels.h = h;
+          css = colorToCSS([h, s, l], 'oklch');
+        } else if (colorMode === 'lch') {
+          channels.l = l * 100;
+          channels.c = s * 150;
+          channels.h = h;
+          css = colorToCSS([h, s, l], 'lch');
+        } else if (colorMode === 'RYBItten') {
+          const [ ry, gy, by ] = rybHsl2rgb([h, s, l]);
+          channels.r = ry;
+          channels.g = gy;
+          channels.b = by;
+        }
+
+        const computedColorMode = colorMode === 'RYBItten' ? 'rgb' : colorMode;
+
+        const { r, g, b } = culori.converter("rgb")({
+          mode: computedColorMode,
+          ...channels
         });
+        
+        return {
+          hsl: [h, s, l],
+          rgb: [r * 255, g * 255, b * 255],
+          hex: culori.formatHex({ mode: computedColorMode, ...channels }),
+          css: css || culori.formatHex({ mode: computedColorMode, ...channels }),
+          contrast: {
+            white: culori.wcagContrast("#ffffff", { mode: 'hsl', ...channels }),
+            black: culori.wcagContrast("#000000", { mode: 'hsl', ...channels }),
+          },
+        };
       });
 
+    }
 
-      let colors = [];
+    const $viz = document.querySelector("[data-viz]");
+    const $slViz = document.querySelector("[data-slviz]");
+    const $vizMini = document.querySelector("[data-icon='hue']");
+    const $vizMiniSl = document.querySelector("[data-icon='sl']");
 
-      function paletteDom(colorArr, x = 1) {
-        const $div = document.createElement("div");
-        $div.classList.add("palette-sample");
-        $div.style.setProperty("--x", x);
-        $div.style.setProperty("--rnd", Math.random());
-        $div.innerHTML = "<b><i></i><i></i></b>";
+    function createDisc(color, i) {
+      const $disc = document.createElement("div");
+      $disc.classList.add("disc");
+      $disc.style.setProperty("--c-h", color.hsl[0]);
+      $disc.style.setProperty("--c-s", color.hsl[1]);
+      $disc.style.setProperty("--c-l", color.hsl[2]);
+      $disc.style.setProperty("--c-i", i);
+      // number going from 0 to 0.5 and back to 0
+      $disc.style.setProperty("--c-i2", i > 0.5 ? 1 - i : i);
 
-        for (let i = 0; i < 4; i++) {
-          $div.style.setProperty(
-            `--col-${i}`,
-            colorArr[i % (colorArr.length - 1)].css
-          );
+      return $disc;
+    }
+
+
+    function viz (colors) {
+      $viz.innerHTML = '';
+      $slViz.innerHTML = '';
+      $vizMini.innerHTML = '';
+      $vizMiniSl.innerHTML = '';
+      
+      colors.forEach((color, i) => {
+        $viz.appendChild(createDisc(color, i/colors.length));
+
+        const $slDisc = createDisc(color, i / colors.length);
+        $slDisc.classList.add('disc--sl');
+        $slViz.appendChild($slDisc);
+      
+        const $miniDisc = createDisc(color, i/colors.length);
+        $miniDisc.classList.add('disc--mini');
+        $vizMini.appendChild($miniDisc);
+
+        const $miniDiscSl = createDisc(color, i/colors.length);
+        $miniDiscSl.classList.add('disc--mini');
+        $miniDiscSl.classList.add('disc--mini-sl');
+        $vizMiniSl.appendChild($miniDiscSl);
+      })
+    }
+
+    function bam() { 
+      document.querySelector('.pane__section--hstart').classList.remove('pane__section--hidden');
+      document.querySelector('.pane__section--hstartcenter').classList.remove('pane__section--hidden');
+      document.querySelector('.pane__section--hcycles').classList.remove('pane__section--hidden');
+      document.querySelector('.pane__section--heasing').classList.remove('pane__section--hidden');
+      document.querySelector('.pane__section--colorharmony').classList.add('pane__section--hidden');
+      document.querySelector('.pane__section--hmindiffangle').classList.add('pane__section--hidden');
+
+      let hueList;
+      
+      if (PARAMS.hueGenerator === 'Default') {
+      } else if (PARAMS.hueGenerator === 'Color Harmony') {
+        document.querySelector('.pane__section--hstartcenter').classList.add('pane__section--hidden');
+        document.querySelector('.pane__section--hcycles').classList.add('pane__section--hidden');
+        document.querySelector('.pane__section--heasing').classList.add('pane__section--hidden');
+        
+        document.querySelector('.pane__section--colorharmony').classList.remove('pane__section--hidden');
+
+        hueList = colorHarmonies[PARAMS.colorHarmony](PARAMS.hStart);
+      } else if (PARAMS.hueGenerator === 'Unique Random') {
+        document.querySelector('.pane__section--hmindiffangle').classList.remove('pane__section--hidden');
+        document.querySelector('.pane__section--hstart').classList.add('pane__section--hidden');
+        document.querySelector('.pane__section--hstartcenter').classList.add('pane__section--hidden');
+        document.querySelector('.pane__section--hcycles').classList.add('pane__section--hidden');
+        document.querySelector('.pane__section--heasing').classList.add('pane__section--hidden');
+        
+        let totalRandomHues = 4;
+        
+        if (PARAMS.total > 4 && PARAMS.total < 8) {
+          totalRandomHues = 3;
         }
 
-        return $div;
-      }
-
-      function hslToColorObj(colors) {
-        const colorMode = PARAMS['Color Mode'];
-        // Mutate colors object
-        return colors.map(([h, s, l]) => {
-          const channels = {};
-          let css;
-          if (colorMode === 'hsl' || colorMode === 'okhsl') {
-            channels.h = h;
-            channels.s = s;
-            channels.l = l;
-            if (colorMode === 'hsl') {
-              css = colorToCSS([h, s, l], 'hsl')
-            }
-          } else if (colorMode === 'hsv' || colorMode === 'okhsv') {
-            channels.h = h;
-            channels.s = s;
-            channels.v = l + (s * Math.min(l, 1 - l)) / 2;
-          } else if (colorMode === 'hsi') {
-            channels.h = h;
-            channels.s = s;
-            channels.i = l * 2;
-          } else if (colorMode === 'hwb') {
-            channels.h = h;
-            channels.w = l;
-            channels.b = s;
-          } else if (colorMode === 'oklch') {
-            channels.l = l;
-            channels.c = s * 0.4;
-            channels.h = h;
-            css = colorToCSS([h, s, l], 'oklch');
-          } else if (colorMode === 'lch') {
-            channels.l = l * 100;
-            channels.c = s * 150;
-            channels.h = h;
-            css = colorToCSS([h, s, l], 'lch');
-          } else if (colorMode === 'RYBItten') {
-            const [ ry, gy, by ] = rybHsl2rgb([h, s, l]);
-            channels.r = ry;
-            channels.g = gy;
-            channels.b = by;
-          }
-
-          const computedColorMode = colorMode === 'RYBItten' ? 'rgb' : colorMode;
-
-          const { r, g, b } = culori.converter("rgb")({
-            mode: computedColorMode,
-            ...channels
-          });
-          
-          return {
-            hsl: [h, s, l],
-            rgb: [r * 255, g * 255, b * 255],
-            hex: culori.formatHex({ mode: computedColorMode, ...channels }),
-            css: css || culori.formatHex({ mode: computedColorMode, ...channels }),
-            contrast: {
-              white: culori.wcagContrast("#ffffff", { mode: 'hsl', ...channels }),
-              black: culori.wcagContrast("#000000", { mode: 'hsl', ...channels }),
-            },
-          };
+        hueList = uniqueRandomHues({
+          startHue: PARAMS.hStart,
+          total: totalRandomHues,
         });
-
       }
 
-      const $viz = document.querySelector("[data-viz]");
-      const $slViz = document.querySelector("[data-slviz]");
-      const $vizMini = document.querySelector("[data-icon='hue']");
-      const $vizMiniSl = document.querySelector("[data-icon='sl']");
-
-      function createDisc(color, i) {
-        const $disc = document.createElement("div");
-        $disc.classList.add("disc");
-        $disc.style.setProperty("--c-h", color.hsl[0]);
-        $disc.style.setProperty("--c-s", color.hsl[1]);
-        $disc.style.setProperty("--c-l", color.hsl[2]);
-        $disc.style.setProperty("--c-i", i);
-        // number going from 0 to 0.5 and back to 0
-        $disc.style.setProperty("--c-i2", i > 0.5 ? 1 - i : i);
-
-        return $disc;
+      if (PARAMS.easingMode === 'S/L Curve') {
+        document.querySelector('.pane__section--seasing').classList.add('pane__section--hidden');
+        document.querySelector('.pane__section--leasing').classList.add('pane__section--hidden');
+        document.querySelector('.pane__section--curvemethod').classList.remove('pane__section--hidden');
+        document.querySelector('.pane__section--curveaccent').classList.remove('pane__section--hidden');
+      } else {
+        document.querySelector('.pane__section--seasing').classList.remove('pane__section--hidden');
+        document.querySelector('.pane__section--leasing').classList.remove('pane__section--hidden');
+        document.querySelector('.pane__section--curvemethod').classList.add('pane__section--hidden');
+        document.querySelector('.pane__section--curveaccent').classList.add('pane__section--hidden');
       }
 
-
-      function viz (colors) {
-        $viz.innerHTML = '';
-        $slViz.innerHTML = '';
-        $vizMini.innerHTML = '';
-        $vizMiniSl.innerHTML = '';
-        
-        colors.forEach((color, i) => {
-          $viz.appendChild(createDisc(color, i/colors.length));
-
-          const $slDisc = createDisc(color, i / colors.length);
-          $slDisc.classList.add('disc--sl');
-          $slViz.appendChild($slDisc);
-        
-          const $miniDisc = createDisc(color, i/colors.length);
-          $miniDisc.classList.add('disc--mini');
-          $vizMini.appendChild($miniDisc);
-
-          const $miniDiscSl = createDisc(color, i/colors.length);
-          $miniDiscSl.classList.add('disc--mini');
-          $miniDiscSl.classList.add('disc--mini-sl');
-          $vizMiniSl.appendChild($miniDiscSl);
-        })
+      if (hueList && hueList.length > PARAMS.total) {
+        hueList = hueList.slice(0, PARAMS.total);
+      } else if (hueList && hueList.length < PARAMS.total) {
+        hueList = scaleSpreadArray(hueList, PARAMS.total);
       }
 
-      function bam() { 
-        document.querySelector('.pane__section--hstart').classList.remove('pane__section--hidden');
-        document.querySelector('.pane__section--hstartcenter').classList.remove('pane__section--hidden');
-        document.querySelector('.pane__section--hcycles').classList.remove('pane__section--hidden');
-        document.querySelector('.pane__section--heasing').classList.remove('pane__section--hidden');
-        document.querySelector('.pane__section--colorharmony').classList.add('pane__section--hidden');
-        document.querySelector('.pane__section--hmindiffangle').classList.add('pane__section--hidden');
+      const generatorFn = PARAMS.easingMode === 'S/L Curve' ? generateColorRampWithCurve : generateColorRamp;
 
-        let hueList;
+      colors = generatorFn({
+        total: PARAMS.total,
+        hStart: PARAMS.hStart,
+        hCycles: PARAMS.hCycles,
+        hStartCenter: PARAMS.hStartCenter,
+        hEasing: typeof PARAMS.hEasing === 'string' ? easingFunctions[PARAMS.hEasing] : PARAMS.hEasing,
+        sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
+        sEasing: typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing,
+        lRange: [PARAMS.minLight, PARAMS.maxLight],
+        lEasing: typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing,
         
-        if (PARAMS.hueGenerator === 'Default') {
-        } else if (PARAMS.hueGenerator === 'Color Harmony') {
-          document.querySelector('.pane__section--hstartcenter').classList.add('pane__section--hidden');
-          document.querySelector('.pane__section--hcycles').classList.add('pane__section--hidden');
-          document.querySelector('.pane__section--heasing').classList.add('pane__section--hidden');
-          
-          document.querySelector('.pane__section--colorharmony').classList.remove('pane__section--hidden');
+        curveMethod: PARAMS.curveMethod,
+        curveAccent: PARAMS.curveAccent,
+        
+        hueList: hueList,
+        transformFn: adjustmentFunctions[PARAMS.transformFn],
+      });
 
-          hueList = colorHarmonies[PARAMS.colorHarmony](PARAMS.hStart);
-        } else if (PARAMS.hueGenerator === 'Unique Random') {
-          document.querySelector('.pane__section--hmindiffangle').classList.remove('pane__section--hidden');
-          document.querySelector('.pane__section--hstart').classList.add('pane__section--hidden');
-          document.querySelector('.pane__section--hstartcenter').classList.add('pane__section--hidden');
-          document.querySelector('.pane__section--hcycles').classList.add('pane__section--hidden');
-          document.querySelector('.pane__section--heasing').classList.add('pane__section--hidden');
-          
-          let totalRandomHues = 4;
-          
-          if (PARAMS.total > 4 && PARAMS.total < 8) {
-            totalRandomHues = 3;
-          }
+      document.documentElement.style.setProperty('--total', colors.length);
+      document.documentElement.style.setProperty('--hStart', PARAMS.hStart);
+      document.documentElement.style.setProperty('--hStartCenter', PARAMS.hStartCenter);
+      document.documentElement.style.setProperty('--hCycles', PARAMS.hCycles);
+      document.documentElement.style.setProperty('--sRangeMin', PARAMS.minSaturation);
+      document.documentElement.style.setProperty('--sRangeMax', PARAMS.maxSaturation);
+      document.documentElement.style.setProperty('--lRangeMin', PARAMS.minLight);
+      document.documentElement.style.setProperty('--lRangeMax', PARAMS.maxLight);
 
-          hueList = uniqueRandomHues({
-            startHue: PARAMS.hStart,
-            total: totalRandomHues,
-          });
-        }
+      const colorMode = PARAMS['Color Mode'];
+      // Mutate colors object
+      colors = hslToColorObj(colors);
 
-        if (PARAMS.easingMode === 'S/L Curve') {
-          document.querySelector('.pane__section--seasing').classList.add('pane__section--hidden');
-          document.querySelector('.pane__section--leasing').classList.add('pane__section--hidden');
-          document.querySelector('.pane__section--curvemethod').classList.remove('pane__section--hidden');
-          document.querySelector('.pane__section--curveaccent').classList.remove('pane__section--hidden');
-        } else {
-          document.querySelector('.pane__section--seasing').classList.remove('pane__section--hidden');
-          document.querySelector('.pane__section--leasing').classList.remove('pane__section--hidden');
-          document.querySelector('.pane__section--curvemethod').classList.add('pane__section--hidden');
-          document.querySelector('.pane__section--curveaccent').classList.add('pane__section--hidden');
-        }
+      viz(colors);
 
-        if (hueList && hueList.length > PARAMS.total) {
-          hueList = hueList.slice(0, PARAMS.total);
-        } else if (hueList && hueList.length < PARAMS.total) {
-          hueList = scaleSpreadArray(hueList, PARAMS.total);
-        }
-
-        const generatorFn = PARAMS.easingMode === 'S/L Curve' ? generateColorRampWithCurve : generateColorRamp;
-
-        colors = generatorFn({
-          total: PARAMS.total,
-          hStart: PARAMS.hStart,
-          hCycles: PARAMS.hCycles,
-          hStartCenter: PARAMS.hStartCenter,
-          hEasing: typeof PARAMS.hEasing === 'string' ? easingFunctions[PARAMS.hEasing] : PARAMS.hEasing,
-          sRange: [PARAMS.minSaturation, PARAMS.maxSaturation],
-          sEasing: typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing,
-          lRange: [PARAMS.minLight, PARAMS.maxLight],
-          lEasing: typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing,
-          
-          curveMethod: PARAMS.curveMethod,
-          curveAccent: PARAMS.curveAccent,
-          
-          hueList: hueList,
-          transformFn: adjustmentFunctions[PARAMS.transformFn],
-        });
-
-        document.documentElement.style.setProperty('--total', colors.length);
-        document.documentElement.style.setProperty('--hStart', PARAMS.hStart);
-        document.documentElement.style.setProperty('--hStartCenter', PARAMS.hStartCenter);
-        document.documentElement.style.setProperty('--hCycles', PARAMS.hCycles);
-        document.documentElement.style.setProperty('--sRangeMin', PARAMS.minSaturation);
-        document.documentElement.style.setProperty('--sRangeMax', PARAMS.maxSaturation);
-        document.documentElement.style.setProperty('--lRangeMin', PARAMS.minLight);
-        document.documentElement.style.setProperty('--lRangeMax', PARAMS.maxLight);
-
-        const colorMode = PARAMS['Color Mode'];
-        // Mutate colors object
-        colors = hslToColorObj(colors);
-
-        viz(colors);
-
-        let hueParams = `total: <i>${PARAMS.total}</i>,
-  hStart: <i>${PARAMS.hStart.toFixed(3)}</i>,
-  hStartCenter: <i>${PARAMS.hStartCenter.toFixed(3)}</i>,
-  hEasing: 
-    <i>${typeof PARAMS.hEasing === 'string' ? easingFunctions[PARAMS.hEasing] : PARAMS.hEasing}</i>,
-  hCycles: <i>${PARAMS.hCycles.toFixed(3)}</i>,
+      let hueParams = `total: <i>${PARAMS.total}</i>,
+hStart: <i>${PARAMS.hStart.toFixed(3)}</i>,
+hStartCenter: <i>${PARAMS.hStartCenter.toFixed(3)}</i>,
+hEasing: 
+  <i>${typeof PARAMS.hEasing === 'string' ? easingFunctions[PARAMS.hEasing] : PARAMS.hEasing}</i>,
+hCycles: <i>${PARAMS.hCycles.toFixed(3)}</i>,
 `
 
-        if (PARAMS.hueGenerator != 'Default') {
-          if (PARAMS.hueGenerator === 'Color Harmony') {
-            hueParams = `hueList: 
-  <i>colorHarmonies
-  .${PARAMS.colorHarmony}(${PARAMS.hStart.toFixed(1)})</i>,`
-          } else if (PARAMS.hueGenerator === 'Unique Random') {
-            hueParams = `hueList: <i>uniqueRandomHues({
-    startHue: ${PARAMS.hStart.toFixed(2)},
-    total: ${PARAMS.total > 4 && PARAMS.total < 8 ? 3 : 4},
-    minDistance: ${PARAMS.hMinDiffAngle},
-  })</i>,`
-          }
+      if (PARAMS.hueGenerator != 'Default') {
+        if (PARAMS.hueGenerator === 'Color Harmony') {
+          hueParams = `hueList: 
+<i>colorHarmonies
+.${PARAMS.colorHarmony}(${PARAMS.hStart.toFixed(1)})</i>,`
+        } else if (PARAMS.hueGenerator === 'Unique Random') {
+          hueParams = `hueList: <i>uniqueRandomHues({
+  startHue: ${PARAMS.hStart.toFixed(2)},
+  total: ${PARAMS.total > 4 && PARAMS.total < 8 ? 3 : 4},
+  minDistance: ${PARAMS.hMinDiffAngle},
+})</i>,`
         }
-        const codeString = `${PARAMS.easingMode === 'S/L Curve' ? 'generateColorRampWithCurve' : 'generateColorRamp'
-          }({
-  ${hueParams}
-  sRange: <i>[${PARAMS.minSaturation.toFixed(3)}, ${PARAMS.maxSaturation.toFixed(3)}]</i>,
-  lRange: <i>[${PARAMS.minLight.toFixed(3)}, ${PARAMS.maxLight.toFixed(3)}]</i>,
-  ${PARAMS.easingMode === 'S/L Curve'
-            ? `curveMethod: <i>${PARAMS.curveMethod}</i>,
-  curveAccent: <i>${PARAMS.curveAccent.toFixed(3)}</i>,`
-            : `
-  sEasing:
-    <i>${typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing}</i>,
-  lEasing: 
-    <i>${typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing}</i>,`
-          }
+      }
+      const codeString = `${PARAMS.easingMode === 'S/L Curve' ? 'generateColorRampWithCurve' : 'generateColorRamp'
+        }({
+${hueParams}
+sRange: <i>[${PARAMS.minSaturation.toFixed(3)}, ${PARAMS.maxSaturation.toFixed(3)}]</i>,
+lRange: <i>[${PARAMS.minLight.toFixed(3)}, ${PARAMS.maxLight.toFixed(3)}]</i>,
+${PARAMS.easingMode === 'S/L Curve'
+          ? `curveMethod: <i>${PARAMS.curveMethod}</i>,
+curveAccent: <i>${PARAMS.curveAccent.toFixed(3)}</i>,`
+          : `
+sEasing:
+  <i>${typeof PARAMS.sEasing === 'string' ? easingFunctions[PARAMS.sEasing] : PARAMS.sEasing}</i>,
+lEasing: 
+  <i>${typeof PARAMS.lEasing === 'string' ? easingFunctions[PARAMS.lEasing] : PARAMS.lEasing}</i>,`
+        }
 });
 `
-        const $code = document.querySelector(
-          "[data-code]"
-        );
+      const $code = document.querySelector(
+        "[data-code]"
+      );
 
-        $code.innerHTML = codeString;
-        $code.dataset.copy = codeString.replace(/<i>/g, '').replace(/<\/i>/g, '');
+      $code.innerHTML = codeString;
+      $code.dataset.copy = codeString.replace(/<i>/g, '').replace(/<\/i>/g, '');
 
-        document.documentElement.style.setProperty(
-          "--gradient",
-          colors
-            .map((c) => c.css)
-            .join(",")
-        );
-        document.querySelector("[data-colors]").innerHTML = colors.reduce(
-          (r, c, i) => {
-            const relI = i / PARAMS.total;
-            const bestcontrast = c.contrast.white < c.contrast.black ? "black" : "white";
-            return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.css}; --c: ${bestcontrast}; --h: ${c.hsl[0]}; --l: ${c.hsl[2]}; --rnd: ${-1 + Math.random() * 2};  --rnd2: ${-1 + Math.random() * 2}; --i: ${relI};">
-              <b>
-                ${c.hsl.map((c, i) => Math.round(i ? c * 100: c) + (i ? '%' : '°')).join(' ')}
-              </b>
-              <span></span>
-            </i>`;
-          },
-          ""
-        );
+      document.documentElement.style.setProperty(
+        "--gradient",
+        colors
+          .map((c) => c.css)
+          .join(",")
+      );
+      document.querySelector("[data-colors]").innerHTML = colors.reduce(
+        (r, c, i) => {
+          const relI = i / PARAMS.total;
+          const bestcontrast = c.contrast.white < c.contrast.black ? "black" : "white";
+          return `${r}<i style="--w: ${1 / PARAMS.total}; --color: ${c.css}; --c: ${bestcontrast}; --h: ${c.hsl[0]}; --l: ${c.hsl[2]}; --rnd: ${-1 + Math.random() * 2};  --rnd2: ${-1 + Math.random() * 2}; --i: ${relI};">
+            <b>
+              ${c.hsl.map((c, i) => Math.round(i ? c * 100: c) + (i ? '%' : '°')).join(' ')}
+            </b>
+            <span></span>
+          </i>`;
+        },
+        ""
+      );
 
-        palette(colors, "random");
-        list(colors);
+      palette(colors, "random");
+      list(colors);
 
-        const $body = document.querySelector("body");
-        
-        colors.forEach((c, i) => {
-          document.documentElement.style
-          .setProperty(`--c${i}`, `hsl(${c.hsl[0]}, ${c.hsl[1] * 100}%, ${c.hsl[2] * 100}%)`);
-        });
-
-        document.documentElement.style.setProperty(`--clast`, colors[colors.length - 1].css);
-        
-        const remColors = [...colors];
-        
-        const bgc = remColors.shift();
-        remColors.pop();
-        const bestContrastTobgc = remColors.sort(
-          (a, b) => culori.wcagContrast(a.hex, bgc.hex) - culori.wcagContrast(b.hex, bgc.hex)
-        );
-
-        if (bestContrastTobgc.length) {
-          document.documentElement.style.setProperty(`--csecondlast`, bestContrastTobgc.at(-2).css);
-        }
-
-        document.documentElement.style.setProperty(`--ts`, 
-          colors.map((c,i) => `${-i * 1}px ${-i * 1}px ${0}px ${c.css}`).join()
-        );
-
-        document.documentElement.style.setProperty(`--tsss`,
-          colors.map((c, i) => `0 ${0}px ${0}px ${c.css}`).join()
-        );
-
-        document.documentElement.style.setProperty(`--tss`,
-          (-colors.length * 4) + 'px'
-        );
-
-        names(colors);
-        updateFavicon(colors.map(c => c.hex));
-        np(hueList);
-      }
-       
-      const xmlns = 'http://www.w3.org/2000/svg';
-
-      const printColors = (arr, simple, names) =>
-        arr
-          .map(({ hsl, rgb, hex, css, contrast }, i) => {
-            if (simple) {
-              return `
-          <li class="swatch swatch--simple" style="--col:${hex}; --coltext: ${
-                contrast.black > contrast.white ? "#202125" : "#fff"
-              }">
-            <div data-copy title="Click to copy">${Math.floor(
-              hsl[0]
-            )}&deg; ${Math.floor(hsl[1] * 100)}% ${Math.floor(hsl[2] * 100)}%</div>
-          </li>`;
-            } else {
-              return `
-            <li class="full" style="--col:${hex}; --coltext: ${
-                contrast.black < contrast.white ? "#202125" : "#fff"
-              }; --colbg: ${
-                contrast.black > contrast.white ? "#202125" : "#fff"
-              }">
-              <div class="color-info">
-                <strong>${names[i].name}</strong>
-                <button data-copy title="Click to copy">hsl(${Math.floor(
-                  hsl[0]
-                )},${Math.floor(hsl[1] * 100)}%,${Math.floor(
-                hsl[2] * 100
-              )}%)</button>
-                <button data-copy title="Click to copy">rgb(${Math.floor(
-                  rgb[0]
-                )},${Math.floor(rgb[1])},${Math.floor(rgb[2])})</button>
-                <button data-copy title="Click to copy">${css}</button>
-                <div class="color-info__contrast">
-                  <h5>wcag contrast:</h5>
-                  <em><span style="color: #ffffff;"">Aa</span> ${contrast.white.toFixed(
-                    2
-                  )}</em>
-                  <span style="color: #000000;">Aa</span> ${contrast.black.toFixed(
-                    2
-                  )}</em>
-                </div>
-              </div>
-            </li>
-          `;
-            }
-          })
-          .join("");
-
-      function list(colors) {
-        document.querySelector("[data-list]").innerHTML = `
-        <div>
-          <h3>Colors</h3>
-          <ol>${printColors(colors, true)}</ol>
-        </div>
-      `;
-      }
-
-      let timer;
-      const $names = document.querySelector("[data-names]");
-      const $copyButton = document.querySelector("[data-copycolors]");
-
-      function names(colors) {
-        $names.innerHTML = `<strong style="--col: #fff">…</strong>`;
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-          const hexes = colors.map((c) => c.hex.replace("#", ""));
-          fetch(
-            `https://api.color.pizza/v1/?values=${hexes.join()}&goodnamesonly=true&noduplicates=true`
-          )
-            .then((r) => r.json())
-            .then((d) => {
-              $names.innerHTML = `<ol>${printColors(
-                colors,
-                false,
-                d.colors
-              )}</ol>`;
-            });
-        }, 1000);
-
-        $copyButton.setAttribute(
-          "data-copy",
-          colors.map((c) => c.hex).join(", ")
-        );
-
-
-      }
-
-      $pal.addEventListener("pointerdown", (e) => {
-        palette(colors, "random");
-        timer = setInterval(() => palette(colors, "random"), 100);
-      });
-      $pal.addEventListener("pointerup", () => clearInterval(timer));
-
-      pane.on("change", bam);
-
-      document.documentElement.addEventListener("pointerdown", e => {
-        const $target = e.target;
-        if($target.matches(`[data-pantrigger]`)) {
-          let value = !isNaN($target.dataset.panvalue) ? new Number($target.dataset.panvalue) : $target.dataset.panvalue;
-          PARAMS[$target.dataset.pantrigger] = value;
-          pane.updateInputs(
-            $target.dataset.pantrigger,
-            $target.dataset.panvalue
-          );
-        }
-      });
-
-      if (navigator.clipboard) {
-        document.querySelector("body").addEventListener("click", (e) => {
-          const $el = e.target;
-          if ($el.matches("[data-copy]")) {
-            let oldText = $el.innerText;
-            let text;
-            // check if data copy has a value
-            if (!$el.dataset.copy) {
-              text = $el.innerText;
-            } else {
-              text = $el.dataset.copy;
-            }
-
-            navigator.clipboard.writeText(text).then(() => {
-              $el.innerText = "copied!";
-              setTimeout(() => {
-                $el.innerText = oldText;
-              }, 500);
-            });
-          }
-        });
-      }
-
-      document.querySelector('[aria-controls="sidebar"]').addEventListener('click', () => {
-        document.documentElement.classList.toggle('sidebar-open');
-      });
-
-      newPalette();
-      bam();
-
-      // tabs logic
-      const $tabs = document.querySelectorAll("[data-tab]");
-      const $tabTriggers = document.querySelectorAll("[data-tabtarget]");
-      const $tabsWrap = document.querySelector("[data-tabswrap]");
+      const $body = document.querySelector("body");
       
-      let activeTabIndex = 0;
+      colors.forEach((c, i) => {
+        document.documentElement.style
+        .setProperty(`--c${i}`, `hsl(${c.hsl[0]}, ${c.hsl[1] * 100}%, ${c.hsl[2] * 100}%)`);
+      });
 
-      $tabsWrap.style.setProperty('--tabs-length', $tabs.length);
+      document.documentElement.style.setProperty(`--clast`, colors[colors.length - 1].css);
+      
+      const remColors = [...colors];
+      
+      const bgc = remColors.shift();
+      remColors.pop();
+      const bestContrastTobgc = remColors.sort(
+        (a, b) => culori.wcagContrast(a.hex, bgc.hex) - culori.wcagContrast(b.hex, bgc.hex)
+      );
 
-      function activateTab($tab) {
-        $tabs.forEach($t => {
-          $t.classList.remove('tabs__content--active');
-          $t.setAttribute('aria-hidden', true);
-        });
-        $tabTriggers.forEach($trigger => {
-          $trigger.setAttribute('aria-selected', false);
-          $trigger.classList.remove('tabs__control--active');
-        });
-
-        const $trigger = document.querySelector(`[data-tabtarget="${$tab.dataset.tab}"]`);
-        $trigger.setAttribute('aria-selected', true);
-        $trigger.classList.add('tabs__control--active');
-
-        $tab.classList.add('tabs__content--active');
-        $tab.setAttribute('aria-hidden', false);
-        activeTabIndex = [...$tabs].indexOf($tab);
-        $tabsWrap.style.setProperty('--active-tab', activeTabIndex);
+      if (bestContrastTobgc.length) {
+        document.documentElement.style.setProperty(`--csecondlast`, bestContrastTobgc.at(-2).css);
       }
 
-      activateTab($tabs[activeTabIndex]);
+      document.documentElement.style.setProperty(`--ts`, 
+        colors.map((c,i) => `${-i * 1}px ${-i * 1}px ${0}px ${c.css}`).join()
+      );
 
-      $tabTriggers.forEach($trigger => {
-        $trigger.addEventListener('click', (e) => {
-          e.preventDefault();
-          const target = $trigger.dataset.tabtarget;
-          const $target = document.querySelector(`[data-tab="${target}"]`);
-          activateTab($target);
-        });
+      document.documentElement.style.setProperty(`--tsss`,
+        colors.map((c, i) => `0 ${0}px ${0}px ${c.css}`).join()
+      );
+
+      document.documentElement.style.setProperty(`--tss`,
+        (-colors.length * 4) + 'px'
+      );
+
+      names(colors);
+      updateFavicon(colors.map(c => c.hex));
+      np(hueList);
+    }
+      
+    const xmlns = 'http://www.w3.org/2000/svg';
+
+    const printColors = (arr, simple, names) =>
+      arr
+        .map(({ hsl, rgb, hex, css, contrast }, i) => {
+          if (simple) {
+            return `
+        <li class="swatch swatch--simple" style="--col:${hex}; --coltext: ${
+              contrast.black > contrast.white ? "#202125" : "#fff"
+            }">
+          <div data-copy title="Click to copy">${Math.floor(
+            hsl[0]
+          )}&deg; ${Math.floor(hsl[1] * 100)}% ${Math.floor(hsl[2] * 100)}%</div>
+        </li>`;
+          } else {
+            return `
+          <li class="full" style="--col:${hex}; --coltext: ${
+              contrast.black < contrast.white ? "#202125" : "#fff"
+            }; --colbg: ${
+              contrast.black > contrast.white ? "#202125" : "#fff"
+            }">
+            <div class="color-info">
+              <strong>${names[i].name}</strong>
+              <button data-copy title="Click to copy">hsl(${Math.floor(
+                hsl[0]
+              )},${Math.floor(hsl[1] * 100)}%,${Math.floor(
+              hsl[2] * 100
+            )}%)</button>
+              <button data-copy title="Click to copy">rgb(${Math.floor(
+                rgb[0]
+              )},${Math.floor(rgb[1])},${Math.floor(rgb[2])})</button>
+              <button data-copy title="Click to copy">${css}</button>
+              <div class="color-info__contrast">
+                <h5>wcag contrast:</h5>
+                <em><span style="color: #ffffff;"">Aa</span> ${contrast.white.toFixed(
+                  2
+                )}</em>
+                <span style="color: #000000;">Aa</span> ${contrast.black.toFixed(
+                  2
+                )}</em>
+              </div>
+            </div>
+          </li>
+        `;
+          }
+        })
+        .join("");
+
+    function list(colors) {
+      document.querySelector("[data-list]").innerHTML = `
+      <div>
+        <h3>Colors</h3>
+        <ol>${printColors(colors, true)}</ol>
+      </div>
+    `;
+    }
+
+    let timer;
+    const $names = document.querySelector("[data-names]");
+    const $copyButton = document.querySelector("[data-copycolors]");
+
+    function names(colors) {
+      $names.innerHTML = `<strong style="--col: #fff">…</strong>`;
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const hexes = colors.map((c) => c.hex.replace("#", ""));
+        fetch(
+          `https://api.color.pizza/v1/?values=${hexes.join()}&goodnamesonly=true&noduplicates=true`
+        )
+          .then((r) => r.json())
+          .then((d) => {
+            $names.innerHTML = `<ol>${printColors(
+              colors,
+              false,
+              d.colors
+            )}</ol>`;
+          });
+      }, 1000);
+
+      $copyButton.setAttribute(
+        "data-copy",
+        colors.map((c) => c.hex).join(", ")
+      );
+
+
+    }
+
+    $pal.addEventListener("pointerdown", (e) => {
+      palette(colors, "random");
+      timer = setInterval(() => palette(colors, "random"), 100);
+    });
+    $pal.addEventListener("pointerup", () => clearInterval(timer));
+
+    pane.on("change", bam);
+
+    document.documentElement.addEventListener("pointerdown", e => {
+      const $target = e.target;
+      if($target.matches(`[data-pantrigger]`)) {
+        let value = !isNaN($target.dataset.panvalue) ? new Number($target.dataset.panvalue) : $target.dataset.panvalue;
+        PARAMS[$target.dataset.pantrigger] = value;
+        pane.updateInputs(
+          $target.dataset.pantrigger,
+          $target.dataset.panvalue
+        );
+      }
+    });
+
+    if (navigator.clipboard) {
+      document.querySelector("body").addEventListener("click", (e) => {
+        const $el = e.target;
+        if ($el.matches("[data-copy]")) {
+          let oldText = $el.innerText;
+          let text;
+          // check if data copy has a value
+          if (!$el.dataset.copy) {
+            text = $el.innerText;
+          } else {
+            text = $el.dataset.copy;
+          }
+
+          navigator.clipboard.writeText(text).then(() => {
+            $el.innerText = "copied!";
+            setTimeout(() => {
+              $el.innerText = oldText;
+            }, 500);
+          });
+        }
       });
-    </script>
-  </body>
+    }
+
+    document.querySelector('[aria-controls="sidebar"]').addEventListener('click', () => {
+      document.documentElement.classList.toggle('sidebar-open');
+    });
+
+    newPalette();
+    bam();
+
+    // tabs logic
+    const $tabs = document.querySelectorAll("[data-tab]");
+    const $tabTriggers = document.querySelectorAll("[data-tabtarget]");
+    const $tabsWrap = document.querySelector("[data-tabswrap]");
+    
+    let activeTabIndex = 0;
+
+    $tabsWrap.style.setProperty('--tabs-length', $tabs.length);
+
+    function activateTab($tab) {
+      $tabs.forEach($t => {
+        $t.classList.remove('tabs__content--active');
+        $t.setAttribute('aria-hidden', true);
+      });
+      $tabTriggers.forEach($trigger => {
+        $trigger.setAttribute('aria-selected', false);
+        $trigger.classList.remove('tabs__control--active');
+      });
+
+      const $trigger = document.querySelector(`[data-tabtarget="${$tab.dataset.tab}"]`);
+      $trigger.setAttribute('aria-selected', true);
+      $trigger.classList.add('tabs__control--active');
+
+      $tab.classList.add('tabs__content--active');
+      $tab.setAttribute('aria-hidden', false);
+      activeTabIndex = [...$tabs].indexOf($tab);
+      $tabsWrap.style.setProperty('--active-tab', activeTabIndex);
+    }
+
+    activateTab($tabs[activeTabIndex]);
+
+    $tabTriggers.forEach($trigger => {
+      $trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = $trigger.dataset.tabtarget;
+        const $target = document.querySelector(`[data-tab="${target}"]`);
+        activateTab($target);
+      });
+    });
+  </script>
+</body>
 </html>
