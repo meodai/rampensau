@@ -22,7 +22,7 @@ Perfect for generating color palettes for data visualizations, visual design, ge
 - [Color Ratios](https://codepen.io/meodai/full/vYbwbym)
   Generative rectangles
 - [p5.js Stamps](https://openprocessing.org/sketch/2628160)
-  For of a sketch originally made by [Okazz](https://openprocessing.org/user/128718/?view=sketches).
+  Fork of a sketch originally made by [Okazz](https://openprocessing.org/user/128718/?view=sketches).
 - [Farbvelo Color Generator](https://farbvelo.elastiq.ch/).
   Project this code is based on
 
