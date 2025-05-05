@@ -389,6 +389,7 @@
       left: 50%;
       width: 7rem;
       height: 7rem;
+      
       transform: translate(-50%, 100%) translateY(calc(-100% * var(--c-i))) rotateX(34deg) scale(calc(sin(.1 + var(--c-i2) * 1.5))) scale(1.5);
       transition: calc(300ms - 50ms + var(--c-i2) * 200ms) transform cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -864,6 +865,10 @@
       --color-inverted: var(--light);
 
       margin-top: calc(var(--size-gutter) * 2);
+      select, option {
+        /* windows does not apply it correctly otherwise */
+        color: var(--light)
+      }
     }
     .pane__section {
       display: block;
