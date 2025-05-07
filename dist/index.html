@@ -2399,7 +2399,14 @@ ${PARAMS.easingMode === 'S/L Curve'
       timer = setTimeout(() => {
         const hexes = colors.map((c) => c.hex.replace("#", ""));
         fetch(
-          `https://api.color.pizza/v1/?values=${hexes.join()}&goodnamesonly=true&noduplicates=true`
+          `https://api.color.pizza/v1/?values=${hexes.join()}&goodnamesonly=true&noduplicates=true`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              'X-Referrer': 'https://meodai.github.io/rampensau/',
+            },
+          }
         )
           .then((r) => r.json())
           .then((d) => {
