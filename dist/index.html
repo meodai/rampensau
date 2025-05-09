@@ -1854,6 +1854,14 @@
           step: 1,
         },
       },
+      hueSpread: {
+        default: 0,
+        props: {
+          min: 0,
+          max: 1,
+          step: 0.01,
+        },
+      },
       ...generateColorRampParams,
       easingMode: {
         default: 'Individual Axis',
@@ -2145,6 +2153,13 @@
       document.querySelector('.pane__section--colorharmony').classList.add('pane__section--hidden');
       document.querySelector('.pane__section--hmindiffangle').classList.add('pane__section--hidden');
 
+      // Show hueSpread only for 'Unique Random' or 'Color Harmony'
+      if (PARAMS.hueGenerator === 'Unique Random' || PARAMS.hueGenerator === 'Color Harmony') {
+        document.querySelector('.pane__section--huespread').classList.remove('pane__section--hidden');
+      } else {
+        document.querySelector('.pane__section--huespread').classList.add('pane__section--hidden');
+      }
+
       let hueList;
       
       if (PARAMS.hueGenerator === 'Default') {
@@ -2190,7 +2205,7 @@
       if (hueList && hueList.length > PARAMS.total) {
         hueList = hueList.slice(0, PARAMS.total);
       } else if (hueList && hueList.length < PARAMS.total) {
-        hueList = scaleSpreadArray(hueList, PARAMS.total);
+        hueList = scaleSpreadArray(hueList, PARAMS.total, PARAMS.hueSpread);
       }
 
       const generatorFn = PARAMS.easingMode === 'S/L Curve' ? generateColorRampWithCurve : generateColorRamp;

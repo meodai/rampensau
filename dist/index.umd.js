@@ -62,33 +62,84 @@ var rampensau = (() => {
     return copy;
   }
   var lerp = (amt, from, to) => from + amt * (to - from);
-  var scaleSpreadArray = (valuesToFill, targetSize, fillFunction = lerp) => {
+  var scaleSpreadArray = (valuesToFill, targetSize, padding = 0, fillFunction = lerp) => {
     if (!valuesToFill || valuesToFill.length < 2) {
       throw new Error("valuesToFill array must have at least two values.");
     }
-    if (targetSize < valuesToFill.length) {
+    if (targetSize < 1 && padding > 0) {
+      throw new Error("Target size must be at least 1");
+    }
+    if (targetSize < valuesToFill.length && padding === 0) {
       throw new Error(
         "Target size must be greater than or equal to the valuesToFill array length."
       );
     }
-    const valuesToAdd = targetSize - valuesToFill.length;
-    const chunkArray = valuesToFill.map((value) => [value]);
-    for (let i = 0; i < valuesToAdd; i++) {
-      chunkArray[i % (valuesToFill.length - 1)].push(
-        null
-      );
-    }
-    for (let i = 0; i < chunkArray.length - 1; i++) {
-      const currentChunk = chunkArray[i];
-      const nextChunk = chunkArray[i + 1];
-      const currentValue = currentChunk[0];
-      const nextValue = nextChunk[0];
-      for (let j = 1; j < currentChunk.length; j++) {
-        const percent = j / currentChunk.length;
-        currentChunk[j] = fillFunction(percent, currentValue, nextValue);
+    if (padding <= 0) {
+      const valuesToAdd = targetSize - valuesToFill.length;
+      const chunkArray = valuesToFill.map((value) => [value]);
+      for (let i = 0; i < valuesToAdd; i++) {
+        const idx = i % (valuesToFill.length - 1);
+        if (idx >= 0 && idx < chunkArray.length) {
+          const chunk = chunkArray[idx];
+          if (chunk) {
+            chunk.push(null);
+          }
+        }
       }
+      for (let i = 0; i < chunkArray.length - 1; i++) {
+        const currentChunk = chunkArray[i];
+        const nextChunk = chunkArray[i + 1];
+        if (!currentChunk || !nextChunk) {
+          continue;
+        }
+        const currentValue = currentChunk[0];
+        const nextValue = nextChunk[0];
+        if (currentValue === void 0 || nextValue === void 0) {
+          continue;
+        }
+        for (let j = 1; j < currentChunk.length; j++) {
+          const percent = j / currentChunk.length;
+          currentChunk[j] = fillFunction(percent, currentValue, nextValue);
+        }
+      }
+      return chunkArray.flat();
     }
-    return chunkArray.flat();
+    const result = [];
+    const domainStart = padding;
+    const domainEnd = 1 - padding;
+    for (let i = 0; i < targetSize; i++) {
+      const t = targetSize === 1 ? 0.5 : i / (targetSize - 1);
+      const adjustedT = domainStart + t * (domainEnd - domainStart);
+      let segmentIndex = 0;
+      const normalizedPositions = valuesToFill.map(
+        (_, i2) => i2 / (valuesToFill.length - 1)
+      );
+      for (let j = 1; j < normalizedPositions.length; j++) {
+        const position = normalizedPositions[j];
+        if (position !== void 0 && adjustedT <= position) {
+          segmentIndex = j - 1;
+          break;
+        }
+        if (j === normalizedPositions.length - 1) {
+          segmentIndex = j - 1;
+        }
+      }
+      segmentIndex = Math.min(Math.max(0, segmentIndex), valuesToFill.length - 2);
+      const segmentStart = normalizedPositions[segmentIndex] || 0;
+      const segmentEnd = normalizedPositions[segmentIndex + 1] || 1;
+      let segmentT = 0;
+      if (segmentEnd > segmentStart) {
+        segmentT = (adjustedT - segmentStart) / (segmentEnd - segmentStart);
+      }
+      const fromValue = valuesToFill[segmentIndex];
+      const toValue = valuesToFill[segmentIndex + 1];
+      if (fromValue === void 0 || toValue === void 0) {
+        throw new Error(`Invalid segment values at index ${segmentIndex}`);
+      }
+      const value = fillFunction(segmentT, fromValue, toValue);
+      result.push(value);
+    }
+    return result;
   };
   var pointOnCurve = (curveMethod, curveAccent) => {
     return (t) => {
