@@ -39,6 +39,8 @@ export type colorHarmony =
   | "splitComplementary"
   | "triadic"
   | "tetradic"
+  | "pentadic"
+  | "hexadic"
   | "monochromatic"
   | "doubleComplementary"
   | "compound"
@@ -70,6 +72,21 @@ export const colorHarmonies: {
     normalizeHue(h + 90),
     normalizeHue(h + 180),
     normalizeHue(h + 270),
+  ],
+  pentadic: (h) => [
+    normalizeHue(h),
+    normalizeHue(h + 72),
+    normalizeHue(h + 144),
+    normalizeHue(h + 216),
+    normalizeHue(h + 288),
+  ],
+  hexadic: (h) => [
+    normalizeHue(h),
+    normalizeHue(h + 60),
+    normalizeHue(h + 120),
+    normalizeHue(h + 180),
+    normalizeHue(h + 240),
+    normalizeHue(h + 300),
   ],
   monochromatic: (h) => [normalizeHue(h), normalizeHue(h)], // min 2 for RampenSau
   doubleComplementary: (h) => [
