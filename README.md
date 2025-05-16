@@ -13,7 +13,7 @@ Perfect for generating color palettes for data visualizations, visual design, ge
   Interactive Documentation with example function calls
 - [1000 Generative Samples](https://codepen.io/meodai/pen/ExQWwar?editors=0010)
   Generating a 1000 palettes using similar settings in with lch
-- [p5.js Exaomple](https://editor.p5js.org/meodai/sketches/dzEX_4wTN)
+- [p5.js Example](https://editor.p5js.org/meodai/sketches/dzEX_4wTN)
   3d example using p5.js's `color()` function
 - [Syntax Highlighting](https://meodai.github.io/rampensau/highlighter.html)
   Generative syntax highlighting themes using RampenSau
