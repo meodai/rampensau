@@ -16,26 +16,30 @@ declare type FillFunction<T> = T extends number ? (amt: number, from: T, to: T) 
  */
 export declare const lerp: FillFunction<number>;
 /**
- * Scales and spreads an array to the target size using interpolation.
+ * Scales and spreads an array to the target size using interpolation, with optional padding.
  *
- * This function takes an initial array of values, a target size, and an
- * interpolation function (defaults to `lerp`). It returns a scaled and spread
- * version of the initial array to the target size using the specified
- * interpolation function.
- * The initial entries are spread as evenly as possible across the target size
- * and the gaps are filled with interpolated values using the specified.
+ * This function takes an initial array of values, a target size, an optional padding value,
+ * and an interpolation function (defaults to `lerp`). It returns a scaled and spread
+ * version of the initial array to the target size using the specified interpolation function.
  *
- * In the context of color ramps, this function can be used to create a
- * smoother transition between colors by interpolating between the initial
- * color sets and filling in the gaps with intermediate colors.
+ * The padding parameter (between 0 and 1) compresses the normalized domain from both ends,
+ * matching the behavior of chroma.js's scale() function. This is particularly useful for
+ * color scales to prevent the endpoints from being too extreme.
  *
- * @param {Array} valuesToFill - The initial array of values.
+ * When padding is 0 (default), the original algorithm is used where values are distributed
+ * and interpolated across segments.
+ *
+ * When padding > 0, the normalized domain (0-1) is compressed to [padding, 1-padding],
+ * allowing for more graceful handling of extreme values.
+ *
+ * @param {Array<T>} valuesToFill - The initial array of values.
  * @param {number} targetSize - The desired size of the resulting array.
- * @param {function} fillFunction - The interpolation function (default is lerp).
- * @returns {Array} The scaled and spread array.
- * @throws {Error} If the initial array is empty or target size is invalid.
+ * @param {number} padding - Optional padding value between 0 and 1 (default: 0).
+ * @param {FillFunction<T>} fillFunction - The interpolation function (default is lerp).
+ * @returns {Array<T>} The scaled and spread array.
+ * @throws {Error} If the initial array is invalid or target size is invalid.
  */
-export declare const scaleSpreadArray: <T>(valuesToFill: T[], targetSize: number, fillFunction?: FillFunction<T>) => T[];
+export declare const scaleSpreadArray: <T>(valuesToFill: T[], targetSize: number, padding?: number, fillFunction?: FillFunction<T>) => T[];
 export declare type CurveMethod = "lamé" | "arc" | "pow" | "powY" | "powX" | ((i: number, curveAccent: number) => [number, number]);
 /**
  * function pointOnCurve

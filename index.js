@@ -51,33 +51,63 @@ var rampensau = (() => {
     return copy;
   }
   var lerp = (amt, from, to) => from + amt * (to - from);
-  var scaleSpreadArray = (valuesToFill, targetSize, fillFunction = lerp) => {
+  var scaleSpreadArray = (valuesToFill, targetSize, padding = 0, fillFunction = lerp) => {
     if (!valuesToFill || valuesToFill.length < 2) {
       throw new Error("valuesToFill array must have at least two values.");
     }
-    if (targetSize < valuesToFill.length) {
+    if (targetSize < 1 && padding > 0) {
+      throw new Error("Target size must be at least 1");
+    }
+    if (targetSize < valuesToFill.length && padding === 0) {
       throw new Error(
         "Target size must be greater than or equal to the valuesToFill array length."
       );
     }
-    const valuesToAdd = targetSize - valuesToFill.length;
-    const chunkArray = valuesToFill.map((value) => [value]);
-    for (let i = 0; i < valuesToAdd; i++) {
-      chunkArray[i % (valuesToFill.length - 1)].push(
-        null
-      );
-    }
-    for (let i = 0; i < chunkArray.length - 1; i++) {
-      const currentChunk = chunkArray[i];
-      const nextChunk = chunkArray[i + 1];
-      const currentValue = currentChunk[0];
-      const nextValue = nextChunk[0];
-      for (let j = 1; j < currentChunk.length; j++) {
-        const percent = j / currentChunk.length;
-        currentChunk[j] = fillFunction(percent, currentValue, nextValue);
+    const result = new Array(targetSize);
+    if (padding <= 0) {
+      const len = valuesToFill.length;
+      const lastIdx = len - 1;
+      const totalAdded = targetSize - len;
+      const baseAdds = Math.floor(totalAdded / lastIdx);
+      const remainder = totalAdded % lastIdx;
+      let currentResultIdx = 0;
+      for (let i = 0; i < lastIdx; i++) {
+        const startVal = valuesToFill[i];
+        const endVal = valuesToFill[i + 1];
+        const segmentLen = 1 + baseAdds + (i < remainder ? 1 : 0);
+        for (let j = 0; j < segmentLen; j++) {
+          const t = j / segmentLen;
+          result[currentResultIdx++] = fillFunction(t, startVal, endVal);
+        }
       }
+      result[currentResultIdx] = valuesToFill[lastIdx];
+      return result;
     }
-    return chunkArray.flat();
+    const domainStart = padding;
+    const domainEnd = 1 - padding;
+    const lenMinus1 = valuesToFill.length - 1;
+    const normalizedPositions = new Float64Array(valuesToFill.length);
+    for (let i = 0; i < valuesToFill.length; i++) {
+      normalizedPositions[i] = i / lenMinus1;
+    }
+    let segmentIndex = 0;
+    for (let i = 0; i < targetSize; i++) {
+      const t = targetSize === 1 ? 0.5 : i / (targetSize - 1);
+      const adjustedT = domainStart + t * (domainEnd - domainStart);
+      while (segmentIndex < lenMinus1 && adjustedT > normalizedPositions[segmentIndex + 1]) {
+        segmentIndex++;
+      }
+      const segmentStart = normalizedPositions[segmentIndex];
+      const segmentEnd = normalizedPositions[segmentIndex + 1];
+      let segmentT = 0;
+      if (segmentEnd > segmentStart) {
+        segmentT = (adjustedT - segmentStart) / (segmentEnd - segmentStart);
+      }
+      const fromValue = valuesToFill[segmentIndex];
+      const toValue = valuesToFill[segmentIndex + 1];
+      result[i] = fillFunction(segmentT, fromValue, toValue);
+    }
+    return result;
   };
   var pointOnCurve = (curveMethod, curveAccent) => {
     return (t) => {
@@ -165,6 +195,21 @@ var rampensau = (() => {
       normalizeHue(h + 90),
       normalizeHue(h + 180),
       normalizeHue(h + 270)
+    ],
+    pentadic: (h) => [
+      normalizeHue(h),
+      normalizeHue(h + 72),
+      normalizeHue(h + 144),
+      normalizeHue(h + 216),
+      normalizeHue(h + 288)
+    ],
+    hexadic: (h) => [
+      normalizeHue(h),
+      normalizeHue(h + 60),
+      normalizeHue(h + 120),
+      normalizeHue(h + 180),
+      normalizeHue(h + 240),
+      normalizeHue(h + 300)
     ],
     monochromatic: (h) => [normalizeHue(h), normalizeHue(h)],
     // min 2 for RampenSau

@@ -13,7 +13,7 @@ export declare function normalizeHue(h: number): number;
  * @returns h
  */
 export declare function harveyHue(h: number): number;
-export declare type colorHarmony = "complementary" | "splitComplementary" | "triadic" | "tetradic" | "monochromatic" | "doubleComplementary" | "compound" | "analogous";
+export declare type colorHarmony = "complementary" | "splitComplementary" | "triadic" | "tetradic" | "pentadic" | "hexadic" | "monochromatic" | "doubleComplementary" | "compound" | "analogous";
 export declare type colorHarmonyFn = (h: number) => number[];
 /**
  * Generates a list of hues based on a color harmony.
