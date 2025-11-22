@@ -1,363 +1,410 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>RampenSau Syntax Highlighter Demo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, sans-serif;
-      background: #18181a;
-      color: #f8f8f2;
-      min-height: 100vh;
-    }
-    h1 {
-      text-align: center;
-    }
-    #syntax-container {
-      transition: background-color 0.3s ease;
-    }
-    button {
-      font-size: 1rem;
-      border-radius: 0.375rem;
-      transition: all 0.2s ease;
-      display: block;
-      width: 100%;
-      margin-bottom: 2rem;
-      padding: 0.5rem 1.5rem;
-      color: white;
-      border: none;
-      border-radius: 0.25rem;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    button:hover {
-      opacity: .9;
-    }
-    .code-block {
-      transition: background-color 0.3s ease;
-      border-radius: 0.5rem;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    pre {
-      margin: 0;
-      line-height: 1.5;
-      font-family: monospace;
-      overflow: auto;
-    }
-    h3 {
-      margin-bottom: 1rem;
-      margin-top: 0;
-      font-weight: 300;
-    }
-    .wrapper {
-      max-width: 64rem;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-  </style>
-</head>
-<body>
-  <div id="syntax-container"></div>
-  <script type="module">
-
-  import {
-      generateColorRamp,
-      generateColorRampWithCurve,
-      generateColorRampParams,
-
-      colorUtils,
-      utils
-    } from "./index.mjs";
-
-    const {
-      uniqueRandomHues,
-      colorHarmonies,
-      colorToCSS,
-      harveyHue
-    } = colorUtils;
-
-    const {
-      scaleSpreadArray,
-      shuffleArray,
-    } = utils;
-
-    const random = (min, max) => Math.random() * (max - min) + min;
-
-    function getRampensauColors(isLightMode = false, colorCount = 24) {  
-      return generateColorRamp({
-        total: colorCount,
-        hCycles: random(.1, 2),
-        hStartCenter: 0.5,
-        sRange: [random(.9, .7), random(.5, .3)],
-        lRange: isLightMode ? [random(.85, 1), random(0, 0.15)] : [random(0, 0.15), random(.8, 0.99)],
-        lEasing: isLightMode ? 
-         x => -(Math.cos(Math.PI * x) - 1) / 2
-         : (x, fr) => Math.pow(x, 1.5),
-      }).map(hsl => colorToCSS(hsl, 'hsl'))
-    }
-
-    class SyntaxHighlighter {
-      constructor() {
-        this.colors = [];
-        
-        
-        // Semantic color indices - organize by purpose
-        this.colorMap = {
-          // Background and UI elements
-          background: 2,
-          codeBackground: 0,
-          buttonBackground: 3,
-          
-          // Syntax elements
-          comment: 5,
-          string: random(-20, -15),
-          space: 15,
-          keyword: -16,
-          number: -14,
-          function: -12,
-          method: -10,
-          property: -9,
-          operator: -7,
-          builtin: -5,
-          variable: -3,
-          default: -1,
-          
-          // Always use the last color for text
-          text: -1
-        };
-        
-        // Language keywords and syntax definitions
-        this.keywords = [
-          'class', 'def', 'return', 'for', 'in', 'if', 'const', 'let', 'var',
-          'async', 'await', 'try', 'catch', 'throw', 'new', 'function',
-          'typeof', 'instanceof', 'this', 'super', 'extends', 'static'
-        ];
-        this.builtins = [
-          'console', 'Math', 'Object', 'Array', 'String', 'Number',
-          'Promise', 'Date', 'RegExp', 'Map', 'Set', 'JSON', 'Error'
-        ];
-        this.operators = [
-          '+', '-', '*', '/', '%', '=', '==', '===', '!=', '!==',
-          '>', '<', '>=', '<=', '&&', '||', '!', '??', '?.'
-        ];
+  <head>
+    <meta charset="UTF-8" />
+    <title>RampenSau Syntax Highlighter Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, -apple-system, sans-serif;
+        background: #18181a;
+        color: #f8f8f2;
+        min-height: 100vh;
       }
-      tokenizeLine(line) {
-        const tokens = [];
-        let current = 0;
-        let buffer = '';
-        const pushBuffer = (type = 'default') => {
-          if (buffer) {
-            if (this.keywords.includes(buffer)) {
-              tokens.push({ type: 'keyword', content: buffer });
-            } else if (this.builtins.includes(buffer)) {
-              tokens.push({ type: 'builtin', content: buffer });
-            } else {
-              const nextChar = line[current];
-              if (nextChar === '(') {
-                tokens.push({ type: 'function', content: buffer });
-              } else if (nextChar === '.') {
-                tokens.push({ type: 'property', content: buffer });
+      h1 {
+        text-align: center;
+      }
+      #syntax-container {
+        transition: background-color 0.3s ease;
+      }
+      button {
+        font-size: 1rem;
+        border-radius: 0.375rem;
+        transition: all 0.2s ease;
+        display: block;
+        width: 100%;
+        margin-bottom: 2rem;
+        padding: 0.5rem 1.5rem;
+        color: white;
+        border: none;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      button:hover {
+        opacity: 0.9;
+      }
+      .code-block {
+        transition: background-color 0.3s ease;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      pre {
+        margin: 0;
+        line-height: 1.5;
+        font-family: monospace;
+        overflow: auto;
+      }
+      h3 {
+        margin-bottom: 1rem;
+        margin-top: 0;
+        font-weight: 300;
+      }
+      .wrapper {
+        max-width: 64rem;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="syntax-container"></div>
+    <script type="module">
+      import {
+        generateColorRamp,
+        generateColorRampWithCurve,
+        generateColorRampParams,
+        colorUtils,
+        utils,
+      } from "./index.mjs";
+
+      const { uniqueRandomHues, colorHarmonies, colorToCSS, harveyHue } =
+        colorUtils;
+
+      const { scaleSpreadArray, shuffleArray } = utils;
+
+      const random = (min, max) => Math.random() * (max - min) + min;
+
+      function getRampensauColors(isLightMode = false, colorCount = 24) {
+        return generateColorRamp({
+          total: colorCount,
+          hCycles: random(0.1, 2),
+          hStartCenter: 0.5,
+          sRange: [random(0.9, 0.7), random(0.5, 0.3)],
+          lRange: isLightMode
+            ? [random(0.85, 1), random(0, 0.15)]
+            : [random(0, 0.15), random(0.8, 0.99)],
+          lEasing: isLightMode
+            ? (x) => -(Math.cos(Math.PI * x) - 1) / 2
+            : (x, fr) => Math.pow(x, 1.5),
+        }).map((hsl) => colorToCSS(hsl, "hsl"));
+      }
+
+      class SyntaxHighlighter {
+        constructor() {
+          this.colors = [];
+
+          // Semantic color indices - organize by purpose
+          this.colorMap = {
+            // Background and UI elements
+            background: 2,
+            codeBackground: 0,
+            buttonBackground: 3,
+
+            // Syntax elements
+            comment: 5,
+            string: random(-20, -15),
+            space: 15,
+            keyword: -16,
+            number: -14,
+            function: -12,
+            method: -10,
+            property: -9,
+            operator: -7,
+            builtin: -5,
+            variable: -3,
+            default: -1,
+
+            // Always use the last color for text
+            text: -1,
+          };
+
+          // Language keywords and syntax definitions
+          this.keywords = [
+            "class",
+            "def",
+            "return",
+            "for",
+            "in",
+            "if",
+            "const",
+            "let",
+            "var",
+            "async",
+            "await",
+            "try",
+            "catch",
+            "throw",
+            "new",
+            "function",
+            "typeof",
+            "instanceof",
+            "this",
+            "super",
+            "extends",
+            "static",
+          ];
+          this.builtins = [
+            "console",
+            "Math",
+            "Object",
+            "Array",
+            "String",
+            "Number",
+            "Promise",
+            "Date",
+            "RegExp",
+            "Map",
+            "Set",
+            "JSON",
+            "Error",
+          ];
+          this.operators = [
+            "+",
+            "-",
+            "*",
+            "/",
+            "%",
+            "=",
+            "==",
+            "===",
+            "!=",
+            "!==",
+            ">",
+            "<",
+            ">=",
+            "<=",
+            "&&",
+            "||",
+            "!",
+            "??",
+            "?.",
+          ];
+        }
+        tokenizeLine(line) {
+          const tokens = [];
+          let current = 0;
+          let buffer = "";
+          const pushBuffer = (type = "default") => {
+            if (buffer) {
+              if (this.keywords.includes(buffer)) {
+                tokens.push({ type: "keyword", content: buffer });
+              } else if (this.builtins.includes(buffer)) {
+                tokens.push({ type: "builtin", content: buffer });
               } else {
-                tokens.push({ type, content: buffer });
+                const nextChar = line[current];
+                if (nextChar === "(") {
+                  tokens.push({ type: "function", content: buffer });
+                } else if (nextChar === ".") {
+                  tokens.push({ type: "property", content: buffer });
+                } else {
+                  tokens.push({ type, content: buffer });
+                }
               }
+              buffer = "";
             }
-            buffer = '';
-          }
-        };
-        while (current < line.length) {
-          if (line[current] === '"' || line[current] === "'") {
-            pushBuffer();
-            const quote = line[current];
-            let string = quote;
-            current++;
-            while (current < line.length && line[current] !== quote) {
-              string += line[current];
+          };
+          while (current < line.length) {
+            if (line[current] === '"' || line[current] === "'") {
+              pushBuffer();
+              const quote = line[current];
+              let string = quote;
               current++;
+              while (current < line.length && line[current] !== quote) {
+                string += line[current];
+                current++;
+              }
+              if (current < line.length) {
+                string += quote;
+                current++;
+              }
+              tokens.push({ type: "string", content: string });
+              continue;
             }
-            if (current < line.length) {
-              string += quote;
+            if (line[current] === "/" && line[current + 1] === "/") {
+              pushBuffer();
+              tokens.push({ type: "comment", content: line.slice(current) });
+              break;
+            }
+            const possibleOperator = this.operators.find((op) =>
+              line.slice(current).startsWith(op)
+            );
+            if (possibleOperator) {
+              pushBuffer();
+              tokens.push({ type: "operator", content: possibleOperator });
+              current += possibleOperator.length;
+              continue;
+            }
+            if (line[current] === ".") {
+              pushBuffer();
+              tokens.push({ type: "operator", content: "." });
               current++;
+              while (current < line.length && /[\w$_]/.test(line[current])) {
+                buffer += line[current];
+                current++;
+              }
+              if (buffer) {
+                tokens.push({ type: "method", content: buffer });
+                buffer = "";
+              }
+              continue;
             }
-            tokens.push({ type: 'string', content: string });
-            continue;
-          }
-          if (line[current] === '/' && line[current + 1] === '/') {
-            pushBuffer();
-            tokens.push({ type: 'comment', content: line.slice(current) });
-            break;
-          }
-          const possibleOperator = this.operators.find(op =>
-            line.slice(current).startsWith(op)
-          );
-          if (possibleOperator) {
-            pushBuffer();
-            tokens.push({ type: 'operator', content: possibleOperator });
-            current += possibleOperator.length;
-            continue;
-          }
-          if (line[current] === '.') {
-            pushBuffer();
-            tokens.push({ type: 'operator', content: '.' });
-            current++;
-            while (current < line.length && /[\w$_]/.test(line[current])) {
+            if (/[0-9]/.test(line[current])) {
+              pushBuffer();
+              let number = "";
+              while (current < line.length && /[0-9.]/.test(line[current])) {
+                number += line[current];
+                current++;
+              }
+              tokens.push({ type: "number", content: number });
+              continue;
+            }
+            if (/\s/.test(line[current])) {
+              pushBuffer();
+              let spaces = "";
+              while (current < line.length && /\s/.test(line[current])) {
+                spaces += line[current] === " " ? "·" : line[current];
+                current++;
+              }
+              tokens.push({ type: "space", content: spaces });
+              continue;
+            }
+            if (/[\w$_]/.test(line[current])) {
               buffer += line[current];
               current++;
+              continue;
             }
-            if (buffer) {
-              tokens.push({ type: 'method', content: buffer });
-              buffer = '';
-            }
-            continue;
-          }
-          if (/[0-9]/.test(line[current])) {
             pushBuffer();
-            let number = '';
-            while (current < line.length && /[0-9.]/.test(line[current])) {
-              number += line[current];
-              current++;
-            }
-            tokens.push({ type: 'number', content: number });
-            continue;
-          }
-          if (/\s/.test(line[current])) {
-            pushBuffer();
-            let spaces = '';
-            while (current < line.length && /\s/.test(line[current])) {
-              spaces += line[current] === ' ' ? '·' : line[current];
-              current++;
-            }
-            tokens.push({ type: 'space', content: spaces });
-            continue;
-          }
-          if (/[\w$_]/.test(line[current])) {
-            buffer += line[current];
+            tokens.push({ type: "operator", content: line[current] });
             current++;
-            continue;
           }
           pushBuffer();
-          tokens.push({ type: 'operator', content: line[current] });
-          current++;
+          return tokens;
         }
-        pushBuffer();
-        return tokens;
-      }
-      createTokenSpan(token) {
-        const span = document.createElement('span');
-        span.textContent = token.content;
-        let colorIndex = this.colorMap[token.type];
-        if (typeof colorIndex === 'undefined') colorIndex = this.colorMap.default;
-        // Support negative indices for end of array
-        const idx = colorIndex < 0 ? this.colors.length + colorIndex : colorIndex;
-        span.style.color = this.colors[idx] || this.colors[this.colors.length - 1];
-        return span;
-      }
-      renderLine(line) {
-        const div = document.createElement('div');
-        const tokens = this.tokenizeLine(line);
-        tokens.forEach(token => {
-          div.appendChild(this.createTokenSpan(token));
-        });
-        return div;
+        createTokenSpan(token) {
+          const span = document.createElement("span");
+          span.textContent = token.content;
+          let colorIndex = this.colorMap[token.type];
+          if (typeof colorIndex === "undefined")
+            colorIndex = this.colorMap.default;
+          // Support negative indices for end of array
+          const idx =
+            colorIndex < 0 ? this.colors.length + colorIndex : colorIndex;
+          span.style.color =
+            this.colors[idx] || this.colors[this.colors.length - 1];
+          return span;
+        }
+        renderLine(line) {
+          const div = document.createElement("div");
+          const tokens = this.tokenizeLine(line);
+          tokens.forEach((token) => {
+            div.appendChild(this.createTokenSpan(token));
+          });
+          return div;
+        }
+
+        createCodeBlocks() {
+          const codeContainer = document.createElement("div");
+          codeContainer.style.display = "flex";
+          codeContainer.style.flexDirection = "column";
+          codeContainer.style.gap = "2rem";
+          codeContainer.appendChild(
+            this.createCodeBlock("JavaScript Example", javascriptCode)
+          );
+          codeContainer.appendChild(
+            this.createCodeBlock("Python Example", pythonCode)
+          );
+          return codeContainer;
+        }
+
+        createShuffleButton() {
+          const shuffleButton = document.createElement("button");
+          shuffleButton.textContent = "Generate Theme";
+          shuffleButton.style.background = this.colors[3];
+          shuffleButton.style.color =
+            this.colors[this.colors.length - 1] || "#fff";
+          shuffleButton.addEventListener("click", () => {
+            this.shuffle();
+            this.updateColors();
+          });
+          return shuffleButton;
+        }
+
+        applyContainerStyles(container) {
+          container.style.background = this.colors[2];
+          container.style.color = this.colors[this.colors.length - 1];
+          return container;
+        }
+
+        render(container) {
+          container.innerHTML = "";
+          container.className = "";
+
+          // Apply base styles
+          this.applyContainerStyles(container);
+
+          // Create and style wrapper
+          const wrapper = document.createElement("div");
+          wrapper.className = "wrapper";
+          wrapper.style.color = this.colors[this.colors.length - 1];
+
+          const title = document.createElement("h1");
+          title.textContent = "RampenSau Syntax Highlighter";
+          title.style.color = "currentColor";
+          // Add button and code blocks
+          wrapper.appendChild(title);
+          wrapper.appendChild(this.createShuffleButton());
+          wrapper.appendChild(this.createCodeBlocks());
+
+          // Add everything to container
+          container.appendChild(wrapper);
+        }
+
+        createCodeBlock(title, code) {
+          const block = document.createElement("div");
+          block.classList.add("code-block");
+          block.style.background = this.colors[0];
+          block.style.color = this.colors[this.colors.length - 1];
+          const heading = document.createElement("h3");
+          heading.textContent = title;
+          heading.style.color = this.colors[this.colors.length - 1];
+          block.appendChild(heading);
+          const pre = document.createElement("pre");
+          pre.style.color = this.colors[this.colors.length - 1];
+          code.split("\n").forEach((line) => {
+            pre.appendChild(this.renderLine(line));
+          });
+          block.appendChild(pre);
+          return block;
+        }
+
+        shuffle() {
+          this.colors = getRampensauColors(random(0, 1) < 0.5, 40);
+        }
+
+        updateColors() {
+          const container = document.querySelector("#syntax-container");
+          this.applyContainerStyles(container);
+
+          const wrapper = container.querySelector(".wrapper");
+          wrapper.style.color = this.colors[this.colors.length - 1];
+
+          // Update button styles
+          const button = wrapper.querySelector("button");
+          button.style.background = this.colors[3];
+          button.style.color = this.colors[this.colors.length - 1];
+
+          // Replace code container with new one
+          const oldCodeContainer = wrapper.querySelector("div");
+          const newCodeContainer = this.createCodeBlocks();
+          wrapper.replaceChild(newCodeContainer, oldCodeContainer);
+        }
       }
 
-      createCodeBlocks() {
-        const codeContainer = document.createElement('div');
-        codeContainer.style.display = 'flex';
-        codeContainer.style.flexDirection = 'column';
-        codeContainer.style.gap = '2rem';
-        codeContainer.appendChild(this.createCodeBlock('JavaScript Example', javascriptCode));
-        codeContainer.appendChild(this.createCodeBlock('Python Example', pythonCode));
-        return codeContainer;
-      }
-
-      createShuffleButton() {
-        const shuffleButton = document.createElement('button');
-        shuffleButton.textContent = 'Generate Theme';
-        shuffleButton.style.background = this.colors[3];
-        shuffleButton.style.color = this.colors[this.colors.length - 1] || '#fff';
-        shuffleButton.addEventListener('click', () => {
-          this.shuffle();
-          this.updateColors();
-        });
-        return shuffleButton;
-      }
-
-      applyContainerStyles(container) {
-        container.style.background = this.colors[2];
-        container.style.color = this.colors[this.colors.length - 1];
-        return container;
-      }
-
-      render(container) {
-        container.innerHTML = '';
-        container.className = '';
-        
-        // Apply base styles
-        this.applyContainerStyles(container);
-        
-        // Create and style wrapper
-        const wrapper = document.createElement('div');
-        wrapper.className = 'wrapper';
-        wrapper.style.color = this.colors[this.colors.length - 1];
-        
-        const title = document.createElement('h1');
-        title.textContent = 'RampenSau Syntax Highlighter';
-        title.style.color = 'currentColor';
-        // Add button and code blocks
-        wrapper.appendChild(title);
-        wrapper.appendChild(this.createShuffleButton());
-        wrapper.appendChild(this.createCodeBlocks());
-        
-        // Add everything to container
-        container.appendChild(wrapper);
-      }
-
-      createCodeBlock(title, code) {
-        const block = document.createElement('div');
-        block.classList.add('code-block');
-        block.style.background = this.colors[0];
-        block.style.color = this.colors[this.colors.length - 1];
-        const heading = document.createElement('h3');
-        heading.textContent = title;
-        heading.style.color = this.colors[this.colors.length - 1];
-        block.appendChild(heading);
-        const pre = document.createElement('pre');
-        pre.style.color = this.colors[this.colors.length - 1];
-        code.split('\n').forEach(line => {
-          pre.appendChild(this.renderLine(line));
-        });
-        block.appendChild(pre);
-        return block;
-      }
-
-      shuffle() {
-        this.colors = getRampensauColors(random(0,1) < .5, 40);
-      }
-
-      updateColors() {
-        const container = document.querySelector('#syntax-container');
-        this.applyContainerStyles(container);
-        
-        const wrapper = container.querySelector('.wrapper');
-        wrapper.style.color = this.colors[this.colors.length - 1];
-        
-        // Update button styles
-        const button = wrapper.querySelector('button');
-        button.style.background = this.colors[3];
-        button.style.color = this.colors[this.colors.length - 1];
-        
-        // Replace code container with new one
-        const oldCodeContainer = wrapper.querySelector('div');
-        const newCodeContainer = this.createCodeBlocks();
-        wrapper.replaceChild(newCodeContainer, oldCodeContainer);
-      }
-    }
-
-    const pythonCode = `class DataProcessor:
+      const pythonCode = `class DataProcessor:
     def __init__(self, data: List[Dict]):
         self.data = data
         self._processed = False
@@ -373,7 +420,7 @@
     def is_processed(self) -> bool:
         return self._processed`;
 
-    const javascriptCode = `const fetchUserData = async (userId) => {
+      const javascriptCode = `const fetchUserData = async (userId) => {
   try {
     const response = await api.get(${"`/users/${userId}`"});
     const { data } = response;
@@ -392,11 +439,11 @@
   }
 };`;
 
-    // Mount highlighter
-    const container = document.getElementById('syntax-container');
-    const highlighter = new SyntaxHighlighter();
-    highlighter.shuffle();
-    highlighter.render(container);
-  </script>
-</body>
+      // Mount highlighter
+      const container = document.getElementById("syntax-container");
+      const highlighter = new SyntaxHighlighter();
+      highlighter.shuffle();
+      highlighter.render(container);
+    </script>
+  </body>
 </html>

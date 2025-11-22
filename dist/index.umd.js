@@ -74,70 +74,49 @@ var rampensau = (() => {
         "Target size must be greater than or equal to the valuesToFill array length."
       );
     }
+    const result = new Array(targetSize);
     if (padding <= 0) {
-      const valuesToAdd = targetSize - valuesToFill.length;
-      const chunkArray = valuesToFill.map((value) => [value]);
-      for (let i = 0; i < valuesToAdd; i++) {
-        const idx = i % (valuesToFill.length - 1);
-        if (idx >= 0 && idx < chunkArray.length) {
-          const chunk = chunkArray[idx];
-          if (chunk) {
-            chunk.push(null);
-          }
+      const len = valuesToFill.length;
+      const lastIdx = len - 1;
+      const totalAdded = targetSize - len;
+      const baseAdds = Math.floor(totalAdded / lastIdx);
+      const remainder = totalAdded % lastIdx;
+      let currentResultIdx = 0;
+      for (let i = 0; i < lastIdx; i++) {
+        const startVal = valuesToFill[i];
+        const endVal = valuesToFill[i + 1];
+        const segmentLen = 1 + baseAdds + (i < remainder ? 1 : 0);
+        for (let j = 0; j < segmentLen; j++) {
+          const t = j / segmentLen;
+          result[currentResultIdx++] = fillFunction(t, startVal, endVal);
         }
       }
-      for (let i = 0; i < chunkArray.length - 1; i++) {
-        const currentChunk = chunkArray[i];
-        const nextChunk = chunkArray[i + 1];
-        if (!currentChunk || !nextChunk) {
-          continue;
-        }
-        const currentValue = currentChunk[0];
-        const nextValue = nextChunk[0];
-        if (currentValue === void 0 || nextValue === void 0) {
-          continue;
-        }
-        for (let j = 1; j < currentChunk.length; j++) {
-          const percent = j / currentChunk.length;
-          currentChunk[j] = fillFunction(percent, currentValue, nextValue);
-        }
-      }
-      return chunkArray.flat();
+      result[currentResultIdx] = valuesToFill[lastIdx];
+      return result;
     }
-    const result = [];
     const domainStart = padding;
     const domainEnd = 1 - padding;
+    const lenMinus1 = valuesToFill.length - 1;
+    const normalizedPositions = new Float64Array(valuesToFill.length);
+    for (let i = 0; i < valuesToFill.length; i++) {
+      normalizedPositions[i] = i / lenMinus1;
+    }
+    let segmentIndex = 0;
     for (let i = 0; i < targetSize; i++) {
       const t = targetSize === 1 ? 0.5 : i / (targetSize - 1);
       const adjustedT = domainStart + t * (domainEnd - domainStart);
-      let segmentIndex = 0;
-      const normalizedPositions = valuesToFill.map(
-        (_, i2) => i2 / (valuesToFill.length - 1)
-      );
-      for (let j = 1; j < normalizedPositions.length; j++) {
-        const position = normalizedPositions[j];
-        if (position !== void 0 && adjustedT <= position) {
-          segmentIndex = j - 1;
-          break;
-        }
-        if (j === normalizedPositions.length - 1) {
-          segmentIndex = j - 1;
-        }
+      while (segmentIndex < lenMinus1 && adjustedT > normalizedPositions[segmentIndex + 1]) {
+        segmentIndex++;
       }
-      segmentIndex = Math.min(Math.max(0, segmentIndex), valuesToFill.length - 2);
-      const segmentStart = normalizedPositions[segmentIndex] || 0;
-      const segmentEnd = normalizedPositions[segmentIndex + 1] || 1;
+      const segmentStart = normalizedPositions[segmentIndex];
+      const segmentEnd = normalizedPositions[segmentIndex + 1];
       let segmentT = 0;
       if (segmentEnd > segmentStart) {
         segmentT = (adjustedT - segmentStart) / (segmentEnd - segmentStart);
       }
       const fromValue = valuesToFill[segmentIndex];
       const toValue = valuesToFill[segmentIndex + 1];
-      if (fromValue === void 0 || toValue === void 0) {
-        throw new Error(`Invalid segment values at index ${segmentIndex}`);
-      }
-      const value = fillFunction(segmentT, fromValue, toValue);
-      result.push(value);
+      result[i] = fillFunction(segmentT, fromValue, toValue);
     }
     return result;
   };
@@ -227,6 +206,21 @@ var rampensau = (() => {
       normalizeHue(h + 90),
       normalizeHue(h + 180),
       normalizeHue(h + 270)
+    ],
+    pentadic: (h) => [
+      normalizeHue(h),
+      normalizeHue(h + 72),
+      normalizeHue(h + 144),
+      normalizeHue(h + 216),
+      normalizeHue(h + 288)
+    ],
+    hexadic: (h) => [
+      normalizeHue(h),
+      normalizeHue(h + 60),
+      normalizeHue(h + 120),
+      normalizeHue(h + 180),
+      normalizeHue(h + 240),
+      normalizeHue(h + 300)
     ],
     monochromatic: (h) => [normalizeHue(h), normalizeHue(h)],
     // min 2 for RampenSau

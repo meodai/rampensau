@@ -83,53 +83,59 @@ export const scaleSpreadArray = <T>(
     );
   }
 
-  // For case without padding, use the original algorithm
+  const result = new Array(targetSize);
+
+  // For case without padding, use the original algorithm optimized
   if (padding <= 0) {
-    // Create a copy of the valuesToFill array and add null values to it if necessary
-    const valuesToAdd = targetSize - valuesToFill.length;
-    const chunkArray: T[][] = valuesToFill.map((value): T[] => [value]);
+    const len = valuesToFill.length;
+    const lastIdx = len - 1;
+    const totalAdded = targetSize - len;
 
-    for (let i = 0; i < valuesToAdd; i++) {
-      const idx = i % (valuesToFill.length - 1);
-      if (idx >= 0 && idx < chunkArray.length) {
-        const chunk = chunkArray[idx];
-        if (chunk) {
-          chunk.push(null as unknown as T);
-        }
+    // Calculate how many items are added per segment
+    // The original logic distributed 'valuesToAdd' in a round-robin fashion
+    // starting from the first segment.
+    const baseAdds = Math.floor(totalAdded / lastIdx);
+    const remainder = totalAdded % lastIdx;
+
+    let currentResultIdx = 0;
+
+    for (let i = 0; i < lastIdx; i++) {
+      const startVal = valuesToFill[i] as T;
+      const endVal = valuesToFill[i + 1] as T;
+
+      // A segment consists of the start value + any added intermediate values.
+      // If i < remainder, this segment gets an extra slot (matching the original round-robin).
+      const segmentLen = 1 + baseAdds + (i < remainder ? 1 : 0);
+
+      for (let j = 0; j < segmentLen; j++) {
+        const t = j / segmentLen;
+        result[currentResultIdx++] = fillFunction(t, startVal, endVal);
       }
     }
 
-    // Fill each chunk with interpolated values using the specified interpolation function
-    for (let i = 0; i < chunkArray.length - 1; i++) {
-      const currentChunk = chunkArray[i];
-      const nextChunk = chunkArray[i + 1];
+    // The loop above handles [start, ...intermediates] for every segment.
+    // We must manually add the very last value of the input array,
+    // as it is never a 'start' value for a segment.
+    result[currentResultIdx] = valuesToFill[lastIdx];
 
-      if (!currentChunk || !nextChunk) {
-        continue;
-      }
-
-      const currentValue = currentChunk[0];
-      const nextValue = nextChunk[0];
-
-      if (currentValue === undefined || nextValue === undefined) {
-        continue;
-      }
-
-      for (let j = 1; j < currentChunk.length; j++) {
-        const percent = j / currentChunk.length;
-        currentChunk[j] = fillFunction(percent, currentValue, nextValue);
-      }
-    }
-
-    return chunkArray.flat() as T[];
+    return result;
   }
 
-  // Implement chroma.js style padding
-  const result: T[] = [];
+  // Implement chroma.js style padding (Optimized)
 
   // The padding essentially shifts the start and end of the normalized range
   const domainStart = padding;
   const domainEnd = 1 - padding;
+  const lenMinus1 = valuesToFill.length - 1;
+
+  // Optimization: Pre-calculate normalized positions once
+  // This avoids creating a new array and iterating it inside the main loop (O(N) -> O(1))
+  const normalizedPositions = new Float64Array(valuesToFill.length);
+  for (let i = 0; i < valuesToFill.length; i++) {
+    normalizedPositions[i] = i / lenMinus1;
+  }
+
+  let segmentIndex = 0;
 
   // Generate evenly spaced positions in the target array
   for (let i = 0; i < targetSize; i++) {
@@ -139,29 +145,19 @@ export const scaleSpreadArray = <T>(
     // Apply padding by adjusting t
     const adjustedT = domainStart + t * (domainEnd - domainStart);
 
-    // Find the right segment for this position
-    let segmentIndex = 0;
-    const normalizedPositions: number[] = valuesToFill.map(
-      (_, i) => i / (valuesToFill.length - 1)
-    );
-
-    for (let j = 1; j < normalizedPositions.length; j++) {
-      const position = normalizedPositions[j];
-      if (position !== undefined && adjustedT <= position) {
-        segmentIndex = j - 1;
-        break;
-      }
-      if (j === normalizedPositions.length - 1) {
-        segmentIndex = j - 1;
-      }
+    // Optimization: Monotonic search.
+    // Since 'i' increases, 'adjustedT' increases. We can continue searching
+    // from the previous segmentIndex instead of searching from 0 every time.
+    while (
+      segmentIndex < lenMinus1 &&
+      adjustedT > (normalizedPositions[segmentIndex + 1] as number)
+    ) {
+      segmentIndex++;
     }
 
-    // Ensure segment index is valid
-    segmentIndex = Math.min(Math.max(0, segmentIndex), valuesToFill.length - 2);
-
     // Get the segment boundaries in normalized space
-    const segmentStart = normalizedPositions[segmentIndex] || 0;
-    const segmentEnd = normalizedPositions[segmentIndex + 1] || 1;
+    const segmentStart = normalizedPositions[segmentIndex] as number;
+    const segmentEnd = normalizedPositions[segmentIndex + 1] as number;
 
     // Calculate relative position within segment (0-1)
     let segmentT = 0;
@@ -169,18 +165,12 @@ export const scaleSpreadArray = <T>(
       segmentT = (adjustedT - segmentStart) / (segmentEnd - segmentStart);
     }
 
-    // Get the values from the segments, with null checks
-    const fromValue = valuesToFill[segmentIndex];
-    const toValue = valuesToFill[segmentIndex + 1];
-
-    if (fromValue === undefined || toValue === undefined) {
-      throw new Error(`Invalid segment values at index ${segmentIndex}`);
-    }
+    // Get the values from the segments
+    const fromValue = valuesToFill[segmentIndex] as T;
+    const toValue = valuesToFill[segmentIndex + 1] as T;
 
     // Get the interpolated value from the correct segment
-    const value = fillFunction(segmentT, fromValue, toValue);
-
-    result.push(value);
+    result[i] = fillFunction(segmentT, fromValue, toValue);
   }
 
   return result;

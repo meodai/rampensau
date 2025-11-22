@@ -334,15 +334,16 @@ Returns a new shuffled array based on the input array.
 - `array` array      → The array to shuffle
 - `rndFn` function() → Random function. Defaults to `Math.random`
 
-### scaleSpreadArray(valuesToFill, targetSize, fillFunction)
+### scaleSpreadArray(valuesToFill, targetSize, padding, fillFunction)
 
-Scales and spreads an array to the target size using interpolation. 
+Scales and spreads an array to the target size using interpolation.
 In the context of RampenSau, this is used to create a smooth transition between colors.
 Let's say you have an array of 3 colors and you want to create a ramp of 10 colors.
 You can use this function to fill the gaps between the colors and create a smooth transition.
 
 - `valuesToFill` array     → Initial array of values
 - `targetSize` int         → Desired size of the resulting array
+- `padding` float 0…1      → Optional padding value (defaults to 0)
 - `fillFunction` function  → Interpolation function (defaults to lerp)
 
 ### lerp(amt, from, to)

@@ -54,7 +54,7 @@ describe('scaleSpreadArray', () => {
     const initial = [0, 10];
     const targetSize = 5;
     const expected = [0, 2.5, 5, 7.5, 10];
-    const result = scaleSpreadArray(initial, targetSize, lerp);
+    const result = scaleSpreadArray(initial, targetSize, 0, lerp);
     expect(result).toHaveLength(targetSize);
     result.forEach((val, i) => expect(val).toBeCloseTo(expected[i] as number));
   });
@@ -63,7 +63,7 @@ describe('scaleSpreadArray', () => {
     const initial = [0, 10, 5];
     const targetSize = 7;
     // Expected: [0, 5, 10, 7.5, 5, ?, ?] - Calculation gets complex, focus on length and bounds
-    const result = scaleSpreadArray(initial, targetSize, lerp);
+    const result = scaleSpreadArray(initial, targetSize, 0, lerp);
     expect(result).toHaveLength(targetSize);
     expect(result[0]).toBe(0);
     expect(result[2]).toBe(6.666666666666666); // Second original element position
