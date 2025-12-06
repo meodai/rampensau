@@ -217,7 +217,7 @@ function uniqueRandomHues({
   rndFn = Math.random
 } = {}) {
   minHueDiffAngle = Math.min(minHueDiffAngle, 360 / total);
-  const baseHue = startHue || rndFn() * 360;
+  const baseHue = startHue != null ? startHue : rndFn() * 360;
   const huesToPickFrom = Array.from(
     {
       length: Math.round(360 / minHueDiffAngle)
