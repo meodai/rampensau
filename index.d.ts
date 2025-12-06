@@ -2,10 +2,6 @@ export * as utils from "./utils";
 export * as colorUtils from "./colorUtils";
 export { generateColorRamp, generateColorRampWithCurve } from "./core";
 /**
- * A set of default parameters and sain ranges to use `generateColorRamp`
- * when coming up with random color ramps.
- */
-/**
  * A set of default parameters and sane ranges to use with `generateColorRamp`
  * when coming up with random color ramps.
  */
