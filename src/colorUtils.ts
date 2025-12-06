@@ -160,9 +160,21 @@ export const hsv2hsl = ([h, s, v]: Vector3): Vector3 => {
  * functions to convert from the ramp's colors values to CSS color functions.
  */
 const colorModsCSS = {
-  oklch: (color: Vector3) => [color[2] * 100 + "%", color[1] * 100 + "%", color[0]],
-  lch: (color: Vector3) => [color[2] * 100 + "%", color[1] * 100 + "%", color[0]],
-  hsl: (color: Vector3) => [color[0], color[1] * 100 + "%", color[2] * 100 + "%"],
+  oklch: (color: Vector3) => [
+    color[2] * 100 + "%",
+    color[1] * 100 + "%",
+    color[0],
+  ],
+  lch: (color: Vector3) => [
+    color[2] * 100 + "%",
+    color[1] * 100 + "%",
+    color[0],
+  ],
+  hsl: (color: Vector3) => [
+    color[0],
+    color[1] * 100 + "%",
+    color[2] * 100 + "%",
+  ],
   hsv: (color: Vector3) => {
     const [h, s, l] = hsv2hsl(color);
     return [h, s * 100 + "%", l * 100 + "%"];
