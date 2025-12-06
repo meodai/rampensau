@@ -225,7 +225,7 @@ export const pointOnCurve = (curveMethod: CurveMethod, curveAccent: number) => {
       y = yFunc;
     } else {
       throw new Error(
-        `pointOnCurve() curveAccent parameter is expected to be "lamé" | "arc" | "pow" | "powY" | "powX" or a function but \`${curveMethod}\` given.`
+        `pointOnCurve() curveMethod parameter is expected to be "lamé" | "arc" | "pow" | "powY" | "powX" or a function but \`${curveMethod}\` given.`
       );
     }
 

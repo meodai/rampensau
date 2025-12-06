@@ -70,7 +70,7 @@ export function generateColorRamp({
   const length = hueList && hueList.length > 0 ? hueList.length : total;
 
   return Array.from({ length }, (_, i) => {
-    const relI = i / (length - 1);
+    const relI = length > 1 ? i / (length - 1) : 0;
     const fraction = 1 / length;
 
     const hue = hueList
