@@ -140,7 +140,7 @@ var pointOnCurve = (curveMethod, curveAccent) => {
       y = yFunc;
     } else {
       throw new Error(
-        `pointOnCurve() curveAccent parameter is expected to be "lam\xE9" | "arc" | "pow" | "powY" | "powX" or a function but \`${curveMethod}\` given.`
+        `pointOnCurve() curveMethod parameter is expected to be "lam\xE9" | "arc" | "pow" | "powY" | "powX" or a function but \`${curveMethod}\` given.`
       );
     }
     return { x, y };
@@ -241,7 +241,7 @@ function uniqueRandomHues({
   rndFn = Math.random
 } = {}) {
   minHueDiffAngle = Math.min(minHueDiffAngle, 360 / total);
-  const baseHue = startHue || rndFn() * 360;
+  const baseHue = startHue ?? rndFn() * 360;
   const huesToPickFrom = Array.from(
     {
       length: Math.round(360 / minHueDiffAngle)
@@ -261,9 +261,21 @@ var hsv2hsl = ([h, s, v]) => {
   return [h, s_hsl, l];
 };
 var colorModsCSS = {
-  oklch: (color) => [color[2] * 100 + "%", color[1] * 100 + "%", color[0]],
-  lch: (color) => [color[2] * 100 + "%", color[1] * 100 + "%", color[0]],
-  hsl: (color) => [color[0], color[1] * 100 + "%", color[2] * 100 + "%"],
+  oklch: (color) => [
+    color[2] * 100 + "%",
+    color[1] * 100 + "%",
+    color[0]
+  ],
+  lch: (color) => [
+    color[2] * 100 + "%",
+    color[1] * 100 + "%",
+    color[0]
+  ],
+  hsl: (color) => [
+    color[0],
+    color[1] * 100 + "%",
+    color[2] * 100 + "%"
+  ],
   hsv: (color) => {
     const [h, s, l] = hsv2hsl(color);
     return [h, s * 100 + "%", l * 100 + "%"];
@@ -292,7 +304,7 @@ function generateColorRamp({
   const sDiff = sRange[1] - sRange[0];
   const length = hueList && hueList.length > 0 ? hueList.length : total;
   return Array.from({ length }, (_, i) => {
-    const relI = i / (length - 1);
+    const relI = length > 1 ? i / (length - 1) : 0;
     const fraction = 1 / length;
     const hue = hueList ? hueList[i] : normalizeHue(
       hStart + // Add the starting hue
