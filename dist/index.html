@@ -68,6 +68,10 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
     />
+    <script type="module">
+      // Pre-load token-beam for use later
+      window.tokenBeamPromise = import('https://esm.sh/token-beam@0.1.0/es2022/token-beam.mjs');
+    </script>
     <style>
       :root {
         font-family: "Bricolage Grotesque", sans-serif;
@@ -1128,6 +1132,183 @@
         width: max-content;
       }
 
+      /* Token Beam Widget Styles */
+      .token-beam-widget {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        padding: 0;
+        border: 2px solid var(--light);
+        display: flex;
+        align-items: center;
+        max-width: 400px;
+        background: var(--dark);
+        position: relative;
+      }
+
+      .token-beam-widget__label {
+        position: relative;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--light);
+        white-space: nowrap;
+        padding: 0.6rem 1.5rem 0.6rem 3em;
+        line-height: 1;
+        margin: 0;
+      }
+
+      .token-beam-widget__label::before {
+        content: '⊷';
+        font-size: 2em;
+        transform: translateY(-50%) rotate(45deg);
+        position: absolute;
+        top: 50%;
+        left: 0.5em;
+      }
+
+      .token-beam-widget__token-wrap {
+        position: relative;
+        flex: 1;
+        display: flex;
+        align-items: center;
+      }
+
+      .token-beam-widget__token {
+        flex: 1;
+        padding: 0.6rem;
+        background: var(--dark);
+        border: 2px solid var(--light);
+        border-top: 0;
+        border-bottom: 0;
+        font-size: 0.75rem;
+        letter-spacing: 0.18em;
+        text-align: left;
+        cursor: pointer;
+        font-family: 'Courier New', monospace;
+        color: var(--light);
+        transition: all 0.2s ease;
+      }
+
+      .token-beam-widget__token:hover {
+        background: var(--highlight);
+        color: var(--dark);
+      }
+
+      .token-beam-widget__help {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .token-beam-widget__help-btn {
+        width: 1.95rem;
+        height: 1.95rem;
+        border-radius: 0;
+        background: var(--light);
+        border: 2px solid var(--light);
+        color: var(--dark);
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      }
+
+      .token-beam-widget__help-btn:hover {
+        background: var(--highlight);
+        border-color: var(--highlight);
+      }
+
+      .token-beam-widget__help-dropdown {
+        position: absolute;
+        bottom: calc(100% + 0.5rem);
+        right: 0;
+        background: var(--light);
+        color: var(--dark);
+        padding: 0.8rem;
+        border: 2px solid var(--highlight);
+        min-width: 280px;
+        font-size: 0.7rem;
+        line-height: 1.4;
+        display: none;
+        z-index: 100;
+      }
+
+      .token-beam-widget__help-dropdown::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        right: 0.5rem;
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid var(--highlight);
+      }
+
+      .token-beam-widget__help.is-open .token-beam-widget__help-dropdown {
+        display: block;
+      }
+
+      .token-beam-widget__help-dropdown a {
+        text-decoration: underline;
+      }
+
+      /* Hide help button when connected */
+      .token-beam-widget--connected .token-beam-widget__help {
+        display: none;
+      }
+
+      .token-beam-widget__unlink {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: var(--light);
+        border: 2px solid var(--light);
+        padding: 0.6rem;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        color: var(--dark);
+        transition: all 0.2s ease;
+        border-left: 0;
+      }
+
+      .token-beam-widget__dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #1b8a2d;
+        flex-shrink: 0;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.55; transform: scale(0.85); }
+      }
+
+      .token-beam-widget__dot--active {
+        animation: pulse 2s ease infinite;
+      }
+
+      .token-beam-widget__unlink:hover {
+        background: #c4342d;
+        border-color: #c4342d;
+        color: var(--light);
+      }
+
+      .token-beam-widget__unlink:hover .token-beam-widget__dot {
+        background: var(--light);
+      }
+
+      .token-beam-widget--waiting .token-beam-widget__token {
+        cursor: default;
+      }
+
       .color-names h2 {
         color: var(--light);
       }
@@ -1550,9 +1731,29 @@
       <aside class="color-names">
         <h2>For Curious Minds <span>and Desperate Deadlines</span></h2>
         <div data-names></div>
+        
         <button class="button color-names__copy" data-copy data-copycolors>
           Copy Palette to Clipboard
         </button>
+        
+        <!-- Token Beam Widget -->
+        <div class="token-beam-widget token-beam-widget--waiting" data-token-beam-widget>
+          <h4 class="token-beam-widget__label">Token Beam</h4>
+          <div class="token-beam-widget__token-wrap" data-token-wrap>
+            <button class="token-beam-widget__token" data-token-button>
+              Generating Token...
+            </button>
+          </div>
+          <div class="token-beam-widget__help" data-help>
+            <button class="token-beam-widget__help-btn" data-help-btn title="What is this?">?</button>
+            <div class="token-beam-widget__help-dropdown" data-help-dropdown>
+              Sync your color palette live with design tools like Figma, Sketch, Aseprite & more. Click to generate a token, then paste it in your design tool's plugin.
+              <br><br>
+              <a href="https://github.com/meodai/token-beam" target="_blank">Learn more →</a>
+            </div>
+          </div>
+        </div>
+        
         <div class="section__text">
           <p>
             I got requests to export palettes—so here you go. Still, I’d gently
@@ -2666,6 +2867,11 @@ ${
         names(colors);
         updateFavicon(colors.map((c) => c.hex));
         np(hueList);
+        
+        // Sync palette to Token Beam
+        if (window.tokenBeamSync && typeof window.tokenBeamSync === 'function') {
+          window.tokenBeamSync(colors);
+        }
       }
 
       const xmlns = "http://www.w3.org/2000/svg";
@@ -2857,6 +3063,181 @@ ${
           activateTab($target);
         });
       });
+
+      // Token Beam Integration
+      (async function initTokenBeam() {
+        try {
+          const { SyncClient, createCollection } = await window.tokenBeamPromise;
+          
+          const widget = document.querySelector('[data-token-beam-widget]');
+          const tokenButton = document.querySelector('[data-token-button]');
+          const tokenWrap = document.querySelector('[data-token-wrap]');
+          const helpEl = document.querySelector('[data-help]');
+          const helpBtn = document.querySelector('[data-help-btn]');
+          const helpDropdown = document.querySelector('[data-help-dropdown]');
+          
+          let syncClient = null;
+          let sessionToken = null;
+          let isPaired = false;
+          
+          // Help dropdown toggle
+          helpBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            helpEl.classList.toggle('is-open');
+          });
+          
+          document.addEventListener('click', (e) => {
+            if (!helpEl.contains(e.target)) {
+              helpEl.classList.remove('is-open');
+            }
+          });
+          
+          const SYNC_SERVER_URL = 'wss://tokenbeam.dev';
+          
+          // Helper to show/hide unlink button and help
+          function showUnlinkButton() {
+            widget.classList.add('token-beam-widget--connected');
+            const existingBtn = tokenWrap.querySelector('.token-beam-widget__unlink');
+            if (!existingBtn) {
+              const unlinkBtn = document.createElement('button');
+              unlinkBtn.className = 'token-beam-widget__unlink';
+              unlinkBtn.innerHTML = '<span class="token-beam-widget__dot token-beam-widget__dot--active"></span>';
+              unlinkBtn.title = 'Click to disconnect';
+              unlinkBtn.addEventListener('click', handleUnlink);
+              tokenWrap.appendChild(unlinkBtn);
+            }
+          }
+          
+          function hideUnlinkButton() {
+            widget.classList.remove('token-beam-widget--connected');
+            const unlinkBtn = tokenWrap.querySelector('.token-beam-widget__unlink');
+            if (unlinkBtn) unlinkBtn.remove();
+          }
+          
+          // Initialize sync client - it handles token creation automatically
+          function initSyncClient() {
+            if (syncClient) {
+              syncClient.disconnect();
+            }
+            
+            syncClient = new SyncClient({
+              serverUrl: SYNC_SERVER_URL,
+              clientType: 'web',
+              origin: 'RampenSau Color Generator',
+              icon: { type: 'unicode', value: '🎨' },
+              onPaired: (token) => {
+                // Token automatically created by server
+                sessionToken = token;
+                widget.classList.remove('token-beam-widget--waiting');
+                tokenButton.textContent = sessionToken;
+                tokenButton.title = 'Click to copy token - waiting for design tool...';
+              },
+              onTargetConnected: (clientType) => {
+                isPaired = true;
+                showUnlinkButton();
+                tokenButton.title = `Connected to ${clientType}`;
+                // Sync current palette
+                if (colors && colors.length > 0) {
+                  syncPalette(colors);
+                }
+              },
+              onConnected: () => {
+                tokenButton.title = 'Connecting to sync server...';
+              },
+              onDisconnected: () => {
+                isPaired = false;
+                hideUnlinkButton();
+                tokenButton.title = 'Disconnected - click unlink to reconnect';
+              },
+              onError: (error) => {
+                console.error('Sync error:', error);
+                if (error.includes('client disconnected')) {
+                  isPaired = false;
+                  hideUnlinkButton();
+                  tokenButton.title = 'Design tool disconnected';
+                } else {
+                  tokenButton.title = 'Sync error - check console';
+                }
+              },
+            });
+            
+            syncClient.connect().catch((error) => {
+              console.error('Failed to connect to sync server:', error);
+              tokenButton.textContent = 'Connection failed';
+              tokenButton.title = 'Failed to connect to sync server';
+            });
+          }
+          
+          // Handle token click
+          tokenButton.addEventListener('click', () => {
+            if (!sessionToken) {
+              // Token not yet ready
+              return;
+            }
+            // Copy token to clipboard
+            navigator.clipboard.writeText(sessionToken).then(() => {
+              const oldText = tokenButton.textContent;
+              tokenButton.textContent = 'Copied!';
+              setTimeout(() => {
+                tokenButton.textContent = oldText;
+              }, 500);
+            });
+          });
+          
+          // Handle unlink
+          function handleUnlink() {
+            if (syncClient) {
+              syncClient.disconnect();
+              syncClient = null;
+            }
+            sessionToken = null;
+            isPaired = false;
+            
+            // Update UI
+            widget.classList.add('token-beam-widget--waiting');
+            hideUnlinkButton();
+            tokenButton.textContent = 'Generating Token...';
+            tokenButton.title = 'Generating sync token...';
+            
+            // Reinitialize
+            initSyncClient();
+          }
+          
+          // Sync current palette to design tool
+          function syncPalette(colorArray) {
+            if (!syncClient || !isPaired) return;
+            
+            try {
+              const collection = createCollection('rampensau', 
+                colorArray.map((c, i) => ({
+                  name: String(i + 1).padStart(2, '0'),
+                  type: 'color',
+                  value: c.hex,
+                }))
+              );
+              
+              syncClient.sync(collection);
+            } catch (error) {
+              console.error('Failed to sync palette:', error);
+            }
+          }
+          
+          // Expose sync function globally so bam() can call it
+          window.tokenBeamSync = syncPalette;
+          
+          // Auto-initialize on page load
+          initSyncClient();
+          
+        } catch (error) {
+          console.error('Token Beam initialization error:', error);
+          const tokenButton = document.querySelector('[data-token-button]');
+          if (tokenButton) {
+            tokenButton.textContent = 'Token Beam Unavailable';
+            tokenButton.disabled = true;
+            tokenButton.title = 'Failed to load Token Beam library';
+          }
+        }
+      })();
     </script>
   </body>
 </html>
