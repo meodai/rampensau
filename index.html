@@ -70,7 +70,7 @@
     />
     <script type="module">
       // Pre-load token-beam for use later
-      window.tokenBeamPromise = import('https://esm.sh/token-beam@0.1.0/es2022/token-beam.mjs');
+      window.tokenBeamPromise = import('https://esm.sh/token-beam@1.6.0/es2022/token-beam.mjs');
     </script>
     <style>
       :root {
@@ -3067,7 +3067,7 @@ ${
       // Token Beam Integration
       (async function initTokenBeam() {
         try {
-          const { SyncClient, createCollection } = await window.tokenBeamPromise;
+          const { SourceSession, createCollection } = await window.tokenBeamPromise;
           
           const widget = document.querySelector('[data-token-beam-widget]');
           const tokenButton = document.querySelector('[data-token-button]');
@@ -3078,7 +3078,6 @@ ${
           
           let syncClient = null;
           let sessionToken = null;
-          let isPaired = false;
           
           // Help dropdown toggle
           helpBtn.addEventListener('click', (e) => {
@@ -3120,45 +3119,47 @@ ${
               syncClient.disconnect();
             }
             
-            syncClient = new SyncClient({
+            syncClient = new SourceSession({
               serverUrl: SYNC_SERVER_URL,
               clientType: 'web',
               origin: 'RampenSau Color Generator',
               icon: { type: 'unicode', value: '🎨' },
-              onPaired: (token) => {
-                // Token automatically created by server
-                sessionToken = token;
-                widget.classList.remove('token-beam-widget--waiting');
-                tokenButton.textContent = sessionToken;
-                tokenButton.title = 'Click to copy token - waiting for design tool...';
-              },
-              onTargetConnected: (clientType) => {
-                isPaired = true;
-                showUnlinkButton();
-                tokenButton.title = `Connected to ${clientType}`;
-                // Sync current palette
-                if (colors && colors.length > 0) {
-                  syncPalette(colors);
-                }
-              },
-              onConnected: () => {
-                tokenButton.title = 'Connecting to sync server...';
-              },
-              onDisconnected: () => {
-                isPaired = false;
+            });
+
+            syncClient.on('paired', ({ sessionToken: token }) => {
+              sessionToken = token;
+              widget.classList.remove('token-beam-widget--waiting');
+              tokenButton.textContent = sessionToken;
+              tokenButton.title = 'Click to copy token - waiting for design tool...';
+            });
+
+            syncClient.on('peer-connected', ({ clientType }) => {
+              showUnlinkButton();
+              tokenButton.title = `Connected to ${clientType}`;
+              if (colors && colors.length > 0) {
+                syncPalette(colors);
+              }
+            });
+
+            syncClient.on('peer-disconnected', () => {
+              if (!syncClient.hasPeers()) {
                 hideUnlinkButton();
-                tokenButton.title = 'Disconnected - click unlink to reconnect';
-              },
-              onError: (error) => {
-                console.error('Sync error:', error);
-                if (error.includes('client disconnected')) {
-                  isPaired = false;
-                  hideUnlinkButton();
-                  tokenButton.title = 'Design tool disconnected';
-                } else {
-                  tokenButton.title = 'Sync error - check console';
-                }
-              },
+                tokenButton.title = 'Design tool disconnected';
+              }
+            });
+
+            syncClient.on('connected', () => {
+              tokenButton.title = 'Connecting to sync server...';
+            });
+
+            syncClient.on('disconnected', () => {
+              hideUnlinkButton();
+              tokenButton.title = 'Disconnected - click unlink to reconnect';
+            });
+
+            syncClient.on('error', ({ message }) => {
+              console.error('Sync error:', message);
+              tokenButton.title = 'Sync error - check console';
             });
             
             syncClient.connect().catch((error) => {
@@ -3191,7 +3192,6 @@ ${
               syncClient = null;
             }
             sessionToken = null;
-            isPaired = false;
             
             // Update UI
             widget.classList.add('token-beam-widget--waiting');
@@ -3205,7 +3205,7 @@ ${
           
           // Sync current palette to design tool
           function syncPalette(colorArray) {
-            if (!syncClient || !isPaired) return;
+            if (!syncClient || !syncClient.hasPeers()) return;
             
             try {
               const collection = createCollection('rampensau', 
