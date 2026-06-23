@@ -112,7 +112,7 @@ var scaleSpreadArray = (valuesToFill, targetSize, padding = 0, fillFunction = le
 var pointOnCurve = (curveMethod, curveAccent) => {
   return (t) => {
     const limit = Math.PI / 2;
-    const slice = limit / 1;
+    const slice = limit;
     const percentile = t;
     let x = 0, y = 0;
     if (curveMethod === "lam\xE9") {
@@ -169,7 +169,7 @@ function normalizeHue(h) {
 }
 function harveyHue(h) {
   h = normalizeHue(h) / 360;
-  if (h === 1 || h === 0) return h;
+  if (h === 0) return h;
   h = 1 + h % 1;
   const seg = 1 / 6;
   const a = h % seg / seg * Math.PI / 2;
@@ -235,7 +235,7 @@ var colorHarmonies = {
   ]
 };
 function uniqueRandomHues({
-  startHue = 0,
+  startHue,
   total = 9,
   minHueDiffAngle = 60,
   rndFn = Math.random
@@ -379,7 +379,7 @@ var generateColorRampParams = {
   },
   curveMethod: {
     default: "lam\xE9",
-    props: { options: ["lam\xE9", "sine", "power", "linear"] }
+    props: { options: ["lam\xE9", "arc", "pow", "powY", "powX"] }
   },
   curveAccent: {
     default: 0.5,

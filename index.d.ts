@@ -4,6 +4,10 @@ export { generateColorRamp, generateColorRampWithCurve } from "./core";
 /**
  * A set of default parameters and sane ranges to use with `generateColorRamp`
  * when coming up with random color ramps.
+ *
+ * Note: the randomized `default` values below are evaluated once when this
+ * module is imported, so every consumer shares the same defaults for the
+ * lifetime of the import. Re-randomize per ramp by passing fresh values.
  */
 export declare const generateColorRampParams: {
     total: {
