@@ -1,9 +1,9 @@
 export declare type Vector2 = [number, number];
 export declare type Vector3 = [...Vector2, number];
 /**
- * Converts a color from HSL to HSV.
- * @param {Array} hsl - The HSL color values.
- * @returns {Array} - The HSV color values.
+ * Normalizes a hue to the 0–360 range (wrapping negatives and overflow).
+ * @param {number} h - The hue value to normalize.
+ * @returns {number} - The normalized hue in the range [0, 360).
  */
 export declare function normalizeHue(h: number): number;
 /**
@@ -35,12 +35,7 @@ export declare type uniqueRandomHuesArguments = {
  * @param {uniqueRandomHuesArguments} args - The arguments to generate the hues.
  * @returns {Array<number>} - The list of hues.
  */
-export declare function uniqueRandomHues({ startHue, total, minHueDiffAngle, rndFn, }?: {
-    startHue?: number | undefined;
-    total?: number | undefined;
-    minHueDiffAngle?: number | undefined;
-    rndFn?: (() => number) | undefined;
-}): number[];
+export declare function uniqueRandomHues({ startHue, total, minHueDiffAngle, rndFn, }?: uniqueRandomHuesArguments): number[];
 /**
  * Converts a color from HSV to HSL.
  * @param {Array} hsv - The HSV color values.
