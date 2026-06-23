@@ -235,7 +235,9 @@ Available harmonies:
 - `splitComplementary` - Base hue and two hues on either side of its complement
 - `triadic` - Three hues evenly spaced around the color wheel
 - `tetradic` - Four hues evenly spaced around the color wheel
-- `monochromatic` - Just the base hue
+- `pentadic` - Five hues evenly spaced around the color wheel (72° apart)
+- `hexadic` - Six hues evenly spaced around the color wheel (60° apart)
+- `monochromatic` - The base hue, returned twice (RampenSau needs at least two hues to build a ramp)
 - `doubleComplementary` - Two complementary pairs
 - `compound` - A mix of complementary and analogous
 - `analogous` - A series of adjacent hues
