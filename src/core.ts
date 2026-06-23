@@ -24,26 +24,28 @@ export type lightnessArguments = {
   lEasing?: ModifiedEasingFn;
 };
 
-type BaseGenerateColorRampArgument = {
+type BaseGenerateColorRampArgument<T extends Vector3 | string = Vector3> = {
   total?: number;
-  transformFn?: (hsl: Vector3, i?: number) => Vector3 | string;
+  transformFn?: (hsl: Vector3, i?: number) => T;
 } & hueArguments &
   saturationArguments &
   lightnessArguments;
 
-export type GenerateColorRampArgument = BaseGenerateColorRampArgument & {
-  hueList?: never;
-};
+export type GenerateColorRampArgument<T extends Vector3 | string = Vector3> =
+  BaseGenerateColorRampArgument<T> & {
+    hueList?: never;
+  };
 
-export type GenerateColorRampArgumentFixedHues = BaseGenerateColorRampArgument &
-  presetHues;
+export type GenerateColorRampArgumentFixedHues<
+  T extends Vector3 | string = Vector3
+> = BaseGenerateColorRampArgument<T> & presetHues;
 
 /**
  * Generates a color ramp based on the HSL color space.
  * @param {GenerateColorRampArgument} args - The arguments to generate the ramp.
  * @returns {Array<number>} - The color ramp.
  */
-export function generateColorRamp({
+export function generateColorRamp<T extends Vector3 | string = Vector3>({
   total = 9,
   hStart = Math.random() * 360,
   hStartCenter = 0.5,
@@ -56,12 +58,12 @@ export function generateColorRamp({
   lRange = [Math.random() * 0.1, 0.9],
   lEasing = (x) => Math.pow(x, 1.5),
 
-  transformFn = ([h, s, l]) => [h, s, l],
+  transformFn = (([h, s, l]) => [h, s, l]) as (hsl: Vector3, i?: number) => T,
 
   hueList,
 }:
-  | GenerateColorRampArgument
-  | GenerateColorRampArgumentFixedHues = {}): Vector3[] {
+  | GenerateColorRampArgument<T>
+  | GenerateColorRampArgumentFixedHues<T> = {}): T[] {
   // creates a range of lightness and saturation based on the corresponding min and max values
   const lDiff: number = lRange[1] - lRange[0];
   const sDiff: number = sRange[1] - sRange[0];
@@ -83,11 +85,13 @@ export function generateColorRamp({
     const saturation = sRange[0] + sDiff * sEasing(relI, fraction);
     const lightness = lRange[0] + lDiff * lEasing(relI, fraction);
 
-    return transformFn([hue, saturation, lightness], i) as Vector3; // Ensure the array is of type Vector3
+    return transformFn([hue, saturation, lightness], i);
   });
 }
 
-export const generateColorRampWithCurve = ({
+export const generateColorRampWithCurve = <
+  T extends Vector3 | string = Vector3
+>({
   total = 9,
   hStart = Math.random() * 360,
   hStartCenter = 0.5,
@@ -97,14 +101,14 @@ export const generateColorRampWithCurve = ({
   hueList,
   curveMethod = "lamé",
   curveAccent = 0.5,
-  transformFn = ([h, s, l]) => [h, s, l],
-}: (GenerateColorRampArgument | GenerateColorRampArgumentFixedHues) & {
+  transformFn = (([h, s, l]) => [h, s, l]) as (hsl: Vector3, i?: number) => T,
+}: (GenerateColorRampArgument<T> | GenerateColorRampArgumentFixedHues<T>) & {
   curveMethod?: CurveMethod;
   curveAccent?: number;
-} = {}): Vector3[] => {
+} = {}): T[] => {
   const { sEasing, lEasing } = makeCurveEasings(curveMethod, curveAccent);
 
-  return generateColorRamp({
+  return generateColorRamp<T>({
     total,
     hStart,
     hStartCenter,
