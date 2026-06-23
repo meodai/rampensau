@@ -142,13 +142,15 @@ const { uniqueRandomHues } = colorUtils;
 generateColorRamp({
   hueList: uniqueRandomHues({
     startHue: Math.random() * 360, 
-    total: 5, 
+    total: 4, 
     minHueDiffAngle: 90,
   })
 })
 ```
 
 The `uniqueRandomHues` function will generate a list of unique hues with a minimum distance of 90° between each hue. This list is then passed to the `hueList` option of `generateColorRamp`. `uniqueRandomHues` is also exported by RampenSau, so you can use it directly.
+
+**Note:** `minHueDiffAngle` is capped at `360 / total`, since you cannot fit more evenly-spaced hues around the wheel than that. Asking for `total: 5` with `minHueDiffAngle: 90` (which would need 450°) silently falls back to a 72° gap. If you need a specific minimum angle, keep `total ≤ 360 / minHueDiffAngle`.
 
 ##### Saturation & Lightness
 
