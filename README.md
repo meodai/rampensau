@@ -328,7 +328,7 @@ RampenSau also provides several utility functions for working with arrays and cu
 
 ```js
 import { utils } from 'rampensau';
-const { shuffleArray, scaleSpreadArray, lerp, pointOnCurve, makeCurveEasings } = utils;
+const { shuffleArray, scaleSpreadArray, lerp, lerpHue, pointOnCurve, makeCurveEasings } = utils;
 ```
 
 ### shuffleArray(array, rndFn)
@@ -350,6 +350,8 @@ You can use this function to fill the gaps between the colors and create a smoot
 - `padding` float 0…1      → Optional padding value (defaults to 0)
 - `fillFunction` function  → Interpolation function (defaults to lerp)
 
+**Note:** The default `lerp` interpolates linearly, which is wrong for the **hue** channel: a segment from `350°` to `10°` would sweep the long way (backward through 180°) instead of the short `+20°` arc across the `0/360` seam. When spreading hues, interpolate that channel with `lerpHue` (shortest-arc, wraps the boundary) instead.
+
 ### lerp(amt, from, to)
 
 Linearly interpolates between two values. 
@@ -358,6 +360,14 @@ Mainly used for the `fillFunction` in `scaleSpreadArray`.
 - `amt` float 0…1   → The interpolation amount
 - `from` number     → The starting value
 - `to` number       → The ending value
+
+### lerpHue(amt, from, to)
+
+Interpolates between two hues (in degrees) along the **shortest arc** around the color wheel, wrapping across the `0/360` boundary. Use this instead of `lerp` for the hue channel when spreading colors with `scaleSpreadArray`.
+
+- `amt` float 0…1   → The interpolation amount
+- `from` number     → The starting hue in degrees
+- `to` number       → The ending hue in degrees
 
 ### pointOnCurve(curveMethod, curveAccent)
 

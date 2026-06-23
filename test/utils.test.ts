@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { shuffleArray, scaleSpreadArray, makeCurveEasings, pointOnCurve } from '../src/utils';
+import { shuffleArray, scaleSpreadArray, makeCurveEasings, pointOnCurve, lerpHue } from '../src/utils';
 
 // Define lerp function locally for testing
 const lerp = (amt: number, from: number, to: number): number => from + amt * (to - from);
@@ -46,6 +46,35 @@ describe('lerp', () => {
     expect(lerp(0.5, 0, 10)).toBe(5);
     expect(lerp(0.25, 10, 20)).toBe(12.5);
     expect(lerp(0.75, -10, 10)).toBe(5);
+  });
+});
+
+describe('lerpHue', () => {
+  it('interpolates within a segment that does not cross the seam', () => {
+    expect(lerpHue(0, 30, 90)).toBeCloseTo(30);
+    expect(lerpHue(1, 30, 90)).toBeCloseTo(90);
+    expect(lerpHue(0.5, 30, 90)).toBeCloseTo(60);
+  });
+
+  it('takes the short arc across the 0/360 boundary', () => {
+    // 350 -> 10 should go forward +20 through 0, landing on 0 at the midpoint
+    expect(lerpHue(0.5, 350, 10)).toBeCloseTo(0);
+    expect(lerpHue(0.25, 350, 10)).toBeCloseTo(355);
+    expect(lerpHue(0.75, 350, 10)).toBeCloseTo(5);
+  });
+
+  it('takes the short arc in the other direction too', () => {
+    // 10 -> 350 should go backward -20 through 0
+    expect(lerpHue(0.5, 10, 350)).toBeCloseTo(0);
+    expect(lerpHue(0.25, 10, 350)).toBeCloseTo(5);
+  });
+
+  it('always returns a normalized hue in [0, 360)', () => {
+    for (let i = 0; i <= 10; i++) {
+      const h = lerpHue(i / 10, 350, 10);
+      expect(h).toBeGreaterThanOrEqual(0);
+      expect(h).toBeLessThan(360);
+    }
   });
 });
 
