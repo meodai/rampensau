@@ -194,7 +194,7 @@ export type CurveMethod =
 export const pointOnCurve = (curveMethod: CurveMethod, curveAccent: number) => {
   return (t: number): { x: number; y: number } => {
     const limit = Math.PI / 2;
-    const slice = limit / 1;
+    const slice = limit;
     const percentile = t;
 
     let x = 0,

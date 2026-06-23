@@ -4,9 +4,9 @@ export type Vector2 = [number, number];
 export type Vector3 = [...Vector2, number];
 
 /**
- * Converts a color from HSL to HSV.
- * @param {Array} hsl - The HSL color values.
- * @returns {Array} - The HSV color values.
+ * Normalizes a hue to the 0–360 range (wrapping negatives and overflow).
+ * @param {number} h - The hue value to normalize.
+ * @returns {number} - The normalized hue in the range [0, 360).
  */
 export function normalizeHue(h: number): number {
   return ((h % 360) + 360) % 360;
@@ -22,7 +22,7 @@ export function harveyHue(h: number): number {
   // modified this part to make it more usable with rampenSau
   h = normalizeHue(h) / 360; // this ensures the value stays within the 0-360 range and normalizes it to 0-1
 
-  if (h === 1 || h === 0) return h;
+  if (h === 0) return h;
   h = 1 + (h % 1);
 
   const seg = 1 / 6;
