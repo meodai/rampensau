@@ -43,6 +43,7 @@ var rampensau = (() => {
   var utils_exports = {};
   __export(utils_exports, {
     lerp: () => lerp,
+    lerpHue: () => lerpHue,
     makeCurveEasings: () => makeCurveEasings,
     pointOnCurve: () => pointOnCurve,
     scaleSpreadArray: () => scaleSpreadArray,
@@ -62,6 +63,10 @@ var rampensau = (() => {
     return copy;
   }
   var lerp = (amt, from, to) => from + amt * (to - from);
+  var lerpHue = (amt, from, to) => {
+    const delta = ((to - from) % 360 + 540) % 360 - 180;
+    return ((from + amt * delta) % 360 + 360) % 360;
+  };
   var scaleSpreadArray = (valuesToFill, targetSize, padding = 0, fillFunction = lerp) => {
     if (!valuesToFill || valuesToFill.length < 2) {
       throw new Error("valuesToFill array must have at least two values.");
@@ -271,25 +276,29 @@ var rampensau = (() => {
     const s_hsl = m === 0 ? 0 : (v - l) / m;
     return [h, s_hsl, l];
   };
+  var round = (n, precision = 4) => {
+    const factor = __pow(10, precision);
+    return Math.round(n * factor) / factor;
+  };
   var colorModsCSS = {
     oklch: (color) => [
-      color[2] * 100 + "%",
-      color[1] * 100 + "%",
-      color[0]
+      round(color[2] * 100) + "%",
+      round(color[1] * 100) + "%",
+      round(color[0])
     ],
     lch: (color) => [
-      color[2] * 100 + "%",
-      color[1] * 100 + "%",
-      color[0]
+      round(color[2] * 100) + "%",
+      round(color[1] * 100) + "%",
+      round(color[0])
     ],
     hsl: (color) => [
-      color[0],
-      color[1] * 100 + "%",
-      color[2] * 100 + "%"
+      round(color[0]),
+      round(color[1] * 100) + "%",
+      round(color[2] * 100) + "%"
     ],
     hsv: (color) => {
       const [h, s, l] = hsv2hsl(color);
-      return [h, s * 100 + "%", l * 100 + "%"];
+      return [round(h), round(s * 100) + "%", round(l * 100) + "%"];
     }
   };
   var colorToCSS = (color, mode = "oklch") => {
