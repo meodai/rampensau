@@ -298,7 +298,7 @@ Transforms a hue to create a more evenly distributed spectrum without the over-a
 import { colorUtils } from "rampensau";
 const { harveyHue } = colorUtils;
 
-const transformedHue = harveyHue(0.5); // Returns a transformed hue value
+const transformedHue = harveyHue(120); // 120° (green) -> redistributed hue
 ```
 
 ## Using RampenSau with a color library
