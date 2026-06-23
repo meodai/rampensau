@@ -193,7 +193,7 @@ const hslColorValues = generateColorRamp({
 
 **generateColorRampWithCurve** is a convenience function that uses pre-defined curve methods for easing functions. It accepts all the same options as `generateColorRamp` plus two additional options:
 
-- `curveMethod` string      → The curve method to use for easing. One of `'lamé'`, `'sine'`, `'power'`, or `'linear'`.
+- `curveMethod` string      → The curve method to use for easing. One of `'lamé'`, `'arc'`, `'pow'`, `'powY'`, or `'powX'`, or a custom `(i, curveAccent) => [x, y]` function.
 - `curveAccent` float 0…5   → The accent of the curve, affecting how pronounced the curve's effect is.
 
 **Note:** It is recommended to use `HSV` as the color space for the `curveMethod` option. It produces nicer looking ramps and is easier to work with, because the lightness and saturation are both 100% at the upper right corner of the the `HSV` slice.

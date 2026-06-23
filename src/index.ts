@@ -42,7 +42,7 @@ export const generateColorRampParams = {
   },
   curveMethod: {
     default: "lamé",
-    props: { options: ["lamé", "sine", "power", "linear"] },
+    props: { options: ["lamé", "arc", "pow", "powY", "powX"] },
   },
   curveAccent: {
     default: 0.5,
