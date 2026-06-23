@@ -16,6 +16,18 @@ declare type FillFunction<T> = T extends number ? (amt: number, from: T, to: T) 
  */
 export declare const lerp: FillFunction<number>;
 /**
+ * Interpolates between two hues (in degrees) along the shortest arc around the
+ * color wheel, wrapping across the 0/360 boundary. Linear `lerp` would travel
+ * the long way (e.g. 350° -> 10° sweeps backward through 180° instead of the
+ * short +20° arc), so use this as the `fillFunction` when spreading hue values.
+ *
+ * @param {number} amt - The interpolation amount (usually between 0 and 1).
+ * @param {number} from - The starting hue in degrees.
+ * @param {number} to - The ending hue in degrees.
+ * @returns {number} - The interpolated hue, normalized to [0, 360).
+ */
+export declare const lerpHue: FillFunction<number>;
+/**
  * Scales and spreads an array to the target size using interpolation, with optional padding.
  *
  * This function takes an initial array of values, a target size, an optional padding value,
