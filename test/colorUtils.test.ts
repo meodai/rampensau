@@ -182,4 +182,10 @@ describe('colorToCSS', () => {
     const color: Vector3 = [180, 0.2, 0.8];
     expect(colorToCSS(color)).toBe('oklch(80% 20% 180)');
   });
+
+  it('should round away floating-point artifacts in the output', () => {
+    // 0.56 * 100 === 56.00000000000001 in IEEE-754
+    const color: Vector3 = [348, 0.4, 0.56];
+    expect(colorToCSS(color, 'oklch')).toBe('oklch(56% 40% 348)');
+  });
 });
