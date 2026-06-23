@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { generateColorRamp, generateColorRampWithCurve } from '../src/core';
+import { generateColorRampParams } from '../src/index';
+import { colorToCSS } from '../src/colorUtils';
 import type { Vector3 } from '../src/colorUtils';
+import type { CurveMethod } from '../src/utils';
 
 describe('generateColorRamp', () => {
   it('should generate the correct number of colors', () => {
@@ -50,6 +53,33 @@ describe('generateColorRamp', () => {
     const colors = generateColorRamp({ total: 3, transformFn, sRange: [1, 1] });
     colors.forEach(color => {
       expect(color[1]).toBeLessThanOrEqual(0.5); // Saturation should be halved
+    });
+  });
+
+  it('should support transformFn returning a CSS string', () => {
+    const result = generateColorRamp({
+      total: 4,
+      transformFn: (color) => colorToCSS(color, 'oklch'),
+    });
+    expect(result).toHaveLength(4);
+    result.forEach(color => {
+      expect(typeof color).toBe('string');
+      expect(color as string).toMatch(/^oklch\(/);
+    });
+  });
+});
+
+describe('generateColorRampParams', () => {
+  it('every advertised curveMethod option is accepted without throwing', () => {
+    const { options } = generateColorRampParams.curveMethod.props;
+    expect(options.length).toBeGreaterThan(0);
+    options.forEach(method => {
+      expect(() =>
+        generateColorRampWithCurve({
+          total: 5,
+          curveMethod: method as CurveMethod,
+        })
+      ).not.toThrow();
     });
   });
 });
