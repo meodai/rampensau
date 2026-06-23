@@ -88,6 +88,18 @@ describe('uniqueRandomHues', () => {
     expect(hues.length).toBe(uniqueHues.size);
   });
 
+  it('should derive the base hue from rndFn when startHue is omitted', () => {
+    // base = 0.5 * 360 = 180; with minHueDiffAngle 50 all 7 slots are returned
+    const hues = uniqueRandomHues({ total: 7, minHueDiffAngle: 50, rndFn: () => 0.5 });
+    expect(new Set(hues)).toEqual(new Set([180, 230, 280, 330, 20, 70, 120]));
+  });
+
+  it('should honor an explicit startHue of 0 instead of falling back to rndFn', () => {
+    // startHue 0 must be preserved (?? keeps 0), so the base is 0, not 0.5 * 360
+    const hues = uniqueRandomHues({ startHue: 0, total: 7, minHueDiffAngle: 50, rndFn: () => 0.5 });
+    expect(new Set(hues)).toEqual(new Set([0, 50, 100, 150, 200, 250, 300]));
+  });
+
   it('should respect minHueDiffAngle (probabilistically)', () => {
     const total = 4;
     const minHueDiffAngle = 90;

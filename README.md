@@ -219,7 +219,7 @@ const hslColorValues = generateColorRampWithCurve({
 
 Function returns an array of unique random hues. Mostly useful for generating a list of hues to use with `hueList`. Alternatively you can use `(x) => Math.random()` as the `hEasing` function in `generateColorRamp` but this will not guarantee unique hues.
 
-- `startHue` float 0…360        → Starting point of the hue ramp. 0 Red, 180 Teal etc..
+- `startHue` float 0…360        → Starting point of the hue ramp. 0 Red, 180 Teal etc.. When omitted, a random hue is picked using `rndFn`.
 - `total` int 3…∞               → Amount of base colors.
 - `minHueDiffAngle` float 0…360 → Minimum angle between hues.
 - `rndFn` function()            → Random function. Defaults to `Math.random`.

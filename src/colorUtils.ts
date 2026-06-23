@@ -123,11 +123,11 @@ export type uniqueRandomHuesArguments = {
  * @returns {Array<number>} - The list of hues.
  */
 export function uniqueRandomHues({
-  startHue = 0,
+  startHue,
   total = 9,
   minHueDiffAngle = 60,
   rndFn = Math.random,
-} = {}): number[] {
+}: uniqueRandomHuesArguments = {}): number[] {
   minHueDiffAngle = Math.min(minHueDiffAngle, 360 / total);
   const baseHue = startHue ?? rndFn() * 360;
   const huesToPickFrom = Array.from(
