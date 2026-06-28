@@ -1794,6 +1794,7 @@
         relch,
         reach,
         oklchP3,
+        toe,
         toeInv,
       } from "https://esm.sh/nutelch@0.1.0";
 
@@ -2464,12 +2465,14 @@
           ) {
             // nutelch returns an absolute OKLCH color from a relative-chroma
             // knob (the ramp's `s`), gamut-mapped against the Display P3 shell.
-            // Lightness is remapped through Ottosson's toeInv so the L axis is
-            // perceptually spaced (as in okhsl).
+            // Lightness is remapped through Ottosson's toeInv on both modes so
+            // the L axis is perceptually spaced (as in okhsl). For relch the
+            // relative-chroma knob is also shaped through toe so saturation ramps
+            // perceptually; reach keeps its knob linear.
             const lInv = toeInv(l);
             const nut =
               colorMode === "nuteLrelCH"
-                ? relch({ lut: oklchP3, l: lInv, relC: s, h })
+                ? relch({ lut: oklchP3, l: lInv, relC: toe(s), h })
                 : reach({ lut: oklchP3, l: lInv, reach: s, h });
             channels.l = nut.l;
             channels.c = nut.c;
