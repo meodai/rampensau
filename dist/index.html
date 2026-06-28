@@ -1790,6 +1790,12 @@
       const { scaleSpreadArray, shuffleArray } = utils;
 
       import { rybHsl2rgb } from "https://esm.sh/rybitten/";
+      import {
+        relch,
+        reach,
+        oklchP3,
+        toeInv,
+      } from "https://esm.sh/nutelch@0.1.0";
 
       console.clear();
 
@@ -2273,6 +2279,8 @@
         options: [
           "hsl",
           "okhsl",
+          "nuteLrelCH",
+          "nutLreaChH",
           "hsv",
           "RYBItten",
           "okhsv",
@@ -2282,6 +2290,49 @@
           "oklch",
         ],
       });
+
+      // Short explainer shown under the Color Mode select for the modes that
+      // have a dedicated project page.
+      const MODE_INFO = {
+        nuteLrelCH: {
+          text: "nutelch relch(): keeps lightness fixed and scales chroma to a fraction of the OKLCH gamut shell (cusp), so saturation is relative to the gamut edge. Rendered in the Display P3 gamut.",
+          links: [{ label: "nutelch", url: "https://github.com/meodai/nutelch" }],
+        },
+        nutLreaChH: {
+          text: "nutelch reach(): moves lightness and chroma together along a ray from the achromatic gray toward the OKLCH cusp, for vivid, gamut-aware ramps. Rendered in the Display P3 gamut.",
+          links: [{ label: "nutelch", url: "https://github.com/meodai/nutelch" }],
+        },
+        RYBItten: {
+          text: "Itten’s RYB color wheel: an artists’ red–yellow–blue model whose primaries and mixing match pigment intuition rather than light.",
+          links: [{ label: "rybitten", url: "https://github.com/meodai/rybitten" }],
+        },
+      };
+
+      const $modeDesc = document.createElement("p");
+      $modeDesc.classList.add("pane__desc");
+      document
+        .querySelector(".pane__section--color_mode")
+        .appendChild($modeDesc);
+
+      const updateModeDesc = () => {
+        const info = MODE_INFO[PARAMS["Color Mode"]];
+        if (!info) {
+          $modeDesc.hidden = true;
+          $modeDesc.innerHTML = "";
+          return;
+        }
+        $modeDesc.hidden = false;
+        const links = info.links
+          .map(
+            (l) =>
+              `<a href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`
+          )
+          .join(" ");
+        $modeDesc.innerHTML = `${info.text} ${links}`;
+      };
+
+      updateModeDesc();
+      pane.on("change", updateModeDesc);
 
       const createPalette = (hueList = null) => {
         let colors = generateColorRamp(
@@ -2407,6 +2458,24 @@
             channels.h = h;
             channels.w = l;
             channels.b = s;
+          } else if (
+            colorMode === "nuteLrelCH" ||
+            colorMode === "nutLreaChH"
+          ) {
+            // nutelch returns an absolute OKLCH color from a relative-chroma
+            // knob (the ramp's `s`), gamut-mapped against the Display P3 shell.
+            // Lightness is remapped through Ottosson's toeInv so the L axis is
+            // perceptually spaced (as in okhsl).
+            const lInv = toeInv(l);
+            const nut =
+              colorMode === "nuteLrelCH"
+                ? relch({ lut: oklchP3, l: lInv, relC: s, h })
+                : reach({ lut: oklchP3, l: lInv, reach: s, h });
+            channels.l = nut.l;
+            channels.c = nut.c;
+            channels.h = nut.h;
+            const r = (n, p = 4) => Math.round(n * 10 ** p) / 10 ** p;
+            css = `oklch(${r(nut.l * 100, 2)}% ${r(nut.c)} ${r(nut.h, 2)})`;
           } else if (colorMode === "oklch") {
             channels.l = l;
             channels.c = s * 0.4;
@@ -2425,7 +2494,11 @@
           }
 
           const computedColorMode =
-            colorMode === "RYBItten" ? "rgb" : colorMode;
+            colorMode === "RYBItten"
+              ? "rgb"
+              : colorMode === "nuteLrelCH" || colorMode === "nutLreaChH"
+              ? "oklch"
+              : colorMode;
 
           const { r, g, b } = culori.converter("rgb")({
             mode: computedColorMode,
