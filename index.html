@@ -1787,7 +1787,7 @@
       const { uniqueRandomHues, colorHarmonies, colorToCSS, harveyHue } =
         colorUtils;
 
-      const { scaleSpreadArray, shuffleArray } = utils;
+      const { scaleSpreadArray, shuffleArray, lerpHue } = utils;
 
       import { rybHsl2rgb } from "https://esm.sh/rybitten/";
       import {
@@ -2735,10 +2735,17 @@
             .classList.add("pane__section--hidden");
         }
 
+        const rawHueCount = hueList ? hueList.length : 0;
+
         if (hueList && hueList.length > PARAMS.total) {
           hueList = hueList.slice(0, PARAMS.total);
         } else if (hueList && hueList.length < PARAMS.total) {
-          hueList = scaleSpreadArray(hueList, PARAMS.total, PARAMS.hueSpread);
+          hueList = scaleSpreadArray(
+            hueList,
+            PARAMS.total,
+            PARAMS.hueSpread,
+            lerpHue
+          );
         }
 
         const generatorFn =
@@ -2816,16 +2823,27 @@
 `;
 
         if (PARAMS.hueGenerator != "Default") {
+          let hueExpr = "";
           if (PARAMS.hueGenerator === "Color Harmony") {
-            hueParams = `  hueList: <i>colorHarmonies
-    .${PARAMS.colorHarmony}(${PARAMS.hStart.toFixed(1)})</i>,`;
+            hueExpr = `colorHarmonies
+    .${PARAMS.colorHarmony}(${PARAMS.hStart.toFixed(1)})`;
           } else if (PARAMS.hueGenerator === "Unique Random") {
-            hueParams = `  hueList: <i>uniqueRandomHues({
+            hueExpr = `uniqueRandomHues({
     startHue: ${PARAMS.hStart.toFixed(2)},
     total: ${PARAMS.total > 4 && PARAMS.total < 8 ? 3 : 4},
     minDistance: ${PARAMS.hMinDiffAngle},
-  })</i>,`;
+  })`;
           }
+          if (rawHueCount > PARAMS.total) {
+            hueExpr = `${hueExpr}.slice(0, ${PARAMS.total})`;
+          } else if (rawHueCount < PARAMS.total) {
+            // mirror the scaleSpreadArray call used above to fill the ramp
+            hueExpr = `scaleSpreadArray(
+    ${hueExpr.replace(/\n/g, "\n  ")},
+    ${PARAMS.total}, ${PARAMS.hueSpread.toFixed(3)}, lerpHue
+  )`;
+          }
+          hueParams = `  hueList: <i>${hueExpr}</i>,`;
         }
         const codeString = `${
           PARAMS.easingMode === "S/L Curve"
